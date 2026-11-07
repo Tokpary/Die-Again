@@ -1,0 +1,55 @@
+{
+    "version": 1,
+    "name": "GameInputs",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "0d919f12-786f-45d1-b388-5bf86adbb582",
+            "actions": [
+                {
+                    "name": "Disparo",
+                    "type": "Button",
+                    "id": "b9bee2fc-e498-49ac-bb38-0e7298ade326",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Apuntar",
+                    "type": "Value",
+                    "id": "21ade89f-ec19-400a-963f-85f577e2da6b",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "31b6a02b-4019-40bc-99c4-8697aae53ad6",
+                    "path": "<Pointer>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Disparo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2126d7a5-6d99-40cc-a8f6-99ac25b5499a",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Apuntar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
