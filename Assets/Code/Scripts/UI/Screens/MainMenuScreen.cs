@@ -7,13 +7,47 @@ namespace Code.Scripts.UI.Screens
     public class MainMenuScreen : UIScreen
     {
         [SerializeField] private Button _startButton;
-        
+        [SerializeField] private MainMenuOption[] _menuOptions;
+
+        public event Action<MainMenuOptionType> MenuOptionClicked;
         public event Action PlayButtonClicked;
-        
+
         protected override void Awake()
         {
             base.Awake();
-            _startButton.onClick.AddListener(() => PlayButtonClicked?.Invoke());
+
+            if (_startButton != null)
+                _startButton.onClick.AddListener(() => PlayButtonClicked?.Invoke());
+
+            if (_menuOptions != null)
+            {
+                foreach (var option in _menuOptions)
+                {
+                    if (option == null)
+                        continue;
+
+                    option.OptionClicked += HandleOptionClicked;
+                }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_menuOptions != null)
+            {
+                foreach (var option in _menuOptions)
+                {
+                    if (option == null)
+                        continue;
+
+                    option.OptionClicked -= HandleOptionClicked;
+                }
+            }
+        }
+
+        private void HandleOptionClicked(MainMenuOptionType optionType)
+        {
+            MenuOptionClicked?.Invoke(optionType);
         }
     }
 }
