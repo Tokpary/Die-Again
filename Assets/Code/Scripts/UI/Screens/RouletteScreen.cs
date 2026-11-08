@@ -30,7 +30,7 @@ namespace Code.Scripts.UI.Screens
         {
             if (_previewText != null)
                 _previewText.text = $"SEMANA {progress.Week} · DÍA {progress.Day}\n" +
-                    $"Lucky Number: {progress.NextLuckyNumberMinimum}–{progress.NextLuckyNumberMaximum}" +
+                    $"Rango de prueba: {progress.NextLuckyNumberMinimum}-{progress.NextLuckyNumberMaximum}" +
                     $"     |     Jefe: {probability}%\nVERDE: NORMAL     ·     ROJO: JEFE";
             if (_resultText != null) _resultText.text = "Pulsa GIRAR para revelar el resultado";
             SetButtons(true, false);
@@ -45,8 +45,9 @@ namespace Code.Scripts.UI.Screens
         public void ShowResult(RouletteResult result, bool canRepeat)
         {
             if (_resultText != null)
-                _resultText.text = $"LUCKY NUMBER  {result.LuckyNumber}\n" +
-                    (result.IsBoss ? "ENCUENTRO CON JEFE" : "RONDA NORMAL");
+                _resultText.text = $"<b>LUCKY NUMBER: {result.LuckyNumber}</b>\n" +
+                    (result.IsBoss ? "<color=#F27E85>ENCUENTRO: JEFE</color>" :
+                        "<color=#8ED6B2>ENCUENTRO: NORMAL</color>");
             SetButtons(canRepeat, true);
         }
 

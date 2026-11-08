@@ -9,6 +9,7 @@ namespace Code.Scripts.Roulette
         [SerializeField] private GameObject _visualRoot;
         [SerializeField] private Transform _wheel;
         [SerializeField] private MeshRenderer _sectorRenderer;
+        [SerializeField] private Transform _pointer;
         [Header("Animation")]
         [SerializeField, Min(0.1f)] private float _spinDuration = 4f;
         [SerializeField, Min(1)] private int _fullTurns = 5;
@@ -19,6 +20,7 @@ namespace Code.Scripts.Roulette
         private Coroutine _spin;
         private float _angle;
         private bool _initialized;
+        private float _pointerAngle;
 
         public bool IsSpinning { get; private set; }
         public event Action<RouletteResult> SpinCompleted;
@@ -29,6 +31,8 @@ namespace Code.Scripts.Roulette
             error = null;
             if (_visualRoot == null || _wheel == null || _sectorRenderer == null)
                 error = "RouletteView requires its visual root, wheel and sector renderer.";
+            else if (_pointer == null || _pointer.IsChildOf(_wheel))
+                error = "RouletteView requires a fixed pointer outside the rotating wheel.";
             else if (_sectorRenderer.sharedMaterial == null ||
                      !_sectorRenderer.sharedMaterial.HasProperty(BossFraction))
                 error = "The sector material must use the DiceMaster/Roulette Sectors shader.";
@@ -44,6 +48,8 @@ namespace Code.Scripts.Roulette
             if (!_initialized)
             {
                 _initialRotation = _wheel.localRotation;
+                Vector3 pointer = _wheel.InverseTransformPoint(_pointer.position);
+                _pointerAngle = Mathf.Atan2(pointer.x, pointer.y) * Mathf.Rad2Deg;
                 _properties = new MaterialPropertyBlock();
                 _initialized = true;
             }
@@ -57,7 +63,7 @@ namespace Code.Scripts.Roulette
         public void ShowResult(RouletteResult result)
         {
             Show(result.BossProbability);
-            SetAngle((float)RouletteRules.GetSectorAngle(result.IsBoss, result.BossProbability, 0.5));
+            SetAngle((float)RouletteRules.GetSectorAngle(result.IsBoss, result.BossProbability, 0.5) - _pointerAngle);
         }
 
         public void Spin(RouletteResult result)
@@ -66,7 +72,7 @@ namespace Code.Scripts.Roulette
                 throw new InvalidOperationException("RouletteView is busy or disabled.");
             Show(result.BossProbability);
             float target = (float)RouletteRules.GetSectorAngle(result.IsBoss,
-                result.BossProbability, UnityEngine.Random.value);
+                result.BossProbability, UnityEngine.Random.value) - _pointerAngle;
             IsSpinning = true;
             _spin = StartCoroutine(Animate(result, target));
         }
@@ -96,8 +102,8 @@ namespace Code.Scripts.Roulette
             SetAngle(target);
             _spin = null;
             IsSpinning = false;
-            // The same angular convention is used by the shader, target selection and this check.
-            if (RouletteRules.IsBossAtAngle(_angle, result.BossProbability) != result.IsBoss)
+            // Read the actual pointer in the rotated disc's coordinates, not the requested angle.
+            if (RouletteRules.IsBossAtAngle(GetPointerSectorAngle(), result.BossProbability) != result.IsBoss)
             {
                 Debug.LogError("Roulette stopped outside the selected sector.", this);
                 SpinCancelled?.Invoke();
@@ -110,6 +116,12 @@ namespace Code.Scripts.Roulette
         {
             _angle = Mathf.Repeat(angle, 360f);
             _wheel.localRotation = _initialRotation * Quaternion.AngleAxis(_angle, Vector3.forward);
+        }
+
+        public float GetPointerSectorAngle()
+        {
+            Vector3 pointer = _wheel.InverseTransformPoint(_pointer.position);
+            return Mathf.Repeat(Mathf.Atan2(pointer.x, pointer.y) * Mathf.Rad2Deg, 360f);
         }
 
         public void Hide()
