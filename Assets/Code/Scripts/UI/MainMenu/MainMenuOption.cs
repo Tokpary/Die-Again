@@ -33,8 +33,13 @@ namespace Code.Scripts.UI
             Ray ray = cameraToUse.ScreenPointToRay(
                 Mouse.current.position.ReadValue());
 
-            if (!Physics.Raycast(ray, out RaycastHit hit) ||
-                hit.collider.gameObject != gameObject)
+            if (!Physics.Raycast(ray, out RaycastHit hit))
+                return;
+
+            MainMenuOption opcionPulsada =
+                hit.collider.GetComponentInParent<MainMenuOption>();
+
+            if (opcionPulsada != this)
                 return;
 
             Debug.Log($"[MainMenu] Se ha pulsado: {optionType}");
