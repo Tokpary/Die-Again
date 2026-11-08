@@ -46,6 +46,11 @@ namespace Code.Scripts.States.State
                     break;
                 case MainMenuOptionType.Quit:
                     Debug.Log("[MainMenu] Salir del juego");
+#if UNITY_EDITOR
+                    UnityEditor.EditorApplication.isPlaying = false;
+#else
+                    Application.Quit();
+#endif
                     break;
                 case MainMenuOptionType.Settings:
                     Debug.Log("[MainMenu] Ir a configuración");

@@ -48,6 +48,10 @@ namespace Code.Scripts.UI.Screens
         private void HandleOptionClicked(MainMenuOptionType optionType)
         {
             MenuOptionClicked?.Invoke(optionType);
+
+            // El botón 3D Jugar reutiliza el mismo evento que el botón UI 2D.
+            if (optionType == MainMenuOptionType.Play)
+                PlayButtonClicked?.Invoke();
         }
     }
 }

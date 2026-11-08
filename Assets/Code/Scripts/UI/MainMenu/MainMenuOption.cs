@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Code.Scripts.UI
 {
@@ -19,9 +20,21 @@ namespace Code.Scripts.UI
 
         public MainMenuOptionType OptionType => optionType;
 
-        private void OnMouseDown()
+        private void Update()
         {
-            if (!enabled)
+            if (!enabled || Mouse.current == null ||
+                !Mouse.current.leftButton.wasPressedThisFrame)
+                return;
+
+            Camera cameraToUse = Camera.main;
+            if (cameraToUse == null)
+                return;
+
+            Ray ray = cameraToUse.ScreenPointToRay(
+                Mouse.current.position.ReadValue());
+
+            if (!Physics.Raycast(ray, out RaycastHit hit) ||
+                hit.collider.gameObject != gameObject)
                 return;
 
             Debug.Log($"[MainMenu] Se ha pulsado: {optionType}");
