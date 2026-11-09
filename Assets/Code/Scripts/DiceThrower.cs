@@ -9,6 +9,8 @@ public class DiceThrower : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private LayerMask aimMask = ~0;    
     [SerializeField] private float shotSpeed = 15f;
+    
+    private DiceDragController diceDragController;
 
     private GameInputs gameInput;
     private Vector3 aimPoint;
@@ -49,29 +51,32 @@ public class DiceThrower : MonoBehaviour
         }
         
         bool overUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
-        if(gameInput.Gameplay.Disparo.WasPressedThisFrame() && !overUI)
+        bool clickIsForDice = diceDragController.IsDragging || diceDragController.PressConsumed;
+        if(gameInput.Gameplay.Disparo.WasPressedThisFrame() && !overUI && !clickIsForDice)
         {
-            OnShoot(new InputAction.CallbackContext());
+            OnShoot();
         }
     }
 
-    private void OnShoot(InputAction.CallbackContext ctx)
+    private void OnShoot()
     {
-        if (!hasAimPoint) return;
+        if (!hasAimPoint || diceRb == null) return;
 
         diceRb.isKinematic = false;
         Vector3 velocity = (aimPoint - diceRb.position).normalized * shotSpeed;
 
         diceRb.AddForce(velocity, ForceMode.VelocityChange);
-        diceRb.AddTorque(Random.insideUnitSphere * 10f, ForceMode.VelocityChange); // que ruede como un dado
+        diceRb.AddTorque(Random.insideUnitSphere * 10f, ForceMode.VelocityChange); 
+        diceRb = null;
     }
 
+    public void UnloadDice() => diceRb = null;
 
     public void LoadDice(Dice dice)
     {
-        if (diceRb != null) Destroy(diceRb.gameObject);
-        diceRb = Instantiate(dice, transform.position + transform.forward * 1.5f, Quaternion.identity).GetComponent<Rigidbody>();
+        diceRb = dice.GetComponent<Rigidbody>();
         diceRb.isKinematic = true;
+        dice.transform.SetParent(null);
         diceRb.position = transform.position + transform.forward * 1.5f + Vector3.up * -0.5f;
         diceRb.rotation = Quaternion.identity;
     }
@@ -83,8 +88,9 @@ public class DiceThrower : MonoBehaviour
         Gizmos.DrawWireSphere(aimPoint, 0.3f);
     }
 
-    public void Init(GameInputs gameInputs)
+    public void Init(GameInputs gameInputs, DiceDragController diceDragController)
     {
+        this.diceDragController = diceDragController;
         gameInput = gameInputs;
     }
 }
