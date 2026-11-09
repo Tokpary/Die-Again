@@ -16,9 +16,11 @@ namespace Code.Scripts.Dice
         private Dice _draggedDice;
         
         public bool IsDragging => _draggedDice != null;
+        public bool SelectionMode { get; set; }
         public bool PressConsumed { get; private set; }
 
         public event Action<Dice> DroppedOnCannon;
+        public event Action<Dice> DiceSelected;
         
         public void Init(GameInputs input) 
         {
@@ -30,6 +32,19 @@ namespace Code.Scripts.Dice
             PressConsumed = false;
             if(_gameInputs == null || !_gameInputs.Gameplay.enabled) return;
             Ray ray = _camera.ScreenPointToRay(_gameInputs.Gameplay.Apuntar.ReadValue<Vector2>());
+            if(SelectionMode)
+            {
+                if(_gameInputs == null || !_gameInputs.Gameplay.enabled) return;
+                if(_gameInputs.Gameplay.Disparo.WasPressedThisFrame())
+                {
+                    PressConsumed = true;
+                    if(Physics.Raycast(ray, out RaycastHit hit, 500f, _diceLayerMask) && hit.rigidbody != null && hit.rigidbody.TryGetComponent(out Dice dice))
+                    {
+                        DiceSelected?.Invoke(dice);
+                    }
+                }
+                return;
+            }
             
             if(_draggedDice == null && _gameInputs.Gameplay.Disparo.WasPressedThisFrame())
             {

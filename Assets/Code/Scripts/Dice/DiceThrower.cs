@@ -1,7 +1,9 @@
+using System;
 using Code.Scripts.Dice;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public class DiceThrower : MonoBehaviour
 {
@@ -15,7 +17,10 @@ public class DiceThrower : MonoBehaviour
     private GameInputs gameInput;
     private Vector3 aimPoint;
     private bool hasAimPoint;
-
+    
+    public event Action<Dice> OnDiceShot;
+    private Dice _loadedDice;
+    
     private void Awake()
     {
         if (cam == null) cam = Camera.main;
@@ -66,14 +71,25 @@ public class DiceThrower : MonoBehaviour
         Vector3 velocity = (aimPoint - diceRb.position).normalized * shotSpeed;
 
         diceRb.AddForce(velocity, ForceMode.VelocityChange);
-        diceRb.AddTorque(Random.insideUnitSphere * 10f, ForceMode.VelocityChange); 
+        diceRb.AddTorque(Random.insideUnitSphere * 10f, ForceMode.VelocityChange);
+
+        Dice shot = _loadedDice;
+        _loadedDice = null;
         diceRb = null;
+        OnDiceShot?.Invoke(shot);
     }
 
-    public void UnloadDice() => diceRb = null;
+    public Dice UnloadDice()
+    {
+        Dice dice = _loadedDice;
+        diceRb = null;
+        _loadedDice = null;
+        return dice;
+    }
 
     public void LoadDice(Dice dice)
     {
+        _loadedDice = dice;
         diceRb = dice.GetComponent<Rigidbody>();
         diceRb.isKinematic = true;
         dice.transform.SetParent(null);

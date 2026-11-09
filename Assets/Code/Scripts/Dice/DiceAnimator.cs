@@ -27,6 +27,11 @@ namespace Code.Scripts.Dice
             RunBatch(dice, (d,i) => Shrink(d, i * _stagger), onVanish, onComplete);
         }
         
+        public void Appear(IReadOnlyList<Dice> dice, Action<Dice> onAppear, Action onComplete)
+        {
+            RunBatch(dice, (d,i) => Grow(d, 0f), onAppear, onComplete);
+        }
+        
         private void RunBatch(IReadOnlyList<Dice> dice, Func<Dice, int, IEnumerator> animation, Action<Dice> onEach, Action onComplete)
         {
             var list = new List<Dice>(dice);
@@ -84,6 +89,17 @@ namespace Code.Scripts.Dice
                 dice.transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
                 yield return null;
             }
+        }
+        
+        private IEnumerator Grow(Dice dice, float delay)
+        {
+            if (delay > 0f) yield return new WaitForSeconds(delay);
+            for (float t = 0f; t < 1f; t += Time.deltaTime / _vanishDuration)
+            {
+                dice.transform.localScale = Vector3.Lerp(Vector3.zero, dice.BaseScale, t);
+                yield return null;
+            }
+            dice.transform.localScale = dice.BaseScale;
         }
     }
 }

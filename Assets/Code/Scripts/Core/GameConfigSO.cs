@@ -13,5 +13,9 @@ namespace Code.Scripts.Core
         [Header("Dice Case")]
         public int diceCaseCapacity = 12;
         public DiceSO[] startingDices;
+        
+        [Header("Initial Budget")]
+        public int shotsPerDay = 5;
+        public int rerollsPerDay = 2;
     }
 }
