@@ -169,7 +169,7 @@ namespace Code.Scripts.States.State
         
         private bool CheckIfWinnerValue()
         {
-            _scoreResult = DiceCalculator.Calculate(_thrownDiceTracker.Dice, _context.RunData.CursedObject, _result.LuckyNumber, _result.VictoryTolerance);
+            _scoreResult = DiceCalculator.Calculate(_thrownDiceTracker.Dice, _context.RunData.CursedObject, _result.LuckyNumber, _result.VictoryTolerance, _result.Day);
             return _scoreResult.IsSuccess;
         }
         

@@ -17,5 +17,7 @@ namespace Code.Scripts.Core
         [Header("Initial Budget")]
         public int shotsPerDay = 5;
         public int rerollsPerDay = 2;
+
+        public CursedObject.CursedObject[] startingCursedObjects = new CursedObject.CursedObject[0];
     }
 }
