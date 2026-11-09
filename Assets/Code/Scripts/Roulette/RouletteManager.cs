@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using Code.Scripts.Core;
 using UnityEngine;
 
@@ -53,7 +54,20 @@ namespace Code.Scripts.Roulette
         }
 
 
-        public int GetBossProbability(int day) => _settings.GetBossProbability(day);
+        public int GetBossProbability(int day, IReadOnlyList<Code.Scripts.CursedObject.CursedObject> passives = null, bool logEffects = false)
+        {
+            int probability = _settings.GetBossProbability(day);
+            if (passives != null)
+                foreach (var passive in passives)
+                    {
+                    if (passive == null) continue;
+                    int before = probability;
+                    probability = passive.ModifyBossProbability(day, probability);
+                    if (logEffects)
+                        Debug.Log($"[Objetos/Jefe] {passive.displayName} | Día {day} | {before}% -> {probability}%", passive);
+                }
+            return day == 4 ? 100 : Mathf.Clamp(probability, 0, 100);
+        }
 
         public bool TryValidate(GameProgress progress, out string error)
         {
@@ -65,22 +79,23 @@ namespace Code.Scripts.Roulette
             return error == null;
         }
 
-        public void Show(GameProgress progress)
+        public void Show(GameProgress progress, IReadOnlyList<Code.Scripts.CursedObject.CursedObject> passives = null)
         {
             if (progress == null || !progress.IsRoundPrepared)
                 throw new InvalidOperationException("Prepare the round before showing the roulette.");
-            _view.Show(GetBossProbability(progress.Day), progress.SelectedLuckyNumbers);
+            _view.Show(GetBossProbability(progress.Day, passives), progress.SelectedLuckyNumbers);
         }
 
         public void ShowResult(RouletteResult result) => _view.ShowResult(result);
         public void Hide() => _view.Hide();
 
-        public RouletteResult Spin(GameProgress progress)
+        public RouletteResult Spin(GameProgress progress, IReadOnlyList<Code.Scripts.CursedObject.CursedObject> passives = null)
         {
             if (!TryValidate(progress, out string error)) throw new InvalidOperationException(error);
             if (_view.IsSpinning) throw new InvalidOperationException("The roulette is already spinning.");
-            RouletteResult result = RouletteRules.Roll(progress, GetBossProbability(progress.Day), _random);
+            RouletteResult result = RouletteRules.Roll(progress, GetBossProbability(progress.Day, passives), _random);
             progress.ClearTestResult();
+            _view.Show(result.BossProbability, progress.SelectedLuckyNumbers);
             _view.Spin(result);
             return result;
         }

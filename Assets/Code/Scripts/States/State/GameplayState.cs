@@ -56,13 +56,16 @@ namespace Code.Scripts.States.State
             else
             {
                 // Aqui hay que comprobar contra el sistema de tiradas y reroll para ver si todavia puede hacer algo o no
-                Debug.Log("Dice Values not equals to target value: " + _scoreResult.TotalScore + " vs " + (_scoreResult.TargetScore - _scoreResult.Tolerance) + "-" + (_scoreResult.TargetScore + _scoreResult.Tolerance));
+                Debug.Log("Dice Values not equals to target value: " + _scoreResult.TotalScore + " vs " + _scoreResult.MinimumScore + "-" + _scoreResult.MaximumScore);
             }
         }
         
         private bool CheckIfWinnerValue()
         {
-            _scoreResult = DiceCalculator.Calculate(_outOfDrawer, _context.RunData.CursedObject, _result.LuckyNumber, _result.VictoryTolerance);
+            _scoreResult = DiceCalculator.Calculate(_outOfDrawer, _context.RunData.CursedObject, _result.LuckyNumber, _result.VictoryTolerance, _result.Day);
+            Debug.Log($"[Ronda] Suma: {_scoreResult.TotalScore} | Lucky Number: {_scoreResult.TargetScore} | " +
+                $"Rango para ganar: [{_scoreResult.MinimumScore}, {_scoreResult.MaximumScore}] (inclusive) | " +
+                $"Resultado: {(_scoreResult.IsSuccess ? "VICTORIA" : "FUERA DE RANGO")}");
             return _scoreResult.IsSuccess;
         }
         

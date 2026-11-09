@@ -37,8 +37,8 @@ namespace Code.Scripts.States.State
             
             if (!_progress.IsRoundPrepared) _rouletteManager.PrepareRound(_progress);
 
-            _rouletteManager.Show(_progress);
-            _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day));
+            _rouletteManager.Show(_progress, _context.RunData.CursedObject);
+            _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day, _context.RunData.CursedObject));
             if (_progress.HasResult)
             {
                _rouletteManager.ShowResult(_progress.CurrentResult);
@@ -65,10 +65,10 @@ namespace Code.Scripts.States.State
 
             try
             {
-                _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day));
+                _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day, _context.RunData.CursedObject));
                 _screen.ShowSpinning();
                 _spinning = true;
-                _rouletteManager.Spin(_progress);
+                _rouletteManager.Spin(_progress, _context.RunData.CursedObject);
             }
             catch (Exception exception) when (exception is ArgumentException || exception is InvalidOperationException)
             {
@@ -88,6 +88,14 @@ namespace Code.Scripts.States.State
             {
                 _progress.RecordResult(result);
                 _screen.ShowResult(result, true);
+                ScoreResult preview = DiceCalculator.PreviewTolerance(_context.RunData.CursedObject,
+                    result.LuckyNumber, result.VictoryTolerance, result.Day);
+                _rouletteManager.GetBossProbability(result.Day, _context.RunData.CursedObject, true);
+                Debug.Log($"[Ruleta] Semana {result.Week}, día {result.Day} | Lucky Number: {result.LuckyNumber} | " +
+                    $"Tolerancia base: +/-{result.VictoryTolerance} | " +
+                    $"Rango para ganar: [{preview.MinimumScore}, {preview.MaximumScore}] (inclusive) | " +
+                    $"Jefe: {_rouletteManager.GetBossProbability(result.Day)}% base -> {result.BossProbability}% aplicado | " +
+                    $"Encuentro: {(result.IsBoss ? "JEFE" : "NORMAL")}");
             }
             catch (InvalidOperationException exception)
             {

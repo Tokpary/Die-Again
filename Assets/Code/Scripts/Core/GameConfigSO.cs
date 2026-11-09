@@ -13,5 +13,8 @@ namespace Code.Scripts.Core
         [Header("Dice Case")]
         public int diceCaseCapacity = 12;
         public DiceSO[] startingDices;
+
+        [Header("Equipped passive objects at run start")]
+        public CursedObject.CursedObject[] startingCursedObjects = new CursedObject.CursedObject[0];
     }
 }

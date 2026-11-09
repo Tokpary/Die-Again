@@ -10,6 +10,11 @@ namespace Code.Scripts
         public int TotalScore { get;  set; }
         public int TargetScore { get;  set; }
         public int Tolerance { get;  set; }
-        public bool IsSuccess => Mathf.Abs(TotalScore - TargetScore) <= Tolerance;
+        public int LowerToleranceBonus { get; set; }
+        public int UpperToleranceBonus { get; set; }
+        public int Day { get; set; }
+        public int MinimumScore => TargetScore - Tolerance - LowerToleranceBonus;
+        public int MaximumScore => TargetScore + Tolerance + UpperToleranceBonus;
+        public bool IsSuccess => TotalScore >= MinimumScore && TotalScore <= MaximumScore;
     }
 }
