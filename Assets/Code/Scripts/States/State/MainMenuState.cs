@@ -54,9 +54,11 @@ namespace Code.Scripts.States.State
                     break;
                 case MainMenuOptionType.Settings:
                     Debug.Log("[MainMenu] Ir a configuración");
+                    _screen.ShowOptionsPanel(optionType);
                     break;
                 case MainMenuOptionType.Credits:
                     Debug.Log("[MainMenu] Ir a créditos");
+                    _screen.ShowOptionsPanel(optionType);
                     break;
             }
         }

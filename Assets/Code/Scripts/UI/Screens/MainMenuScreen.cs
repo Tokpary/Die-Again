@@ -8,9 +8,21 @@ namespace Code.Scripts.UI.Screens
     {
         [SerializeField] private Button _startButton;
         [SerializeField] private MainMenuOption[] _menuOptions;
+        [SerializeField] private MainMenuSettingsPanel _settingsPanel;
 
         public event Action<MainMenuOptionType> MenuOptionClicked;
         public event Action PlayButtonClicked;
+
+        public void ShowOptionsPanel(MainMenuOptionType optionType)
+        {
+            if (_settingsPanel == null)
+            {
+                Debug.LogError("[MainMenu] Asigna el panel en MainMenuScreen.", this);
+                return;
+            }
+
+            _settingsPanel.ShowFor(optionType);
+        }
 
         protected override void Awake()
         {
