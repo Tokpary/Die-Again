@@ -1581,7 +1581,7 @@ MonoBehaviour:
   _rouletteManager: {fileID: 1900317217}
   _diceDrawer: {fileID: 1735557864}
   _diceDragController: {fileID: 2101050958}
-  _diceAnimator: {fileID: 0}
+  _diceAnimator: {fileID: 2101050960}
 --- !u!4 &460063225
 Transform:
   m_ObjectHideFlags: 0
@@ -3287,6 +3287,14 @@ MonoBehaviour:
   _pointer: {fileID: 452438141}
   _spinDuration: 4
   _fullTurns: 5
+  _numberRingInnerRadius: 0.32
+  _numberRingOuterRadius: 0.94
+  _numberOutwardOffset: 0.35
+  _numberSurfaceGap: 0.00002
+  _labelColor: {r: 1, g: 0.91, b: 0.7, a: 1}
+  _numberFont: {fileID: 0}
+  _baseFontSize: 36
+  _numberSizeMultiplier: 0.65
 --- !u!1 &2101050957
 GameObject:
   m_ObjectHideFlags: 0
@@ -3297,6 +3305,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2101050959}
   - component: {fileID: 2101050958}
+  - component: {fileID: 2101050960}
   m_Layer: 0
   m_Name: DiceDragController
   m_TagString: Untagged
@@ -3338,6 +3347,46 @@ Transform:
   m_Children: []
   m_Father: {fileID: 460063225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2101050960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101050957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8433a2d201bd4b9da71b6f2e69fa6152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceAnimator
+  _arcDuration: 0.5
+  _arcHeight: 2
+  _arcCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _stagger: 0.08
+  _vanishDuration: 0.5
 --- !u!1 &2120568605
 GameObject:
   m_ObjectHideFlags: 0
