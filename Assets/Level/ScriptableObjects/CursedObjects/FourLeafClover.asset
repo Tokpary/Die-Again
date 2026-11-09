@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44874b70b57d4da8b5b7561e9db19aab, type: 3}
+  m_Name: FourLeafClover
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.CursedObject.CursedObjects.FourLeafClover
+  displayName: Trébol de cuatro hojas
+  description: +1 inferior y superior durante el día 1 de cada semana.
+  lowerToleranceIncrease: 1
+  upperToleranceIncrease: 1

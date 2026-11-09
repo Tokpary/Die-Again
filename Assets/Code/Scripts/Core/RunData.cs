@@ -13,6 +13,10 @@ namespace Code.Scripts.Core
         public RunData(GameConfigSO config)
         {
             Progress = new GameProgress(config.InitialWeek, config.InitialDay);
+            if (config.startingCursedObjects != null)
+                foreach (var passive in config.startingCursedObjects)
+                    if (passive != null && !CursedObject.Contains(passive))
+                        CursedObject.Add(passive);
             DiceCase = new DiceCase(config.diceCaseCapacity);
             foreach (DiceSO dice in config.startingDices)
             {
