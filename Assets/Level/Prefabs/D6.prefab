@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: D6
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab1ac15f218e8ce4f95d0f6f9ccd297c, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -66,6 +70,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ab1ac15f218e8ce4f95d0f6f9ccd297c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4723119766698815250}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ab1ac15f218e8ce4f95d0f6f9ccd297c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6939954841522258775}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ab1ac15f218e8ce4f95d0f6f9ccd297c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -9137997669843775783}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ab1ac15f218e8ce4f95d0f6f9ccd297c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1926386813329140947}
   m_SourcePrefab: {fileID: 100100000, guid: ab1ac15f218e8ce4f95d0f6f9ccd297c, type: 3}
 --- !u!1 &6778794177474309131 stripped
 GameObject:
@@ -99,6 +112,66 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DiceFaceShaderData
   diceData: {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
+--- !u!114 &6939954841522258775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6778794177474309131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c00af978cf9847edaa15227110d02a7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.Dice
+--- !u!65 &-9137997669843775783
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6778794177474309131}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.025347218, y: 0.025347214, z: 0.025347214}
+  m_Center: {x: -0.000000013038516, y: -0.0000000055879346, z: -9.313224e-10}
+--- !u!54 &-1926386813329140947
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6778794177474309131}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 2
 --- !u!33 &7131193112200280340 stripped
 MeshFilter:
   m_CorrespondingSourceObject: {fileID: -5754084199372789682, guid: ab1ac15f218e8ce4f95d0f6f9ccd297c, type: 3}

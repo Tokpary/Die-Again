@@ -1,4 +1,5 @@
 using System;
+using Code.Scripts.Core;
 using Code.Scripts.Roulette;
 using Code.Scripts.UI.Screens;
 using UnityEngine;
@@ -7,11 +8,12 @@ namespace Code.Scripts.States.State
 {
     public class RouletteState : AState
     {
-        private readonly System.Random _random = new System.Random();
         private RouletteScreen _screen;
         private bool _active;
         private bool _spinning;
-
+        
+        private RouletteManager _rouletteManager => _context.RouletteManager;
+        private GameProgress _progress => _context.RunData.Progress;
         public RouletteState(GameContext context, IStateMachine stateMachine) : base(context, stateMachine)
         {
         }
@@ -24,61 +26,49 @@ namespace Code.Scripts.States.State
             _screen = _context.UIManager.ShowScreen<RouletteScreen>();
             _screen.SpinButtonClicked += OnSpinButtonClicked;
             _screen.NextButtonClicked += OnPlayButtonClicked;
-            if (_context.RouletteView != null)
-            {
-                _context.RouletteView.SpinCompleted += OnSpinCompleted;
-                _context.RouletteView.SpinCancelled += OnSpinCancelled;
-            }
+            _rouletteManager.OnSpinCompleted += OnSpinCompleted;
+            _rouletteManager.OnSpinCancelled += OnSpinCancelled;
 
             if (!TryValidate(out string error))
             {
                 _screen.ShowError(error);
                 return;
             }
+            
+            if (!_progress.IsRoundPrepared) _rouletteManager.PrepareRound(_progress);
 
-            int probability = _context.RouletteSettings.GetBossProbability(_context.Progress.Day);
-            _context.RouletteView.Show(probability);
-            _screen.ShowPreview(_context.Progress, probability);
-            if (_context.Progress.HasResult)
+            _rouletteManager.Show(_progress);
+            _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day));
+            if (_progress.HasResult)
             {
-                _context.RouletteView.ShowResult(_context.Progress.CurrentResult);
-                _screen.ShowResult(_context.Progress.CurrentResult, !_context.Progress.IsRoundStarted);
+               _rouletteManager.ShowResult(_progress.CurrentResult);
+                _screen.ShowResult(_progress.CurrentResult, !_progress.IsRoundStarted);
             }
         }
 
         private bool TryValidate(out string error)
         {
-            error = null;
-            if (_context.RouletteSettings == null || _context.RouletteView == null || _context.Progress == null)
-                error = "Faltan referencias de la ruleta en GameManager.";
-            else if (!_context.RouletteSettings.TryValidate(out error)) return false;
-            else if (!_context.RouletteView.TryValidate(out error)) return false;
-            else if (_context.Progress.IsComplete) error = "Partida completada: los tres jefes han sido derrotados.";
-            else if (!_context.Progress.IsRoundPrepared)
-                error = "La progresión debe preparar el rango antes de anunciarlo y entrar en la ruleta.";
+            if (!_rouletteManager.TryValidate(_progress, out error)) return false;
+            if(_progress.IsComplete) error = "El juego ha finalizado. No se puede continuar.";
             return error == null;
         }
 
         // The test button and future automatic entry both use this single operation.
         public void RequestSpin()
         {
-            if (!_active || _spinning) return;
+            if (!_active || _spinning || _progress.IsRoundStarted) return;
             if (!TryValidate(out string error))
             {
                 _screen.ShowError(error);
                 return;
             }
-            if (_context.Progress.IsRoundStarted) return;
 
             try
             {
-                int probability = _context.RouletteSettings.GetBossProbability(_context.Progress.Day);
-                RouletteResult result = RouletteRules.Roll(_context.Progress, probability, _random);
-                _context.Progress.ClearTestResult();
-                _screen.ShowPreview(_context.Progress, probability);
+                _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day));
                 _screen.ShowSpinning();
                 _spinning = true;
-                _context.RouletteView.Spin(result);
+                _rouletteManager.Spin(_progress);
             }
             catch (Exception exception) when (exception is ArgumentException || exception is InvalidOperationException)
             {
@@ -96,7 +86,7 @@ namespace Code.Scripts.States.State
             _spinning = false;
             try
             {
-                _context.Progress.RecordResult(result);
+                _progress.RecordResult(result);
                 _screen.ShowResult(result, true);
             }
             catch (InvalidOperationException exception)
@@ -115,8 +105,8 @@ namespace Code.Scripts.States.State
 
         private void OnPlayButtonClicked()
         {
-            if (!_active || _spinning || !_context.Progress.HasResult) return;
-            _context.Progress.StartRound();
+            if (!_active || _spinning || !_progress.HasResult) return;
+            _progress.StartRound();
             _stateMachine.ChangeState(new GameplayState(_context, _stateMachine));
         }
 
@@ -130,12 +120,9 @@ namespace Code.Scripts.States.State
                 _screen.SpinButtonClicked -= OnSpinButtonClicked;
                 _screen.NextButtonClicked -= OnPlayButtonClicked;
             }
-            if (_context.RouletteView != null)
-            {
-                _context.RouletteView.SpinCompleted -= OnSpinCompleted;
-                _context.RouletteView.SpinCancelled -= OnSpinCancelled;
-                _context.RouletteView.Hide();
-            }
+            _rouletteManager.OnSpinCompleted -= OnSpinCompleted;
+            _rouletteManager.OnSpinCancelled -= OnSpinCancelled;
+            _rouletteManager.Hide();
             base.Exit();
         }
     }

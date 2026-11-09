@@ -1,29 +1,36 @@
 using Code.Scripts.States;
 using Code.Scripts.UI;
 using Code.Scripts.Core;
+using Code.Scripts.Dice;
 using Code.Scripts.Roulette;
 
 namespace Code.Scripts
 {
     public class GameContext 
     {
-        public IStateMachine StateMachine { get; private set; }
         public UIManager UIManager { get; private set; }
         public GameInputs GameInputs { get; private set; }
         public DiceThrower DiceThrower { get; private set; }
-        public GameProgress Progress { get; private set; }
-        public RouletteSO RouletteSettings { get; private set; }
-        public RouletteView RouletteView { get; private set; }
+        public RouletteManager RouletteManager { get; private set; }
+        public GameConfigSO GameConfig { get; private set; }
+        public RunData RunData { get; set; }
+        public DiceDrawer DiceDrawer { get; private set; }
+        public DiceDragController DiceDragController { get; set; }
+        public DiceAnimator DiceAnimator { get; private set; }
 
-        public GameContext(UIManager uiManager, GameInputs gameInputs, DiceThrower diceThrower,
-            GameProgress progress, RouletteSO rouletteSettings, RouletteView rouletteView)
+        public GameContext(UIManager uiManager, GameInputs gameInputs, DiceThrower diceThrower, RouletteManager rouletteManager, 
+            RunData runData, GameConfigSO gameConfig, DiceDrawer diceDrawer, DiceDragController diceDragController = null,
+            DiceAnimator diceAnimator = null)
         {
             UIManager = uiManager;
             GameInputs = gameInputs;
             DiceThrower = diceThrower;
-            Progress = progress;
-            RouletteSettings = rouletteSettings;
-            RouletteView = rouletteView;
+            RouletteManager = rouletteManager;
+            RunData = runData;
+            DiceDrawer = diceDrawer;
+            GameConfig = gameConfig;
+            DiceDragController = diceDragController;
+            DiceAnimator = diceAnimator;
         }
 
     }

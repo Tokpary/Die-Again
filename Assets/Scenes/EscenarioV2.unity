@@ -1778,8 +1778,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 992c3aa6305c6ec49a8f9422c4f567ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CurvedText
-  arcHeight: 1
-  tmp: {fileID: 0}
 --- !u!1 &300400264 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3842449057911880834, guid: d1076131b2ba36146b96a781faade423, type: 3}
@@ -2076,6 +2074,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.UI.Screens.RouletteScreen
   _nextButton: {fileID: 606505852}
+  _spinButton: {fileID: 0}
+  _previewText: {fileID: 0}
+  _resultText: {fileID: 0}
 --- !u!225 &356616534
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2648,6 +2649,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Core.GameManager
   _uiManager: {fileID: 1191537472}
   _diceThrower: {fileID: 742560846}
+  _rouletteSettings: {fileID: 0}
+  _rouletteView: {fileID: 0}
+  _startInRouletteForTesting: 0
+  _initialWeek: 1
+  _initialDay: 1
 --- !u!4 &460063225
 Transform:
   m_ObjectHideFlags: 0

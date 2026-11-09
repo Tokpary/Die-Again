@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4a5d8b89e134494b7b51bd15c577381, type: 3}
-  m_Name: D8
+  m_Name: D2
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
-  faceValues: 0100000002000000030000000400000005000000060000000700000008000000
+  faceValues: 0100000002000000
   diceMaterial: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: -490025098210845299, guid: 005f5999ca6c22c48a82ce973c5be2fe, type: 3}
