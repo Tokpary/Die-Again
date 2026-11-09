@@ -3287,6 +3287,14 @@ MonoBehaviour:
   _pointer: {fileID: 452438141}
   _spinDuration: 4
   _fullTurns: 5
+  _numberRingInnerRadius: 0.24
+  _numberRingOuterRadius: 0.88
+  _numberOutwardOffset: 0.537
+  _numberSurfaceGap: 0.00002
+  _labelColor: {r: 1, g: 0.9, b: 0.66, a: 1}
+  _numberFont: {fileID: 0}
+  _baseFontSize: 36
+  _numberSizeMultiplier: 0.413
 --- !u!1 &2101050957
 GameObject:
   m_ObjectHideFlags: 0

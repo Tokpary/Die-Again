@@ -7,8 +7,7 @@ Shader "DiceMaster/Roulette Sectors"
         _NormalColor ("Normal", Color) = (0.07, 0.28, 0.24, 1)
         _BossColor ("Boss", Color) = (0.7, 0.06, 0.12, 1)
         _TrimColor ("Trim", Color) = (0.8, 0.57, 0.25, 1)
-
-        _SliceCount ("Number of slices", Range(4, 60)) = 20
+        _SliceCount ("Number of slices", Range(1, 20)) = 20
         _SliceLineWidth ("Slice line width", Range(0.001, 0.02)) = 0.004
     }
 
@@ -24,7 +23,6 @@ Shader "DiceMaster/Roulette Sectors"
         Pass
         {
             Tags { "LightMode"="SRPDefaultUnlit" }
-
             Cull Off
 
             HLSLPROGRAM
@@ -49,7 +47,6 @@ Shader "DiceMaster/Roulette Sectors"
                 float4 _NormalColor;
                 float4 _BossColor;
                 float4 _TrimColor;
-
                 float _BossFraction;
                 float _SliceCount;
                 float _SliceLineWidth;
@@ -74,28 +71,28 @@ Shader "DiceMaster/Roulette Sectors"
                     atan2(p.x, p.y) / 6.28318530718 + 1.0
                 );
 
-                // Original boss probability logic.
                 half4 color = angle < _BossFraction
                     ? _BossColor
                     : _NormalColor;
 
-                // Decorative radial divisions.
-                float slicePosition = angle * max(1.0, round(_SliceCount));
-                float distanceToBoundary =
-                    min(frac(slicePosition), 1.0 - frac(slicePosition));
+                float count = max(1.0, round(_SliceCount));
+                float slicePosition = angle * count;
+
+                float distanceToBoundary = min(
+                    frac(slicePosition),
+                    1.0 - frac(slicePosition)
+                );
 
                 float lineDistance =
-                    distanceToBoundary * 6.28318530718
-                    / max(1.0, round(_SliceCount));
+                    distanceToBoundary * 6.28318530718 / count;
 
-                if (lineDistance * radius < _SliceLineWidth
-                    && radius > 0.10
-                    && radius < 0.96)
+                if (lineDistance * radius < _SliceLineWidth &&
+                    radius > 0.10 &&
+                    radius < 0.96)
                 {
                     color = _TrimColor;
                 }
 
-                // Keep only the outer golden ring and central decoration.
                 if (radius > 0.97 || radius < 0.045)
                 {
                     color = _TrimColor;
