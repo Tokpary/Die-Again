@@ -1,11 +1,15 @@
+
 using System;
+using System.Collections.Generic;
 using Code.Scripts.Roulette;
 
 namespace Code.Scripts.Core
 {
-    // Runtime data owned by GameManager. Only confirmed victories advance the run.
+    // Runtime state persists across roulette rerolls and UI transitions.
     public class GameProgress
     {
+        private readonly List<int> _selectedLuckyNumbers = new List<int>();
+        public IReadOnlyList<int> SelectedLuckyNumbers => _selectedLuckyNumbers.AsReadOnly();
         public int Week { get; private set; }
         public int Day { get; private set; }
         public int RoundId { get; private set; } = 1;
@@ -25,21 +29,25 @@ namespace Code.Scripts.Core
             Day = day;
         }
 
-        // Call before announcing a range in the shop, or before the first roulette.
-        // Once announced, the interval cannot change until that round is completed.
-        public void PrepareNextRound(int minimum, int maximum)
+        // Idempotent within a round: the same numbers, in the same positions, survive rerolls.
+        public void PrepareNextRound(int minimum, int maximum, int maximumSlices = 20, Random random = null)
         {
             if (IsComplete) throw new InvalidOperationException("The run is complete.");
             RouletteRules.ValidateRange(minimum, maximum);
+            if (maximumSlices < 1 || maximumSlices > 20)
+                throw new ArgumentOutOfRangeException(nameof(maximumSlices), "The roulette supports 1 to 20 slices.");
             if (IsRoundPrepared)
             {
-                if (minimum != NextLuckyNumberMinimum || maximum != NextLuckyNumberMaximum)
-                    throw new InvalidOperationException("The announced Lucky Number range is locked.");
+                if (minimum != NextLuckyNumberMinimum || maximum != NextLuckyNumberMaximum ||
+                    _selectedLuckyNumbers.Count != Math.Min(maximumSlices, maximum - minimum + 1))
+                    throw new InvalidOperationException("The announced Lucky Number selection is locked.");
                 return;
             }
 
+            var selection = RouletteRules.SelectNumbers(minimum, maximum, maximumSlices, random ?? new Random());
             NextLuckyNumberMinimum = minimum;
             NextLuckyNumberMaximum = maximum;
+            _selectedLuckyNumbers.AddRange(selection);
             IsRoundPrepared = true;
         }
 
@@ -56,13 +64,16 @@ namespace Code.Scripts.Core
             if (!IsRoundPrepared || IsRoundStarted || IsComplete || result.RoundId != RoundId ||
                 result.Week != Week || result.Day != Day ||
                 result.Minimum != NextLuckyNumberMinimum || result.Maximum != NextLuckyNumberMaximum ||
-                result.LuckyNumber < result.Minimum || result.LuckyNumber > result.Maximum ||
                 result.BossProbability < 0 || result.BossProbability > 100 ||
                 (Day == 4 && (!result.IsBoss || result.BossProbability != 100)) ||
                 (result.BossProbability == 0 && result.IsBoss) ||
-                (result.BossProbability == 100 && !result.IsBoss))
-                throw new InvalidOperationException("The roulette result does not belong to the prepared round.");
-
+                (result.BossProbability == 100 && !result.IsBoss) ||
+                result.StopAngle < 0 || result.StopAngle >= 360 ||
+                result.SliceIndex < 0 || result.SliceIndex >= _selectedLuckyNumbers.Count ||
+                _selectedLuckyNumbers[result.SliceIndex] != result.LuckyNumber ||
+                RouletteRules.GetSliceIndex(result.StopAngle, _selectedLuckyNumbers.Count) != result.SliceIndex ||
+                RouletteRules.IsBossAtAngle(result.StopAngle, result.BossProbability) != result.IsBoss)
+                throw new InvalidOperationException("The roulette result does not match the prepared wheel.");
             CurrentResult = result;
             HasResult = true;
         }
@@ -74,30 +85,20 @@ namespace Code.Scripts.Core
             IsRoundStarted = true;
         }
 
-        // Future scoring code calls this once after confirming victory. UI Next is not victory.
         public void CompleteRound()
         {
             if (!IsRoundStarted || !HasResult || IsComplete)
                 throw new InvalidOperationException("There is no active round to complete.");
-
             IsRoundStarted = false;
             IsRoundPrepared = false;
+            _selectedLuckyNumbers.Clear();
             if (CurrentResult.IsBoss && Week == 3)
             {
                 IsComplete = true;
                 return;
             }
-
-            if (CurrentResult.IsBoss)
-            {
-                Week++;
-                Day = 1;
-            }
-            else
-            {
-                Day++;
-            }
-
+            if (CurrentResult.IsBoss) { Week++; Day = 1; }
+            else Day++;
             RoundId++;
             HasResult = false;
             CurrentResult = default;
