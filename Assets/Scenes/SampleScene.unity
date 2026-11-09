@@ -631,7 +631,7 @@ Transform:
   m_GameObject: {fileID: 180552379}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.00884, z: 0.00318}
+  m_LocalPosition: {x: 0, y: -0.00884, z: 0.00239}
   m_LocalScale: {x: 0.019872, y: 0.019872, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1581,6 +1581,7 @@ MonoBehaviour:
   _rouletteManager: {fileID: 1900317217}
   _diceDrawer: {fileID: 1735557864}
   _diceDragController: {fileID: 2101050958}
+  _diceAnimator: {fileID: 0}
 --- !u!4 &460063225
 Transform:
   m_ObjectHideFlags: 0
@@ -2897,6 +2898,7 @@ MonoBehaviour:
   - {fileID: 1002546701}
   - {fileID: 109458817}
   - {fileID: 958001302}
+  _returnDropHeight: 1
 --- !u!4 &1735557865
 Transform:
   m_ObjectHideFlags: 0
