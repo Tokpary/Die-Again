@@ -29,14 +29,23 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Distortion: 4
-    - _EdgeWidth: 0.071
+    - _BevelStrength: 0.8
+    - _BevelWidth: 0.1
+    - _DeformAmount: 0.0111
+    - _DeformFrequency: 8
+    - _Distortion: 3.53
+    - _EdgeWidth: 0.077
     - _EffectIntensity: 3.51
+    - _GlossPower: 36
+    - _GlossStrength: 0.35
+    - _JellyFrequency: 2
+    - _JellySpeed: 0.55
+    - _JellyStrength: 0.18
     - _NumberClearance: 0
     - _NumberMode: 0
     - _PatternInvSize: 1
-    - _WaveScale: 3.01
-    - _WaveSpeed: 0.97
+    - _WaveScale: 3.97
+    - _WaveSpeed: 1.37
     - _WaveWidth: 0.293
     m_Colors:
     - _BaseColor: {r: 0.003, g: 0.003, b: 0.005, a: 1}
