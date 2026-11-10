@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -12,16 +13,26 @@ namespace Code.Scripts.Dice
         private readonly List<Dice> _dice = new List<Dice>();
         [SerializeField] private float _returnDropHeight = 1f;
         [SerializeField] Transform _drawerTransform;
+        [SerializeField] private Rigidbody _drawerRigidbody;
+        [SerializeField] private BoxCollider _area;
         private Vector3 _closedPosition;
-        public void Open(DiceCase diceCase)
+
+        public Bounds Area => _area.bounds;
+        public Vector3 DropPoint => _area.bounds.center + Vector3.up * _returnDropHeight;
+
+        private void Awake()
         {
             _closedPosition = _drawerTransform.position;
-            _drawerTransform.DOMove(_closedPosition + Vector3.forward * -2.5f, 1.5f).SetEase(Ease.OutBack);
+        }
+
+        public void Open(DiceCase diceCase)
+        {
+            _drawerTransform.DOMove(_closedPosition + Vector3.forward * -2.5f, 1.5f).SetEase(Ease.OutQuad);
         }
 
         public void Close()
         {
-            _drawerTransform.DOMove(_closedPosition, 1.5f).SetEase(Ease.InBack);
+            _drawerTransform.DOMove(_closedPosition, 1.5f).SetEase(Ease.InOutSine);
         }
 
         public void Populate(DiceCase diceCase)
@@ -70,6 +81,20 @@ namespace Code.Scripts.Dice
             diceCase.Remove(dice.Data);
             _dice.Remove(dice);
             Destroy(dice.gameObject);
+        }
+
+        private void FixedUpdate()
+        {
+            float floorY = _area.bounds.min.y - 0.5f;
+            foreach (Dice dice in _dice)
+            {
+                if (dice == null || dice.transform.position.y >= floorY) continue;
+                var rb = dice.GetComponent<Rigidbody>();
+                if(rb.isKinematic) continue;
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.position = DropPoint;
+            }
         }
     }
 }
