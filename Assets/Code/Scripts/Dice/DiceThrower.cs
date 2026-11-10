@@ -1,5 +1,6 @@
 using System;
 using Code.Scripts.Dice;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -11,6 +12,8 @@ public class DiceThrower : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private LayerMask aimMask = ~0;    
     [SerializeField] private float shotSpeed = 15f;
+    [SerializeField] private Transform _holdPoint;
+    private int _loadedDiceLayer;
     
     private DiceDragController diceDragController;
 
@@ -67,22 +70,36 @@ public class DiceThrower : MonoBehaviour
     {
         if (!hasAimPoint || diceRb == null) return;
 
-        diceRb.isKinematic = false;
-        Vector3 velocity = (aimPoint - diceRb.position).normalized * shotSpeed;
-
-        diceRb.AddForce(velocity, ForceMode.VelocityChange);
-        diceRb.AddTorque(Random.insideUnitSphere * 10f, ForceMode.VelocityChange);
-
-        Dice shot = _loadedDice;
-        _loadedDice = null;
+        Rigidbody rb = diceRb;
+        Dice shot = ReleaseLoadedDice();
         diceRb = null;
+        
+        rb.isKinematic = false;
+        Vector3 velocity = (aimPoint - rb.position).normalized * shotSpeed;
+
+        rb.AddForce(velocity, ForceMode.VelocityChange);
+        rb.AddTorque(Random.insideUnitSphere * 10f, ForceMode.VelocityChange);
+
         OnDiceShot?.Invoke(shot);
     }
 
     public Dice UnloadDice()
     {
-        Dice dice = _loadedDice;
+        Dice dice = ReleaseLoadedDice();
         diceRb = null;
+        return dice;
+    }
+
+    private Dice ReleaseLoadedDice()
+    {
+        Dice dice = _loadedDice;
+        if(dice == null) return null;
+
+        dice.transform.DOKill();
+        dice.transform.SetParent(null, true);
+        SetLayer(dice.gameObject, _loadedDiceLayer);
+        diceRb.interpolation = RigidbodyInterpolation.Interpolate;
+        
         _loadedDice = null;
         return dice;
     }
@@ -92,9 +109,14 @@ public class DiceThrower : MonoBehaviour
         _loadedDice = dice;
         diceRb = dice.GetComponent<Rigidbody>();
         diceRb.isKinematic = true;
-        dice.transform.SetParent(null);
-        diceRb.position = transform.position + transform.forward * 1.5f + Vector3.up * -0.5f;
-        diceRb.rotation = Quaternion.identity;
+        diceRb.interpolation = RigidbodyInterpolation.None;
+        
+        _loadedDiceLayer = dice.gameObject.layer;
+        SetLayer(dice.gameObject, LayerMask.NameToLayer("Ignore Raycast"));
+        
+        dice.transform.SetParent(_holdPoint, true);
+        dice.transform.DOLocalMove(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
+        dice.transform.DOLocalRotateQuaternion(Quaternion.identity, 0.2f).SetEase(Ease.OutBack);
     }
 
     private void OnDrawGizmos()
@@ -108,5 +130,14 @@ public class DiceThrower : MonoBehaviour
     {
         this.diceDragController = diceDragController;
         gameInput = gameInputs;
+    }
+    
+    private static void SetLayer(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+        foreach (Transform child in obj.GetComponentsInChildren<Transform>(true))
+        {
+            child.gameObject.layer = layer;
+        }
     }
 }

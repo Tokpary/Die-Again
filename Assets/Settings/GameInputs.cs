@@ -109,6 +109,15 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Orbitar"",
+                    ""type"": ""Value"",
+                    ""id"": ""617cac7c-b1ab-4bdb-8af1-23b729a6fb21"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -133,6 +142,39 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Apuntar"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""3ee0a1ab-f2f7-45bd-9e09-364834a327c8"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Orbitar"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""42e8d8c6-ec96-46ee-acb1-04d0b793c00b"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Orbitar"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""6c72ce88-3368-48d4-b438-19e0cc5d779d"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Orbitar"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -143,6 +185,7 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Disparo = m_Gameplay.FindAction("Disparo", throwIfNotFound: true);
         m_Gameplay_Apuntar = m_Gameplay.FindAction("Apuntar", throwIfNotFound: true);
+        m_Gameplay_Orbitar = m_Gameplay.FindAction("Orbitar", throwIfNotFound: true);
     }
 
     ~@GameInputs()
@@ -225,6 +268,7 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
     private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
     private readonly InputAction m_Gameplay_Disparo;
     private readonly InputAction m_Gameplay_Apuntar;
+    private readonly InputAction m_Gameplay_Orbitar;
     /// <summary>
     /// Provides access to input actions defined in input action map "Gameplay".
     /// </summary>
@@ -244,6 +288,10 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Gameplay/Apuntar".
         /// </summary>
         public InputAction @Apuntar => m_Wrapper.m_Gameplay_Apuntar;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Orbitar".
+        /// </summary>
+        public InputAction @Orbitar => m_Wrapper.m_Gameplay_Orbitar;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -276,6 +324,9 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
             @Apuntar.started += instance.OnApuntar;
             @Apuntar.performed += instance.OnApuntar;
             @Apuntar.canceled += instance.OnApuntar;
+            @Orbitar.started += instance.OnOrbitar;
+            @Orbitar.performed += instance.OnOrbitar;
+            @Orbitar.canceled += instance.OnOrbitar;
         }
 
         /// <summary>
@@ -293,6 +344,9 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
             @Apuntar.started -= instance.OnApuntar;
             @Apuntar.performed -= instance.OnApuntar;
             @Apuntar.canceled -= instance.OnApuntar;
+            @Orbitar.started -= instance.OnOrbitar;
+            @Orbitar.performed -= instance.OnOrbitar;
+            @Orbitar.canceled -= instance.OnOrbitar;
         }
 
         /// <summary>
@@ -347,5 +401,12 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnApuntar(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Orbitar" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnOrbitar(InputAction.CallbackContext context);
     }
 }

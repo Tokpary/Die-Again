@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Code.Scripts.Dice
@@ -8,15 +9,17 @@ namespace Code.Scripts.Dice
         [SerializeField] private Transform[] _slots;
         private readonly List<Dice> _dice = new List<Dice>();
         [SerializeField] private float _returnDropHeight = 1f;
-
+        [SerializeField] Transform _drawerTransform;
+        private Vector3 _closedPosition;
         public void Open(DiceCase diceCase)
         {
-            // Animación de apertura del cajón de dados
+            _closedPosition = _drawerTransform.position;
+            _drawerTransform.DOMove(_closedPosition + Vector3.forward * -2.5f, 1.5f).SetEase(Ease.OutBack);
         }
 
         public void Close()
         {
-            // Animación de cierre del cajón de dados
+            _drawerTransform.DOMove(_closedPosition, 1.5f).SetEase(Ease.InBack);
         }
 
         public void Populate(DiceCase diceCase)

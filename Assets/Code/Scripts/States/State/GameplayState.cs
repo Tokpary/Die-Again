@@ -5,6 +5,7 @@ using Code.Scripts.Dice;
 using Code.Scripts.Roulette;
 using Code.Scripts.Rounds;
 using Code.Scripts.UI.Screens;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Code.Scripts.States.State
@@ -20,6 +21,7 @@ namespace Code.Scripts.States.State
         private bool _ending;
         private readonly HashSet<Dice.Dice> _freeShots = new HashSet<Dice.Dice>();
         private bool _rerolling;
+        private Tween _cameraReturn;
         public GameplayState(GameContext context, IStateMachine stateMachine) : base(context, stateMachine)
         {
         }
@@ -29,20 +31,23 @@ namespace Code.Scripts.States.State
             base.Enter();
             _result = _context.RunData.Progress.CurrentResult;
             Debug.Log("Entering gameplay State");
-            _screen = _context.UIManager.ShowScreen<GameplayScreen>();
-            _screen.NextButtonClicked += OnPlayButtonClicked;
-            _screen.ShowWinningScore(_result.LuckyNumber, _result.VictoryTolerance);
-            _context.DiceDragController.DroppedOnCannon += OnDiceDropped;
-            _context.GameInputs.Gameplay.Enable();
-            _context.DiceDrawer.Open(_context.RunData.DiceCase);
-            _budget = new RoundBudget(_context.GameConfig.shotsPerDay, _context.GameConfig.rerollsPerDay);
-            _budget.OnBudgetChanged += RefreshBudget;
-            _thrownDiceTracker = new ThrownDiceTracker();
-            _thrownDiceTracker.AllSettled += OnAllDiceSettled;
-            _context.DiceThrower.OnDiceShot += OnDiceShot;
-            _screen.RerollButtonClicked += OnRerollButtonClicked;
-            _context.DiceDragController.DiceSelected += OnDiceSelected;
-            RefreshBudget();
+            _context.CameraController.MoveTo(CameraShotId.Gameplay, () =>
+            {
+                _screen = _context.UIManager.ShowScreen<GameplayScreen>();
+                _screen.NextButtonClicked += OnPlayButtonClicked;
+                _screen.ShowWinningScore(_result.LuckyNumber, _result.VictoryTolerance);
+                _context.DiceDragController.DroppedOnCannon += OnDiceDropped;
+                _context.GameInputs.Gameplay.Enable();
+                _context.DiceDrawer.Open(_context.RunData.DiceCase);
+                _budget = new RoundBudget(_context.GameConfig.shotsPerDay, _context.GameConfig.rerollsPerDay);
+                _budget.OnBudgetChanged += RefreshBudget;
+                _thrownDiceTracker = new ThrownDiceTracker();
+                _thrownDiceTracker.AllSettled += OnAllDiceSettled;
+                _context.DiceThrower.OnDiceShot += OnDiceShot;
+                _screen.RerollButtonClicked += OnRerollButtonClicked;
+                _context.DiceDragController.DiceSelected += OnDiceSelected;
+                RefreshBudget();
+            });
         }
 
         private void OnDiceSelected(Dice.Dice obj)
@@ -109,6 +114,20 @@ namespace Code.Scripts.States.State
         {
             _scoreResult = DiceCalculator.Calculate(_thrownDiceTracker.Dice, _context.RunData.CursedObject, _result.LuckyNumber, _result.VictoryTolerance);
             _screen.ShowScore(_scoreResult.TotalScore);
+            
+            CancelCameraReturn();
+            _cameraReturn = DOVirtual.DelayedCall(1.5f, () =>
+            {
+                _cameraReturn = null;
+                _context.CameraController.MoveTo(CameraShotId.Gameplay);
+            });
+            
+        }
+
+        private void CancelCameraReturn()
+        {
+            if(_cameraReturn != null && _cameraReturn.IsActive()) _cameraReturn.Kill();
+            _cameraReturn = null;
         }
 
         private void RefreshBudget()
@@ -125,7 +144,7 @@ namespace Code.Scripts.States.State
             _budget.OnBudgetChanged -= RefreshBudget;
             _thrownDiceTracker.AllSettled -= OnAllDiceSettled;
             _thrownDiceTracker.Clear();
-            _context.DiceThrower.OnDiceShot -= _thrownDiceTracker.Add;
+            _context.DiceThrower.OnDiceShot -= OnDiceShot;
             _screen.RerollButtonClicked -= OnRerollButtonClicked;
             _context.DiceDragController.DiceSelected -= OnDiceSelected;
             _context.DiceDragController.SelectionMode = false;
@@ -183,6 +202,7 @@ namespace Code.Scripts.States.State
             }
             _context.DiceThrower.LoadDice(dice);
             _outOfDrawer.Add(dice);
+            _context.CameraController.MoveTo(CameraShotId.Throwing);
         }
     }
 }

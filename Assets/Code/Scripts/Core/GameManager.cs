@@ -17,6 +17,7 @@ namespace Code.Scripts.Core
         [SerializeField] private DiceDrawer _diceDrawer;
         [SerializeField] private DiceDragController _diceDragController;
         [SerializeField] private DiceAnimator _diceAnimator;
+        [SerializeField] private CameraController _cameraController;
         
         private RunData _runData;
         private GameInputs _gameInputs;
@@ -29,9 +30,10 @@ namespace Code.Scripts.Core
             _gameInputs = new GameInputs();
             if (_diceThrower != null) _diceThrower.Init(_gameInputs, _diceDragController);
             if(_diceDragController != null) _diceDragController.Init(_gameInputs);
+            if(_cameraController != null) _cameraController.Init(_gameInputs);
             _gameInputs.Gameplay.Disable();
             _runData = new RunData(_gameConfig);
-            _gameContext = new GameContext(_uiManager, _gameInputs, _diceThrower, _rouletteManager, _runData, _gameConfig, _diceDrawer, _diceDragController, _diceAnimator);
+            _gameContext = new GameContext(_uiManager, _gameInputs, _diceThrower, _rouletteManager, _runData, _gameConfig, _diceDrawer, _diceDragController, _diceAnimator, _cameraController);
             _stateMachine = new GameStateMachine();
         }
 

@@ -9,16 +9,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 18.75392
+      value: -10.169418
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.46090248
+      value: 5.6135526
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 13.356689
+      value: 5.676659
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -47,6 +59,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -79,6 +95,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
       insertIndex: -1
       addedObject: {fileID: -7845942395551697213}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5442804745898795882}
   m_SourcePrefab: {fileID: 100100000, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
 --- !u!1 &6292107850414759720 stripped
 GameObject:
@@ -171,8 +190,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8554e0d856c30a8449f89d15e260bf68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DiceFaceValueProbe
-  diceData: {fileID: 11400000, guid: b70000ccec238d44e9c61da5848b7eaa, type: 2}
   meshFilter: {fileID: 7761397575308298807}
+--- !u!114 &5442804745898795882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6292107850414759720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5761e753550447794b95f6450edea11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSettleDetector
+  _settleThreshold: 0.05
+  _settleTime: 0.3
 --- !u!33 &7761397575308298807 stripped
 MeshFilter:
   m_CorrespondingSourceObject: {fileID: -5754084199372789682, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}

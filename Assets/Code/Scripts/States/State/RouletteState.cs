@@ -22,28 +22,33 @@ namespace Code.Scripts.States.State
         {
             base.Enter();
             Debug.Log("Entering Roulette State");
-            _active = true;
-            _screen = _context.UIManager.ShowScreen<RouletteScreen>();
-            _screen.SpinButtonClicked += OnSpinButtonClicked;
-            _screen.NextButtonClicked += OnPlayButtonClicked;
-            _rouletteManager.OnSpinCompleted += OnSpinCompleted;
-            _rouletteManager.OnSpinCancelled += OnSpinCancelled;
-
-            if (!TryValidate(out string error))
+            _context.CameraController.MoveTo(CameraShotId.Roulette, () =>
             {
-                _screen.ShowError(error);
-                return;
-            }
+                _active = true;
+                _screen = _context.UIManager.ShowScreen<RouletteScreen>();
+                _screen.SpinButtonClicked += OnSpinButtonClicked;
+                _screen.NextButtonClicked += OnPlayButtonClicked;
+                _rouletteManager.OnSpinCompleted += OnSpinCompleted;
+                _rouletteManager.OnSpinCancelled += OnSpinCancelled;
             
-            if (!_progress.IsRoundPrepared) _rouletteManager.PrepareRound(_progress);
 
-            _rouletteManager.Show(_progress, _context.RunData.CursedObject);
-            _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day, _context.RunData.CursedObject));
-            if (_progress.HasResult)
-            {
-               _rouletteManager.ShowResult(_progress.CurrentResult);
-                _screen.ShowResult(_progress.CurrentResult, !_progress.IsRoundStarted);
-            }
+                if (!TryValidate(out string error))
+                {
+                    _screen.ShowError(error);
+                    return;
+                }
+            
+                if (!_progress.IsRoundPrepared) _rouletteManager.PrepareRound(_progress);
+
+                _rouletteManager.Show(_progress, _context.RunData.CursedObject);
+                _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day, _context.RunData.CursedObject));
+                if (_progress.HasResult)
+                {
+                    _rouletteManager.ShowResult(_progress.CurrentResult);
+                    _screen.ShowResult(_progress.CurrentResult, !_progress.IsRoundStarted);
+                }
+            });
+            
         }
 
         private bool TryValidate(out string error)
