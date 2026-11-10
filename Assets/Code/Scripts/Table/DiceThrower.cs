@@ -1,5 +1,6 @@
 using System;
 using Code.Scripts.Dice;
+using Code.Scripts.Utils;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -23,6 +24,8 @@ public class DiceThrower : MonoBehaviour
     
     public event Action<Dice> OnDiceShot;
     private Dice _loadedDice;
+    
+    public bool HasLoadedDice => _loadedDice != null;
     
     private void Awake()
     {
@@ -72,6 +75,7 @@ public class DiceThrower : MonoBehaviour
 
         Rigidbody rb = diceRb;
         Dice shot = ReleaseLoadedDice();
+        Utils.SetLayer(shot.gameObject, LayerMask.NameToLayer("DiceInFlight"));
         diceRb = null;
         
         rb.isKinematic = false;
@@ -97,7 +101,7 @@ public class DiceThrower : MonoBehaviour
 
         dice.transform.DOKill();
         dice.transform.SetParent(null, true);
-        SetLayer(dice.gameObject, _loadedDiceLayer);
+        Utils.SetLayer(dice.gameObject, _loadedDiceLayer);
         diceRb.interpolation = RigidbodyInterpolation.Interpolate;
         
         _loadedDice = null;
@@ -112,7 +116,7 @@ public class DiceThrower : MonoBehaviour
         diceRb.interpolation = RigidbodyInterpolation.None;
         
         _loadedDiceLayer = dice.gameObject.layer;
-        SetLayer(dice.gameObject, LayerMask.NameToLayer("Ignore Raycast"));
+        Utils.SetLayer(dice.gameObject, LayerMask.NameToLayer("Ignore Raycast"));
         
         dice.transform.SetParent(_holdPoint, true);
         dice.transform.DOLocalMove(Vector3.zero, 0.2f).SetEase(Ease.OutBack);
@@ -132,12 +136,5 @@ public class DiceThrower : MonoBehaviour
         gameInput = gameInputs;
     }
     
-    private static void SetLayer(GameObject obj, int layer)
-    {
-        obj.layer = layer;
-        foreach (Transform child in obj.GetComponentsInChildren<Transform>(true))
-        {
-            child.gameObject.layer = layer;
-        }
-    }
+
 }

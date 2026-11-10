@@ -1,27 +1,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using Code.Scripts.Core;
+using Code.Scripts.Utils;
 using Code.Scripts.Dice;
+using Code.Scripts.Rolling;
+using Code.Scripts.Rolls;
 using Code.Scripts.Roulette;
 using Code.Scripts.Rounds;
 using Code.Scripts.UI.Screens;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace Code.Scripts.States.State
 {
     public class GameplayState : AState
     {
-        private ScoreResult _scoreResult;
-        private RoundBudget _budget;
-        private ThrownDiceTracker _thrownDiceTracker;
+        
         private GameplayScreen _screen;
-        private readonly List<Dice.Dice> _outOfDrawer = new List<Dice.Dice>();
         private RouletteResult _result;
         private bool _ending;
-        private readonly HashSet<Dice.Dice> _freeShots = new HashSet<Dice.Dice>();
-        private bool _rerolling;
-        private Tween _cameraReturn;
+        private RollSession _session;
+        
         public GameplayState(GameContext context, IStateMachine stateMachine) : base(context, stateMachine)
         {
         }
@@ -30,179 +30,85 @@ namespace Code.Scripts.States.State
         {
             base.Enter();
             _result = _context.RunData.Progress.CurrentResult;
-            Debug.Log("Entering gameplay State");
+            
             _context.CameraController.MoveTo(CameraShotId.Gameplay, () =>
             {
+                
                 _screen = _context.UIManager.ShowScreen<GameplayScreen>();
-                _screen.NextButtonClicked += OnPlayButtonClicked;
                 _screen.ShowWinningScore(_result.LuckyNumber, _result.VictoryTolerance);
-                _context.DiceDragController.DroppedOnCannon += OnDiceDropped;
-                _context.GameInputs.Gameplay.Enable();
                 _context.DiceDrawer.Open(_context.RunData.DiceCase);
-                _budget = new RoundBudget(_context.GameConfig.shotsPerDay, _context.GameConfig.rerollsPerDay);
-                _budget.OnBudgetChanged += RefreshBudget;
-                _thrownDiceTracker = new ThrownDiceTracker();
-                _thrownDiceTracker.AllSettled += OnAllDiceSettled;
-                _context.DiceThrower.OnDiceShot += OnDiceShot;
-                _screen.RerollButtonClicked += OnRerollButtonClicked;
-                _context.DiceDragController.DiceSelected += OnDiceSelected;
-                RefreshBudget();
-            });
-        }
-
-        private void OnDiceSelected(Dice.Dice obj)
-        {
-            if(!_thrownDiceTracker.Dice.Contains(obj)) return;
-            if(!_budget.TryUseReroll()) return;
-            
-            SetSelectionMode(false);
-            _rerolling = true;
-            _context.GameInputs.Gameplay.Disable();
-
-            ReturnLoadedDiceToDrawer();
-            _thrownDiceTracker.Remove(obj);
-            
-            _context.DiceAnimator.Vanish(new[] {obj}, onVanish =>
-            {
-                _context.DiceThrower.LoadDice(onVanish);
-                _freeShots.Add(onVanish);
-                _context.DiceAnimator.Appear(new[] {onVanish}, null,  () =>
+                
+                _session = new RollSession(_context, new RollSessionSettings
                 {
-                    _rerolling = false;
-                    _context.GameInputs.Gameplay.Enable();
-                    RefreshBudget();
+                    Shots = _context.GameConfig.shotsPerDay,
+                    Rerolls = _context.GameConfig.rerollsPerDay,
+                    RestShot = CameraShotId.Gameplay,
                 });
-            }, null);
-        }
 
-        private void ReturnLoadedDiceToDrawer()
-        {
-            Dice.Dice loadedDice = _context.DiceThrower.UnloadDice();
-            if (loadedDice == null) return;
-            _outOfDrawer.Remove(loadedDice);
-            _freeShots.Remove(loadedDice);
-            _context.DiceDrawer.Release(loadedDice);
-            _context.DiceAnimator.ArcTo(new[] {loadedDice}, _context.DiceDrawer.GetReturnPoint, d => _context.DiceDrawer.Add(d), null);
-        }
-
-        private void OnRerollButtonClicked()
-        {
-            if (_rerolling) return;
-            if (_context.DiceDragController.SelectionMode)
-            {
-                SetSelectionMode(false);   
-                return;
-            }
-            if (_budget.Rerolls <= 0 || _thrownDiceTracker.Dice.Count == 0) return;
-            SetSelectionMode(true);
-        }
-
-        private void SetSelectionMode(bool active)
-        {
-            _context.DiceDragController.SelectionMode = active;
-            _screen.ShowRerollMode(active);
-        }
-
-        private void OnDiceShot(Dice.Dice obj)
-        {
-            if(!_freeShots.Remove(obj)) _budget.TryUseShot();
-            _thrownDiceTracker.Add(obj);
-            RefreshBudget();
-        }
-
-        private void OnAllDiceSettled()
-        {
-            _scoreResult = DiceCalculator.Calculate(_thrownDiceTracker.Dice, _context.RunData.CursedObject, _result.LuckyNumber, _result.VictoryTolerance);
-            _screen.ShowScore(_scoreResult.TotalScore);
-            
-            CancelCameraReturn();
-            _cameraReturn = DOVirtual.DelayedCall(1.5f, () =>
-            {
-                _cameraReturn = null;
-                _context.CameraController.MoveTo(CameraShotId.Gameplay);
+                _session.AllSettled += OnTableSettled;
+                _session.BudgetChanged += RefreshBudget;
+                _session.RerollModeChanged += _screen.ShowRerollMode;
+                
+                _screen.NextButtonClicked += OnCheckClicked;
+                _screen.RerollButtonClicked += _session.ToggleReroll;
+                
+                _session.Start();
             });
-            
         }
 
-        private void CancelCameraReturn()
+        public override void Update()
         {
-            if(_cameraReturn != null && _cameraReturn.IsActive()) _cameraReturn.Kill();
-            _cameraReturn = null;
+            base.Update();
+            _session?.Tick();
         }
 
-        private void RefreshBudget()
-        {
-            _screen.ShowBudget(_budget.Shots, _budget.Rerolls);
-            _screen.SetRerollAvailable(_budget.Rerolls > 0 && _outOfDrawer.Count > 0);
-        }
 
         public override void Exit()
         {
             base.Exit();
-            _screen.NextButtonClicked -= OnPlayButtonClicked;
-            _context.DiceDragController.DroppedOnCannon -= OnDiceDropped;
-            _budget.OnBudgetChanged -= RefreshBudget;
-            _thrownDiceTracker.AllSettled -= OnAllDiceSettled;
-            _thrownDiceTracker.Clear();
-            _context.DiceThrower.OnDiceShot -= OnDiceShot;
-            _screen.RerollButtonClicked -= OnRerollButtonClicked;
-            _context.DiceDragController.DiceSelected -= OnDiceSelected;
-            _context.DiceDragController.SelectionMode = false;
+            
+            _session.Stop();
+            _session.AllSettled -= OnTableSettled;
+            _session.BudgetChanged -= RefreshBudget;
+            _session.RerollModeChanged -= _screen.ShowRerollMode;
+            _screen.NextButtonClicked -= OnCheckClicked;
+            _screen.RerollButtonClicked -= _session.ToggleReroll;
+        }
+        
+
+
+        private void RefreshBudget()
+        {
+            _screen.ShowBudget(_session.Budget.Shots, _session.Budget.Rerolls);
+            _screen.SetRerollAvailable(_session.CanReroll);
         }
 
-        private void OnPlayButtonClicked()
+        private void OnTableSettled() => _screen.ShowScore(CalculateScore().TotalScore);
+        private ScoreResult CalculateScore() => DiceCalculator.Calculate(_session.ThrownDice, _context.RunData.CursedObject, _result.LuckyNumber, _result.VictoryTolerance, _result.Day);
+        
+        private void OnCheckClicked()
         {
-            if(_rerolling) return;
-            if(CheckIfWinnerValue())
-            {
-                if(_ending) return;
-                _ending = true;
-                _screen.NextButtonClicked -= OnPlayButtonClicked;
-                _context.GameInputs.Gameplay.Disable();
-                _context.RunData.Progress.CompleteRound();
-                _context.DiceThrower.UnloadDice();
-                _context.DiceAnimator.ArcTo(_outOfDrawer, _context.DiceDrawer.GetReturnPoint, dice => _context.DiceDrawer.Add(dice),
-                    () =>
-                    {
-                        _context.DiceDrawer.Close();
-                        _stateMachine.ChangeState(new ShopState(_context, _stateMachine));
-                    });
-            }
-            else
-            {
-                if(_budget.Shots <= 0)
-                {
-                    _context.GameInputs.Gameplay.Disable();
-                    _context.DiceThrower.UnloadDice();
-                    _context.DiceAnimator.ArcTo(_outOfDrawer, _context.DiceDrawer.GetReturnPoint, dice => _context.DiceDrawer.Add(dice),
-                        () =>
-                        {
-                            _context.DiceDrawer.Close();
-                            _stateMachine.ChangeState(new GameOverState(_context, _stateMachine));
-                        });
-                    return;
-                }
-                Debug.Log("Dice Values not equals to target value: " + _scoreResult.TotalScore + " vs " + (_scoreResult.TargetScore - _scoreResult.Tolerance) + "-" + (_scoreResult.TargetScore + _scoreResult.Tolerance));
-            }
+            if(_ending || _session.IsRerolling) return;
+            ScoreResult score = CalculateScore();
+            if (score.IsSuccess) EndDay(true);
+            else if (_session.Budget.Shots <= 0) EndDay(false);
+            _screen.ShowScore(score.TotalScore);
         }
         
-        private bool CheckIfWinnerValue()
+        private void EndDay(bool success)
         {
-            _scoreResult = DiceCalculator.Calculate(_thrownDiceTracker.Dice, _context.RunData.CursedObject, _result.LuckyNumber, _result.VictoryTolerance, _result.Day);
-            return _scoreResult.IsSuccess;
+            _ending = true;
+            _session.Stop();
+            if(success) _context.RunData.Progress.CompleteRound();
+            
+            _session.ReturnAllToDrawer(() =>
+            {
+                _context.DiceDrawer.Close();
+                _stateMachine.ChangeState(success
+                    ? (IState) new ShopState(_context, _stateMachine)
+                    : new GameOverState(_context, _stateMachine));
+            });
         }
         
-        private void OnDiceDropped(Dice.Dice dice)
-        {
-            _context.DiceDrawer.Release(dice);
-            if (_budget.Shots <= 0)
-            {
-                _context.DiceAnimator.ArcTo(new[] {dice}, _context.DiceDrawer.GetReturnPoint, d => _context.DiceDrawer.Add(d), null);
-                return;
-            }
-            _context.DiceThrower.LoadDice(dice);
-            _outOfDrawer.Add(dice);
-            _context.CameraController.MoveTo(CameraShotId.Throwing);
-        }
     }
 }

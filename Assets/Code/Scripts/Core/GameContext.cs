@@ -18,9 +18,10 @@ namespace Code.Scripts
         public DiceDragController DiceDragController { get; set; }
         public DiceAnimator DiceAnimator { get; private set; }
         public CameraController CameraController { get; set; }
+        public DicePlayArea PlayArea { get; set; }
         public GameContext(UIManager uiManager, GameInputs gameInputs, DiceThrower diceThrower, RouletteManager rouletteManager, 
             RunData runData, GameConfigSO gameConfig, DiceDrawer diceDrawer, DiceDragController diceDragController = null,
-            DiceAnimator diceAnimator = null, CameraController cameraController = null)
+            DiceAnimator diceAnimator = null, CameraController cameraController = null, DicePlayArea dicePlayArea = null)
         {
             UIManager = uiManager;
             GameInputs = gameInputs;
@@ -31,6 +32,7 @@ namespace Code.Scripts
             GameConfig = gameConfig;
             DiceDragController = diceDragController;
             DiceAnimator = diceAnimator;
+            PlayArea = dicePlayArea;
             CameraController = cameraController;
         }
 

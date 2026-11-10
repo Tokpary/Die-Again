@@ -54,11 +54,22 @@ namespace Code.Scripts.Dice
             if (_draggedDice == null) return;
             
             var plane = new Plane(Vector3.up, new Vector3(0f, _dragHeight, 0f));
-            if(plane.Raycast(ray, out float distance))
-                _draggedDice.transform.position = ray.GetPoint(distance);
+            if (plane.Raycast(ray, out float distance))
+            {
+                Bounds allowed = _diceDrawer.Area;
+                allowed.Encapsulate(_cannonLoadZone.bounds);
+                Vector3 targetPos = allowed.ClosestPoint(ray.GetPoint(distance));
+                targetPos.y = _dragHeight;
+                _draggedDice.transform.position = targetPos;
+            }
             
             if(_gameInputs.Gameplay.Disparo.WasReleasedThisFrame())
                 Drop();
+        }
+        
+        private static bool ContainsXZ(Bounds b, Vector3 p)
+        {
+            return p.x >= b.min.x && p.x <= b.max.x && p.z >= b.min.z && p.z <= b.max.z;
         }
 
         private void TryPick(Ray ray)
@@ -77,14 +88,21 @@ namespace Code.Scripts.Dice
             Dice dice = _draggedDice;
             _draggedDice = null;
             
-            if(_cannonLoadZone.bounds.Contains(dice.transform.position))
+            if(ContainsXZ(_cannonLoadZone.bounds, dice.transform.position))
             {
                 DroppedOnCannon?.Invoke(dice);
+                return;
             }
-            else
+            
+            if(!ContainsXZ(_diceDrawer.Area, dice.transform.position))
             {
-                dice.GetComponent<Rigidbody>().isKinematic = false;
+                dice.transform.position = _diceDrawer.DropPoint;
             }
+            
+            var rb = dice.GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
     }
 }
