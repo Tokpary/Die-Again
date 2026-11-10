@@ -1,9 +1,11 @@
+using Code.Scripts.Camera;
 using Code.Scripts.States;
 using Code.Scripts.UI;
 using Code.Scripts.Core;
 using Code.Scripts.Dice;
 using Code.Scripts.Roulette;
 using Code.Scripts.Shop;
+using Code.Scripts.Table;
 
 namespace Code.Scripts
 {
@@ -21,6 +23,7 @@ namespace Code.Scripts
         public CameraController CameraController { get; set; }
         public DicePlayArea PlayArea { get; set; }
         public PurchaseEffect PurchaseEffect { get; set; }
+        public CameraViewInput CameraViewInput { get; set; }
         public GameContext(UIManager uiManager, GameInputs gameInputs, DiceThrower diceThrower, RouletteManager rouletteManager, 
             RunData runData, GameConfigSO gameConfig, DiceDrawer diceDrawer, DiceDragController diceDragController = null,
             DiceAnimator diceAnimator = null, CameraController cameraController = null, DicePlayArea dicePlayArea = null, PurchaseEffect purchaseEffect = null)

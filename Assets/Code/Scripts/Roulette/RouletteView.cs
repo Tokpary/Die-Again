@@ -243,7 +243,7 @@ namespace Code.Scripts.Roulette
                 _numberOutwardOffset
             );
 
-            Camera camera = Camera.main;
+            UnityEngine.Camera camera = UnityEngine.Camera.main;
 
             Vector3 cameraLocal = camera != null
                 ? disc.InverseTransformPoint(camera.transform.position)

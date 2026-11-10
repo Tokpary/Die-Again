@@ -26,7 +26,7 @@ namespace Code.Scripts.UI
                 !Mouse.current.leftButton.wasPressedThisFrame)
                 return;
 
-            Camera cameraToUse = Camera.main;
+            UnityEngine.Camera cameraToUse = UnityEngine.Camera.main;
             if (cameraToUse == null)
                 return;
 

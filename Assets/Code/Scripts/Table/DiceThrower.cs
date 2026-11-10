@@ -1,5 +1,6 @@
 using System;
 using Code.Scripts.Dice;
+using Code.Scripts.Table;
 using Code.Scripts.Utils;
 using DG.Tweening;
 using UnityEngine;

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Code.Scripts.Camera;
 using Code.Scripts.Core;
 using Code.Scripts.Utils;
 using Code.Scripts.Dice;
@@ -44,6 +45,7 @@ namespace Code.Scripts.States.State
                     Rerolls = _context.GameConfig.rerollsPerDay,
                     RestShot = CameraShotId.Gameplay,
                 });
+                _screen.TableControls.Bind(_session);
 
                 _session.AllSettled += OnTableSettled;
                 _session.BudgetChanged += RefreshBudget;
@@ -67,6 +69,7 @@ namespace Code.Scripts.States.State
         {
             base.Exit();
             
+            _screen.TableControls.Unbind();
             _session.Stop();
             _session.AllSettled -= OnTableSettled;
             _session.BudgetChanged -= RefreshBudget;
@@ -88,7 +91,7 @@ namespace Code.Scripts.States.State
         
         private void OnCheckClicked()
         {
-            if(_ending || _session.IsRerolling) return;
+            if(_ending || _session.IsAnimating) return;
             ScoreResult score = CalculateScore();
             if (score.IsSuccess) EndDay(true);
             else if (_session.Budget.Shots <= 0) EndDay(false);

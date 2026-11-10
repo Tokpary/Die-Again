@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Code.Scripts.Camera;
 using Code.Scripts.Core;
 using Code.Scripts.Dice;
 using Code.Scripts.Rolling;
@@ -24,7 +25,7 @@ namespace Code.Scripts.States.State
             base.Enter();
             _context.RunData.ShopOffer.RefreshShopOffer(_context.RunData.Progress.Week);
             
-            _context.CameraController.MoveTo(CameraShotId.Shop, () =>
+            _context.CameraController.MoveTo(CameraShotId.Gameplay, () =>
             {
                 _screen = _context.UIManager.ShowScreen<ShopScreen>();
                 _context.DiceDrawer.Open(_context.RunData.DiceCase);
@@ -32,8 +33,11 @@ namespace Code.Scripts.States.State
                 {
                     Shots = 0,
                     Rerolls = 0,
-                    RestShot = CameraShotId.Shop
+                    RestShot = CameraShotId.Gameplay,
+                    Views = new[] {CameraShotId.Drawer, CameraShotId.Throwing, CameraShotId.CursedShelf, CameraShotId.Shop},
                 });
+                
+                _screen.TableControls.Bind(_session);
                 _session.AllSettled += OnTableSettled;
                 _session.BudgetChanged += RefreshScreen;
                 _screen.ClaimButtonClicked += OnClaimClicked;
@@ -56,6 +60,7 @@ namespace Code.Scripts.States.State
             if(_session == null) return;
             
             _session.Stop();
+            _screen.TableControls.Unbind();
             _session.AllSettled -= OnTableSettled;
             _session.BudgetChanged -= RefreshScreen;
             _screen.ClaimButtonClicked -= OnClaimClicked;
@@ -75,11 +80,11 @@ namespace Code.Scripts.States.State
             _screen.ShowOffer(_context.RunData.ShopOffer.Dice, _sum);
             _screen.ShowSum(_sum);
             _screen.SetClaimAvailable(canClaim);
-            _screen.SetLeaveAvailable(!_busy && TableIsStill());
+            _screen.SetLeaveAvailable(!_busy && NothingRolling());
         }
         
         private bool TableIsStill() => _session.ThrownDice.Count > 0 && _session.ThrownDice.All(d => d.Motion.IsSettled);
-        
+        private bool NothingRolling() => _session.ThrownDice.All(d => d.Motion.IsSettled);
         private void OnClaimClicked()
         {
             if(_busy || !TableIsStill()) return;
@@ -95,16 +100,19 @@ namespace Code.Scripts.States.State
             var bought = new DiceInstance(offered);
             if(!_context.RunData.DiceCase.TryAdd(bought))  
                 Debug.LogWarning(("[ShopState] No se pudo añadir el dado comprado al inventario"));
-            
-            _context.PurchaseEffect.Play(spent, bought, FinishPurchase);
+
+            _context.CameraController.MoveTo(CameraShotId.Throwing, () =>
+            {
+                _context.PurchaseEffect.Play(spent, bought, FinishPurchase);
+            });
         }
         
         private void FinishPurchase()
         {
             _busy = false;
             _sum = 0;
-            _context.CameraController.MoveTo(CameraShotId.Shop);
             _session.Start();
+            _session.GoBack();
             RefreshScreen();
         }
         

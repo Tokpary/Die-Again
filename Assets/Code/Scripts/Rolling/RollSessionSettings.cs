@@ -1,3 +1,4 @@
+using Code.Scripts.Camera;
 using Code.Scripts.Core;
 
 namespace Code.Scripts.Rolls
@@ -8,6 +9,8 @@ namespace Code.Scripts.Rolls
         public int Rerolls;
         public CameraShotId RestShot = CameraShotId.Gameplay;
         public CameraShotId AimShot = CameraShotId.Throwing;
+        public CameraShotId DrawerShot = CameraShotId.Drawer;
+        public CameraShotId[] Views = { CameraShotId.Drawer, CameraShotId.Throwing, CameraShotId.CursedShelf };
         public float ResultViewDelay = 1f;
     }
 }

@@ -15,6 +15,8 @@ namespace Code.Scripts.Dice
         [SerializeField] Transform _drawerTransform;
         [SerializeField] private Rigidbody _drawerRigidbody;
         [SerializeField] private BoxCollider _area;
+        [SerializeField] private float _selectLift = 0.4f;
+        private Dice _selectedDice;
         private Vector3 _closedPosition;
 
         public Bounds Area => _area.bounds;
@@ -50,6 +52,7 @@ namespace Code.Scripts.Dice
         
         public void Clear()
         {
+            _selectedDice = null;
             foreach (Dice dice in _dice)
             {
                 if (dice != null)
@@ -103,5 +106,6 @@ namespace Code.Scripts.Dice
             dice.transform.localScale = Vector3.zero;
             return dice;
         }
+        
     }
 }

@@ -15,6 +15,9 @@ namespace Code.Scripts.UI.Screens
         [SerializeField] private TMP_Text _rerollsText;
         [SerializeField] private TMP_Text _scoreText;
         [SerializeField] private TMP_Text _winningScoreText;
+
+        [SerializeField] private TableControlsView _tableControls;
+        public TableControlsView TableControls => _tableControls;
         
         public event Action NextButtonClicked;
         public event Action RerollButtonClicked;

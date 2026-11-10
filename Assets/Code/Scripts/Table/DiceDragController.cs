@@ -1,28 +1,31 @@
 using System;
+using Code.Scripts.Dice;
 using UnityEngine;
 
-namespace Code.Scripts.Dice
+namespace Code.Scripts.Table
 {
     [DefaultExecutionOrder(-10)]
     public class DiceDragController : MonoBehaviour
     {
-        [SerializeField] private Camera _camera;
+        [SerializeField] private UnityEngine.Camera _camera;
         [SerializeField] private LayerMask _diceLayerMask;
         [SerializeField] private DiceDrawer _diceDrawer;
-        [SerializeField] private Collider _cannonLoadZone;
         [SerializeField] private float _dragHeight = 1.5f;
-        
+
         private GameInputs _gameInputs;
-        private Dice _draggedDice;
-        
+        private Dice.Dice _draggedDice;
+
         public bool IsDragging => _draggedDice != null;
         public bool SelectionMode { get; set; }
+        public bool DragEnabled { get; set; }
         public bool PressConsumed { get; private set; }
 
-        public event Action<Dice> DroppedOnCannon;
-        public event Action<Dice> DiceSelected;
-        
-        public void Init(GameInputs input) 
+        public IDiceDropTarget DropTarget { get; set; }
+
+        public event Action<Dice.Dice> DiceSelected;
+        public event Action<Dice.Dice> DroppedOnTarget;
+
+        public void Init(GameInputs input)
         {
             _gameInputs = input;
         }
@@ -30,79 +33,84 @@ namespace Code.Scripts.Dice
         private void Update()
         {
             PressConsumed = false;
-            if(_gameInputs == null || !_gameInputs.Gameplay.enabled) return;
-            Ray ray = _camera.ScreenPointToRay(_gameInputs.Gameplay.Apuntar.ReadValue<Vector2>());
-            if(SelectionMode)
+            if (_gameInputs == null || !_gameInputs.Gameplay.enabled) return;
+
+            Vector2 pointer = _gameInputs.Gameplay.Apuntar.ReadValue<Vector2>();
+            Ray ray = _camera.ScreenPointToRay(pointer);
+
+            if (SelectionMode)
             {
-                if(_gameInputs == null || !_gameInputs.Gameplay.enabled) return;
-                if(_gameInputs.Gameplay.Disparo.WasPressedThisFrame())
+                if (_gameInputs.Gameplay.Disparo.WasPressedThisFrame())
                 {
                     PressConsumed = true;
-                    if(Physics.Raycast(ray, out RaycastHit hit, 500f, _diceLayerMask) && hit.rigidbody != null && hit.rigidbody.TryGetComponent(out Dice dice))
-                    {
-                        DiceSelected?.Invoke(dice);
-                    }
+                    if (TryGetDice(ray, out Dice.Dice dice)) DiceSelected?.Invoke(dice);
                 }
                 return;
             }
-            
-            if(_draggedDice == null && _gameInputs.Gameplay.Disparo.WasPressedThisFrame())
+
+            if (!DragEnabled)
             {
-                TryPick(ray);
+                if (_draggedDice != null) ReturnToDrawer(TakeDragged());   
+                return;
             }
 
+            if (_draggedDice == null && _gameInputs.Gameplay.Disparo.WasPressedThisFrame())
+                TryPick(ray);
+
             if (_draggedDice == null) return;
-            
-            var plane = new Plane(Vector3.up, new Vector3(0f, _dragHeight, 0f));
-            if (plane.Raycast(ray, out float distance))
+
+            MoveDragged(ray);
+            bool overTarget = DropTarget != null && DropTarget.ContainsScreenPoint(pointer);
+            DropTarget?.SetHover(overTarget);
+
+            if (_gameInputs.Gameplay.Disparo.WasReleasedThisFrame())
             {
-                Bounds allowed = _diceDrawer.Area;
-                allowed.Encapsulate(_cannonLoadZone.bounds);
-                Vector3 targetPos = allowed.ClosestPoint(ray.GetPoint(distance));
-                targetPos.y = _dragHeight;
-                _draggedDice.transform.position = targetPos;
+                Dice.Dice dice = TakeDragged();
+                if (overTarget) DroppedOnTarget?.Invoke(dice);
+                else ReturnToDrawer(dice);
             }
-            
-            if(_gameInputs.Gameplay.Disparo.WasReleasedThisFrame())
-                Drop();
-        }
-        
-        private static bool ContainsXZ(Bounds b, Vector3 p)
-        {
-            return p.x >= b.min.x && p.x <= b.max.x && p.z >= b.min.z && p.z <= b.max.z;
         }
 
         private void TryPick(Ray ray)
         {
-            if(!Physics.Raycast(ray, out RaycastHit hit, 500f, _diceLayerMask)) return;
-            if (hit.rigidbody == null || !hit.rigidbody.TryGetComponent(out Dice dice)) return;
-            if (!_diceDrawer.Contains(dice)) return;
-            
+            if (!TryGetDice(ray, out Dice.Dice dice) || !_diceDrawer.Contains(dice)) return;
+
             _draggedDice = dice;
-            hit.rigidbody.isKinematic = true;
+            dice.GetComponent<Rigidbody>().isKinematic = true;
             PressConsumed = true;
         }
 
-        private void Drop()
+        private void MoveDragged(Ray ray)
         {
-            Dice dice = _draggedDice;
+            var plane = new Plane(Vector3.up, new Vector3(0f, _dragHeight, 0f));
+            if (!plane.Raycast(ray, out float distance)) return;
+
+            Vector3 target = _diceDrawer.Area.ClosestPoint(ray.GetPoint(distance));
+            target.y = _dragHeight;
+            _draggedDice.transform.position = target;
+        }
+
+        private Dice.Dice TakeDragged()
+        {
+            Dice.Dice dice = _draggedDice;
             _draggedDice = null;
-            
-            if(ContainsXZ(_cannonLoadZone.bounds, dice.transform.position))
-            {
-                DroppedOnCannon?.Invoke(dice);
-                return;
-            }
-            
-            if(!ContainsXZ(_diceDrawer.Area, dice.transform.position))
-            {
-                dice.transform.position = _diceDrawer.DropPoint;
-            }
-            
+            DropTarget?.SetHover(false);
+            return dice;
+        }
+
+        private void ReturnToDrawer(Dice.Dice dice)
+        {
             var rb = dice.GetComponent<Rigidbody>();
             rb.isKinematic = false;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+        }
+
+        private bool TryGetDice(Ray ray, out Dice.Dice dice)
+        {
+            dice = null;
+            return Physics.Raycast(ray, out RaycastHit hit, 500f, _diceLayerMask) &&
+                   hit.rigidbody != null && hit.rigidbody.TryGetComponent(out dice);
         }
     }
 }

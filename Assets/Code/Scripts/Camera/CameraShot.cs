@@ -1,3 +1,4 @@
+using Code.Scripts.Camera;
 using UnityEngine;
 
 namespace Code.Scripts.Core

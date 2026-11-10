@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
+using Code.Scripts.Core;
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Code.Scripts.Core
+namespace Code.Scripts.Camera
 {
     public class CameraController : MonoBehaviour
     {
-        [SerializeField] private Camera _mainCamera;
+        [SerializeField] private UnityEngine.Camera _mainCamera;
     
         [SerializeField] private Transform _shotsRoot;
     

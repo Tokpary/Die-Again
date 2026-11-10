@@ -1,4 +1,4 @@
-namespace Code.Scripts.Core
+namespace Code.Scripts.Camera
 {
     public enum CameraShotId
     {
@@ -7,5 +7,7 @@ namespace Code.Scripts.Core
         Gameplay,
         Throwing,
         Shop,
+        CursedShelf,
+        Drawer
     }
 }

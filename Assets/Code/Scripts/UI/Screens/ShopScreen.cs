@@ -15,6 +15,9 @@ namespace Code.Scripts.UI.Screens
         [SerializeField] private TMP_Text _offerText;
         [SerializeField] private TMP_Text _sumText;
 
+        [SerializeField] private TableControlsView _tableControls;
+        public TableControlsView TableControls => _tableControls;
+        
         public event Action NextButtonClicked;
         public event Action ClaimButtonClicked;
         
