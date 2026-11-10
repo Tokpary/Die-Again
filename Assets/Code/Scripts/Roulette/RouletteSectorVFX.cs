@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Code.Scripts.Roulette
 {
-    public sealed class RouletteSectorVFX : MonoBehaviour
+    public sealed partial class RouletteSectorVFX : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private RouletteView view;
@@ -16,6 +16,9 @@ namespace Code.Scripts.Roulette
 
         [SerializeField, Min(100f)]
         private float maximumSpinSpeed = 850f;
+
+        [Header("Sector under the fixed pointer")]
+        [SerializeField, Range(0f, 3f)] private float passingSectorIntensity = 0f;
 
         private static readonly int SpinId =
             Shader.PropertyToID("_SpinEnergy");
@@ -72,6 +75,7 @@ namespace Code.Scripts.Roulette
             block = new MaterialPropertyBlock();
             previousRotation = sectors.transform.rotation;
 
+            InitializeCarnival();
             ApplyShaderProperties();
         }
 
@@ -121,6 +125,7 @@ namespace Code.Scripts.Roulette
                 );
             }
 
+            UpdateCarnival(dt, spinning);
             previousRotation = sectors.transform.rotation;
             wasSpinning = spinning;
 
@@ -147,6 +152,7 @@ namespace Code.Scripts.Roulette
 
         private void OnSpinCompleted(RouletteResult result)
         {
+            RevealCarnival(result.IsBoss);
             winningSlice = result.SliceIndex;
             bossResult = result.IsBoss ? 1f : 0f;
 
@@ -160,6 +166,7 @@ namespace Code.Scripts.Roulette
 
         private void OnSpinCancelled()
         {
+            ResetCarnival();
             winningSlice = -1;
             bossResult = 0f;
             revealTime = -1f;
@@ -178,6 +185,12 @@ namespace Code.Scripts.Roulette
             // Preserve RouletteView's probability and slice data.
             sectors.GetPropertyBlock(block);
 
+            int count = Mathf.Max(1, Mathf.RoundToInt(block.GetFloat("_SliceCount")));
+            int passingSlice = isActiveAndEnabled && view.IsSpinning
+                ? RouletteRules.GetSliceIndex(view.GetPointerSectorAngle(), count) : -1;
+            block.SetFloat("_PassingSlice", passingSlice);
+            block.SetFloat("_PassingIntensity", passingSectorIntensity);
+
             block.SetFloat(TimeId, Time.unscaledTime);
             block.SetFloat(SpinId, spinEnergy);
             block.SetFloat(WinnerId, winningSlice);
@@ -190,6 +203,8 @@ namespace Code.Scripts.Roulette
 
         private void OnDisable()
         {
+            HidePresentationImmediately();
+            ResetCarnival();
             if (manager != null)
             {
                 manager.OnSpinCompleted -= OnSpinCompleted;

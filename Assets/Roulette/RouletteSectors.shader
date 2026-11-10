@@ -18,6 +18,8 @@ Shader "DiceMaster/Roulette Sectors"
 
         [HideInInspector] _FXTime ("FX Time", Float) = 0
         [HideInInspector] _SpinEnergy ("Spin Energy", Float) = 0
+        [HideInInspector] _PassingSlice ("Pointer sector", Float) = -1
+        [HideInInspector] _PassingIntensity ("Pointer glow", Float) = 0.85
         [HideInInspector] _WinningSlice ("Winning Slice", Float) = -1
         [HideInInspector] _ResultIsBoss ("Result Is Boss", Float) = 0
         [HideInInspector] _RevealProgress ("Reveal Progress", Float) = 0
@@ -72,6 +74,8 @@ Shader "DiceMaster/Roulette Sectors"
 
                 float _FXTime;
                 float _SpinEnergy;
+                float _PassingSlice;
+                float _PassingIntensity;
                 float _WinningSlice;
                 float _ResultIsBoss;
                 float _RevealProgress;
@@ -133,51 +137,24 @@ Shader "DiceMaster/Roulette Sectors"
                 }
 
                 // ------------------------------------------
-                // SPIN: light follows the wheel's actual rim.
+                // SPIN: faint sector-edge shimmer, no luminous ring.
                 // ------------------------------------------
-
-                float outerRim =
-                    smoothstep(0.82, 0.92, radius) *
-                    (1.0 - smoothstep(0.975, 0.998, radius));
 
                 float faceMask =
                     smoothstep(0.15, 0.24, radius) *
                     (1.0 - smoothstep(0.91, 0.97, radius));
 
-                float movingAngleA = frac(_FXTime * 0.36);
-                float movingAngleB = frac(0.43 - _FXTime * 0.22);
-
-                float arcA = 1.0 - smoothstep(
-                    0.015, 0.105,
-                    CircularDistance(angle, movingAngleA)
-                );
-
-                float arcB = 1.0 - smoothstep(
-                    0.01, 0.065,
-                    CircularDistance(angle, movingAngleB)
-                );
-
-                float shimmer =
-                    outerRim * (0.18 + arcA * 0.80 + arcB * 0.46);
-
                 float edgeGlow = 1.0 - smoothstep(
                     0.006, 0.065, boundaryDistance
                 );
 
-                float tickingLight =
-                    0.55 + 0.45 *
-                    sin(_FXTime * 17.0 - sliceIndex * 1.7);
-
-                float spinGlow =
-                    _SpinEnergy * (
-                        shimmer +
-                        edgeGlow * tickingLight * faceMask * 0.30
-                    );
-
-                color.rgb +=
-                    _FXGoldColor.rgb *
-                    spinGlow *
-                    _FXIntensity;
+                // Follow the real pointer angle, including the final slow ticks.
+                float passing = step(0.0, _PassingSlice) *
+                    (1.0 - step(0.5, abs(sliceIndex - _PassingSlice)));
+                float3 passingColor = angle < _BossFraction
+                    ? _FXRedColor.rgb : _FXGoldColor.rgb;
+                color.rgb += passingColor * passing * faceMask *
+                    (0.24 + edgeGlow * 0.65) * _PassingIntensity * _FXIntensity;
 
                 // ------------------------------------------
                 // RESULT: highlight the real winning wedge.
@@ -218,25 +195,7 @@ Shader "DiceMaster/Roulette Sectors"
                     winnerArea *
                     (0.35 + _RevealEnergy * 0.65);
 
-                // Expanding shockwave contained within the disc.
-                float shockRadius = lerp(
-                    0.13, 0.98,
-                    saturate(_RevealProgress)
-                );
-
-                float shockDistance =
-                    abs(radius - shockRadius);
-
-                float shockwave =
-                    (1.0 - smoothstep(
-                        0.015, 0.07,
-                        shockDistance
-                    )) * _RevealEnergy;
-
-                float resultGlow =
-                    sustainedGlow +
-                    borderGlow +
-                    shockwave * 0.85;
+                float resultGlow = sustainedGlow + borderGlow;
 
                 color.rgb +=
                     resultColor *

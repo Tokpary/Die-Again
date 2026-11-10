@@ -4448,11 +4448,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58841706b13649e478223c200eded1ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RouletteVFX
+  animatePresentation: 1
+  retractHeight: 20
+  dropDuration: 0.65
+  retractDuration: 0.5
+  landingBounce: 0.09
+  carnivalShader: {fileID: 4800000, guid: c3da8a728b22454f808e0c221d9a2311, type: 3}
+  frame: {fileID: 0}
+  amber: {r: 1, g: 0.42, b: 0.07, a: 1}
+  bossRed: {r: 1, g: 0.025, b: 0.01, a: 1}
+  idleIntensity: 0.6
+  chaseIntensity: 5
+  resultIntensity: 7
+  chaseSpeed: 22
+  chaseGroupSize: 3
+  resultFlashDuration: 0.85
+  bossFlashSpeed: 3
+  pointerBounceDegrees: 3
+  fastVibrationDegrees: 0.22
+  brakingTickMultiplier: 1.6
+  stopImpactDegrees: 4
+  stopImpactDuration: 0.24
+  sparkMaterial: {fileID: 2100000, guid: 20fdd157129f03a40ae447534dd4603c, type: 2}
+  sparkPrefab: {fileID: 763799897560185547, guid: 798157bad7358b04499c9d71cd3c0d9b, type: 3}
+  winnerImpactPrefab: {fileID: 5880797563127281583, guid: 265d3a5ba69981a4698ceabcedf368b0, type: 3}
+  winnerImpactScale: 0.0004
+  winnerImpactLifetime: 0.3
+  sparkTip: {x: 0, y: 0.000675, z: 0.0033}
+  tickSparkCount: 2
+  impactSparkCount: 12
+  sparkSize: 0.025
+  sparkLifetime: 0.2
+  sparkSpeed: 0.7
+  bloomIntensity: 0.18
+  sparkCooldown: 0.06
   view: {fileID: 702483647}
   manager: {fileID: 702483646}
   sectors: {fileID: 809724981}
   revealDuration: 1.1
   maximumSpinSpeed: 850
+  passingSectorIntensity: 0
 --- !u!4 &725293140 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fec16d9fef94d2449be360afe96a50f7, type: 3}
@@ -4801,6 +4836,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8229006875093701229, guid: 2845431f1a4cbb140b28e0debb1cc712, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.00218
+      objectReference: {fileID: 0}
     - target: {fileID: 8312987709304693461, guid: 2845431f1a4cbb140b28e0debb1cc712, type: 3}
       propertyPath: m_Name
       value: Roulette
@@ -8316,6 +8355,10 @@ PrefabInstance:
       propertyPath: _sectorRenderer
       value: 
       objectReference: {fileID: 809724981}
+    - target: {fileID: 8460459884974005371, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
+      propertyPath: _numberSurfaceGap
+      value: 0.002
+      objectReference: {fileID: 0}
     - target: {fileID: 9002261293862341130, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
       propertyPath: _sumText
       value: 

@@ -147,7 +147,7 @@ namespace Code.Scripts.Roulette
             _initialized = true;
         }
 
-        public void Show(int probability, IReadOnlyList<int> numbers)
+        public void Show(int probability, IReadOnlyList<int> numbers, Action onPresented = null)
         {
             if (!TryValidate(out string error))
                 throw new InvalidOperationException(error);
@@ -163,6 +163,8 @@ namespace Code.Scripts.Roulette
             }
 
             Initialize();
+            var vfx = GetComponent<RouletteSectorVFX>();
+            vfx?.PrepareNumberLayout();
             _visualRoot.SetActive(true);
 
             _sectorRenderer.GetPropertyBlock(_properties);
@@ -171,6 +173,8 @@ namespace Code.Scripts.Roulette
             _sectorRenderer.SetPropertyBlock(_properties);
 
             RefreshLabels(numbers);
+            if (vfx != null) vfx.Present(onPresented);
+            else onPresented?.Invoke();
         }
 
         private void RefreshLabels(IReadOnlyList<int> numbers)
@@ -338,14 +342,24 @@ namespace Code.Scripts.Roulette
 
                 rect.sizeDelta = new Vector2(4f, 2f);
 
+                // The model is active above the stage so TMP has initialized its font and mesh.
                 label.ForceMeshUpdate();
 
                 if (commonScale < 0f)
                 {
-                    float referenceHeight = Mathf.Max(
-                        label.textBounds.size.y,
-                        0.0001f
-                    );
+                    float referenceHeight = label.textBounds.size.y;
+                    if (referenceHeight <= 0.001f || float.IsNaN(referenceHeight) || float.IsInfinity(referenceHeight))
+                        referenceHeight = label.GetPreferredValues("8").y;
+
+                    if (referenceHeight <= 0.001f || float.IsNaN(referenceHeight) || float.IsInfinity(referenceHeight))
+                    {
+                        // Never turn missing text geometry into an enormous scale.
+                        obj.SetActive(false);
+                        if (Application.isPlaying) Destroy(obj);
+                        else DestroyImmediate(obj);
+                        ClearLabels();
+                        throw new InvalidOperationException("Roulette number font could not be measured. Check the assigned TMP font.");
+                    }
 
                     commonScale =
                         desiredTextHeight / referenceHeight;
@@ -394,6 +408,9 @@ namespace Code.Scripts.Roulette
 
         public void Spin(RouletteResult result)
         {
+            var vfx = GetComponent<RouletteSectorVFX>();
+            if (vfx != null && vfx.IsPresentationBusy)
+                throw new InvalidOperationException("Wait for the roulette entrance to finish.");
             if (IsSpinning ||
                 !isActiveAndEnabled ||
                 !_initialized)
@@ -541,9 +558,17 @@ namespace Code.Scripts.Roulette
         public void Hide()
         {
             CancelSpin();
+            GetComponent<RouletteSectorVFX>()?.HidePresentationImmediately();
 
             if (_visualRoot != null)
                 _visualRoot.SetActive(false);
+        }
+
+        public void Dismiss(Action completed)
+        {
+            var vfx = GetComponent<RouletteSectorVFX>();
+            if (vfx != null && vfx.isActiveAndEnabled) vfx.Dismiss(completed);
+            else completed?.Invoke();
         }
 
         public void CancelSpin()

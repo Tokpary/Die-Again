@@ -26,6 +26,12 @@ namespace Code.Scripts.UI.Screens
         private void OnNextClicked() => NextButtonClicked?.Invoke();
         private void OnSpinClicked() => SpinButtonClicked?.Invoke();
 
+        public void ShowTransition(string message)
+        {
+            if (_resultText != null) _resultText.text = message;
+            SetButtons(false, false);
+        }
+
         public void ShowPreview(GameProgress progress, int probability)
         {
             if (_previewText != null)

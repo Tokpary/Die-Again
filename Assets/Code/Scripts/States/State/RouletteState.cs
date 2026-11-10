@@ -11,6 +11,8 @@ namespace Code.Scripts.States.State
         private RouletteScreen _screen;
         private bool _active;
         private bool _spinning;
+        private bool _transitioning;
+        private bool _entered;
         
         private RouletteManager _rouletteManager => _context.RouletteManager;
         private GameProgress _progress => _context.RunData.Progress;
@@ -21,9 +23,11 @@ namespace Code.Scripts.States.State
         public override void Enter()
         {
             base.Enter();
+            _entered = true;
             Debug.Log("Entering Roulette State");
             _context.CameraController.MoveTo(CameraShotId.Roulette, () =>
             {
+                if (!_entered) return;
                 _active = true;
                 _screen = _context.UIManager.ShowScreen<RouletteScreen>();
                 _screen.SpinButtonClicked += OnSpinButtonClicked;
@@ -40,13 +44,19 @@ namespace Code.Scripts.States.State
             
                 if (!_progress.IsRoundPrepared) _rouletteManager.PrepareRound(_progress);
 
-                _rouletteManager.Show(_progress, _context.RunData.CursedObject);
-                _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day, _context.RunData.CursedObject));
-                if (_progress.HasResult)
+                _transitioning = true;
+                _screen.ShowTransition("Preparando la ruleta...");
+                _rouletteManager.Show(_progress, _context.RunData.CursedObject, () =>
                 {
-                    _rouletteManager.ShowResult(_progress.CurrentResult);
-                    _screen.ShowResult(_progress.CurrentResult, !_progress.IsRoundStarted);
-                }
+                    if (!_active) return;
+                    _transitioning = false;
+                    _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day, _context.RunData.CursedObject));
+                    if (_progress.HasResult)
+                    {
+                        _rouletteManager.ShowResult(_progress.CurrentResult);
+                        _screen.ShowResult(_progress.CurrentResult, !_progress.IsRoundStarted);
+                    }
+                });
             });
             
         }
@@ -61,7 +71,7 @@ namespace Code.Scripts.States.State
         // The test button and future automatic entry both use this single operation.
         public void RequestSpin()
         {
-            if (!_active || _spinning || _progress.IsRoundStarted) return;
+            if (!_active || _transitioning || _spinning || _progress.IsRoundStarted) return;
             if (!TryValidate(out string error))
             {
                 _screen.ShowError(error);
@@ -118,15 +128,23 @@ namespace Code.Scripts.States.State
 
         private void OnPlayButtonClicked()
         {
-            if (!_active || _spinning || !_progress.HasResult) return;
-            _progress.StartRound();
-            _stateMachine.ChangeState(new GameplayState(_context, _stateMachine));
+            if (!_active || _transitioning || _spinning || !_progress.HasResult) return;
+            _transitioning = true;
+            _screen.ShowTransition("Continuando...");
+            _rouletteManager.Dismiss(() =>
+            {
+                if (!_active) return;
+                _progress.StartRound();
+                _stateMachine.ChangeState(new GameplayState(_context, _stateMachine));
+            });
         }
 
         public override void Exit()
         {
+            _entered = false;
             if (!_active) return;
             _active = false;
+            _transitioning = false;
             _spinning = false;
             if (_screen != null)
             {
