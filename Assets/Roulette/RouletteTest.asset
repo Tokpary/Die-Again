@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8898eede5cf8004c8514bcdb8f4def8, type: 3}
+  m_Name: RouletteTest
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Roulette.RouletteSO
+  luckyNumberMinimum: 1
+  luckyNumberMaximum: 6
+  day1BossProbability: 1
+  day2BossProbability: 25
+  day3BossProbability: 50
+  day4BossProbability: 100

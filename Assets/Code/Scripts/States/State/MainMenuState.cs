@@ -1,3 +1,4 @@
+using Code.Scripts.Core;
 using Code.Scripts.UI;
 using Code.Scripts.UI.Screens;
 using UnityEngine;
@@ -32,6 +33,9 @@ namespace Code.Scripts.States.State
         {
             Debug.Log("[MainMenu] Botón Jugar pulsado");
             _screen.PlayButtonClicked -= OnPlayButtonClicked;
+            _context.RunData = new RunData(_context.GameConfig); 
+            _context.DiceDrawer.Clear();
+            _context.DiceDrawer.Populate(_context.RunData.DiceCase);
             _stateMachine.ChangeState(new RouletteState(_context, _stateMachine));
         }
 
