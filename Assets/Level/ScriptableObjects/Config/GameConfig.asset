@@ -23,3 +23,31 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1833768530ff21e479b6ea396c65a001, type: 2}
   - {fileID: 11400000, guid: b70000ccec238d44e9c61da5848b7eaa, type: 2}
   - {fileID: 11400000, guid: 203dc907bb5ea4c45b36b540e1727fb7, type: 2}
+  shotsPerDay: 5
+  rerollsPerDay: 2
+  shopPool:
+  - {fileID: 11400000, guid: f221d4fa3d140e44083a1a5023002573, type: 2}
+  - {fileID: 11400000, guid: 394b551d943a8534fa2162eb71c26f90, type: 2}
+  - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
+  - {fileID: 11400000, guid: 87df873c24439b04882209ae6e570d41, type: 2}
+  - {fileID: 11400000, guid: 1833768530ff21e479b6ea396c65a001, type: 2}
+  - {fileID: 11400000, guid: b70000ccec238d44e9c61da5848b7eaa, type: 2}
+  - {fileID: 11400000, guid: 203dc907bb5ea4c45b36b540e1727fb7, type: 2}
+  - {fileID: 11400000, guid: f221d4fa3d140e44083a1a5023002573, type: 2}
+  - {fileID: 11400000, guid: 394b551d943a8534fa2162eb71c26f90, type: 2}
+  - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
+  - {fileID: 11400000, guid: 87df873c24439b04882209ae6e570d41, type: 2}
+  - {fileID: 11400000, guid: 1833768530ff21e479b6ea396c65a001, type: 2}
+  - {fileID: 11400000, guid: b70000ccec238d44e9c61da5848b7eaa, type: 2}
+  - {fileID: 11400000, guid: 203dc907bb5ea4c45b36b540e1727fb7, type: 2}
+  - {fileID: 11400000, guid: f221d4fa3d140e44083a1a5023002573, type: 2}
+  - {fileID: 11400000, guid: 394b551d943a8534fa2162eb71c26f90, type: 2}
+  - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
+  - {fileID: 11400000, guid: 87df873c24439b04882209ae6e570d41, type: 2}
+  - {fileID: 11400000, guid: 1833768530ff21e479b6ea396c65a001, type: 2}
+  - {fileID: 11400000, guid: b70000ccec238d44e9c61da5848b7eaa, type: 2}
+  - {fileID: 11400000, guid: 203dc907bb5ea4c45b36b540e1727fb7, type: 2}
+  shopOfferMin: 10
+  shopOfferMax: 20
+  startingCursedObjects: []
+  KillPlaneHeight: -1

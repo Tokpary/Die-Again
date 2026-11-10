@@ -238,10 +238,16 @@ namespace Code.Scripts.Rolling
 
        public void DiscardThrown(Action onDone)
        {
+           List<Dice.Dice> thrown = TakeThrownDice();
+           _context.DiceAnimator.Vanish(thrown, d => _context.DiceDrawer.Discard(d, _context.RunData.DiceCase), onDone);
+       }
+
+       public List<Dice.Dice> TakeThrownDice()
+       {
            ReturnLoadedDiceToDrawer();
            var thrown = new List<Dice.Dice>(_tracker.Dice);
            ClearTable();
-           _context.DiceAnimator.Vanish(thrown, d => _context.DiceDrawer.Discard(d, _context.RunData.DiceCase), onDone);
+           return thrown;
        }
 
        public void ClearTable()

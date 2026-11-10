@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using DG.Tweening;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Code.Scripts.Dice
 {
@@ -91,6 +93,15 @@ namespace Code.Scripts.Dice
                 rb.angularVelocity = Vector3.zero;
                 rb.position = DropPoint;
             }
+        }
+
+        public Dice Spawn(DiceInstance data, Vector3 position)
+        {
+            Dice dice = Instantiate(data.DiceData.prefab, position, UnityEngine.Random.rotation);
+            dice.Init(data);
+            dice.GetComponent<Rigidbody>().isKinematic = true;
+            dice.transform.localScale = Vector3.zero;
+            return dice;
         }
     }
 }

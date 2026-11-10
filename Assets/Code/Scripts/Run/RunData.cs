@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Code.Scripts.Dice;
+using Code.Scripts.Shop;
 
 namespace Code.Scripts.Core
 {
@@ -7,6 +8,7 @@ namespace Code.Scripts.Core
     {
         public GameProgress Progress { get; }
         public DiceCase DiceCase { get; }
+        public ShopOffer ShopOffer { get; }
 
         public List<CursedObject.CursedObject> CursedObject { get; } = new List<CursedObject.CursedObject>();
 
@@ -22,6 +24,7 @@ namespace Code.Scripts.Core
             {
                 DiceCase.TryAdd(new DiceInstance(dice));
             }
+            ShopOffer = new ShopOffer(config.shopPool, config.shopOfferMin, config.shopOfferMax);
         }
     }
 }

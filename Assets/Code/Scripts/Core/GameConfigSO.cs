@@ -17,6 +17,13 @@ namespace Code.Scripts.Core
         [Header("Initial Budget")]
         public int shotsPerDay = 5;
         public int rerollsPerDay = 2;
+
+        [Header("Shop")] 
+        public DiceSO[] shopPool;
+
+        public int shopOfferMin = 10;
+        public int shopOfferMax = 20;
+        
         
         public CursedObject.CursedObject[] startingCursedObjects = new CursedObject.CursedObject[0];
         
