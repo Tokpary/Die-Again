@@ -31,6 +31,10 @@ Material:
     m_Floats:
     - _BevelStrength: 0.8
     - _BevelWidth: 0.1
+    - _D2Balance: 0.9
+    - _D2FlatAxis: 2
+    - _D2Pattern: 0
+    - _D2PatternScale: 8
     - _DeformAmount: 0.0111
     - _DeformFrequency: 8
     - _Distortion: 3.53
@@ -48,9 +52,11 @@ Material:
     - _WaveSpeed: 1.37
     - _WaveWidth: 0.293
     m_Colors:
-    - _BaseColor: {r: 0.003, g: 0.003, b: 0.005, a: 1}
+    - _BaseColor: {r: 0.019607844, g: 0.019607844, b: 0.019607844, a: 1}
+    - _D2HalfSize: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _D4Values: {r: 1, g: 2, b: 3, a: 4}
-    - _InkColor: {r: 1, g: 1, b: 1, a: 1}
+    - _InkColor: {r: 0.90588236, g: 0.89411765, b: 0.98039216, a: 1}
     - _PatternCenter: {r: 0, g: 0, b: 0, a: 0}
+    - _WaveColor: {r: 0.90588236, g: 0.89411765, b: 0.98039216, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
