@@ -3,6 +3,7 @@ using Code.Scripts.UI;
 using Code.Scripts.Core;
 using Code.Scripts.Dice;
 using Code.Scripts.Roulette;
+using Code.Scripts.Shop;
 
 namespace Code.Scripts
 {
@@ -19,9 +20,10 @@ namespace Code.Scripts
         public DiceAnimator DiceAnimator { get; private set; }
         public CameraController CameraController { get; set; }
         public DicePlayArea PlayArea { get; set; }
+        public PurchaseEffect PurchaseEffect { get; set; }
         public GameContext(UIManager uiManager, GameInputs gameInputs, DiceThrower diceThrower, RouletteManager rouletteManager, 
             RunData runData, GameConfigSO gameConfig, DiceDrawer diceDrawer, DiceDragController diceDragController = null,
-            DiceAnimator diceAnimator = null, CameraController cameraController = null, DicePlayArea dicePlayArea = null)
+            DiceAnimator diceAnimator = null, CameraController cameraController = null, DicePlayArea dicePlayArea = null, PurchaseEffect purchaseEffect = null)
         {
             UIManager = uiManager;
             GameInputs = gameInputs;
@@ -34,6 +36,7 @@ namespace Code.Scripts
             DiceAnimator = diceAnimator;
             PlayArea = dicePlayArea;
             CameraController = cameraController;
+            PurchaseEffect = purchaseEffect;
         }
 
     }
