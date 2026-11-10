@@ -23,6 +23,7 @@ namespace Code.Scripts.Dice
         {
             Data = data;
             FaceValueProbe.SetDiceData(data.DiceData);
+            data.DiceMaterial?.ApplyVisual(this);
         }
         
         public int GetUpwardFaceValue()
