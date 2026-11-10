@@ -10,6 +10,8 @@ namespace Code.Scripts.Dice
     public class DiceDrawer : MonoBehaviour
     {
         [SerializeField] private Transform[] _slots;
+        [SerializeField, Tooltip("Optional material for spawned dice without an existing special material.")]
+        private DiceMaterials.DiceMaterial _defaultDiceMaterial;
         private readonly List<Dice> _dice = new List<Dice>();
         [SerializeField] private float _returnDropHeight = 1f;
         [SerializeField] Transform _drawerTransform;
@@ -42,6 +44,8 @@ namespace Code.Scripts.Dice
             for (int i = 0; i < diceCase.Dice.Count && i < _slots.Length; i++)
             {
                 DiceInstance data = diceCase.Dice[i];
+                if (data.DiceMaterial == null && _defaultDiceMaterial != null)
+                    data.DiceMaterial = _defaultDiceMaterial;
                 Dice dice = Instantiate(data.DiceData.prefab, _slots[i].position, _slots[i].rotation, _slots[i]);
                 dice.Init(data);
                 _dice.Add(dice);

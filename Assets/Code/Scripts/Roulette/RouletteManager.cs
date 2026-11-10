@@ -79,15 +79,16 @@ namespace Code.Scripts.Roulette
             return error == null;
         }
 
-        public void Show(GameProgress progress, IReadOnlyList<Code.Scripts.CursedObject.CursedObject> passives = null)
+        public void Show(GameProgress progress, IReadOnlyList<Code.Scripts.CursedObject.CursedObject> passives = null, Action onPresented = null)
         {
             if (progress == null || !progress.IsRoundPrepared)
                 throw new InvalidOperationException("Prepare the round before showing the roulette.");
-            _view.Show(GetBossProbability(progress.Day, passives), progress.SelectedLuckyNumbers);
+            _view.Show(GetBossProbability(progress.Day, passives), progress.SelectedLuckyNumbers, onPresented);
         }
 
         public void ShowResult(RouletteResult result) => _view.ShowResult(result);
         public void Hide() => _view.Hide();
+        public void Dismiss(Action completed) => _view.Dismiss(completed);
 
         public RouletteResult Spin(GameProgress progress, IReadOnlyList<Code.Scripts.CursedObject.CursedObject> passives = null)
         {
