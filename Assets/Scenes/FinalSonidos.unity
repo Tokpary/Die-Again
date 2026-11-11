@@ -3228,6 +3228,7 @@ GameObject:
   - component: {fileID: 268076821}
   - component: {fileID: 268076820}
   - component: {fileID: 268076823}
+  - component: {fileID: 268076824}
   m_Layer: 0
   m_Name: Menu Opciones
   m_TagString: Untagged
@@ -3260,7 +3261,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: bf7a524592746ce4baca7d8589a3ec39, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3328,6 +3329,27 @@ MonoBehaviour:
   settingsContent: {fileID: 173162419}
   creditsContent: {fileID: 81301629}
   movementDuration: 1
+--- !u!65 &268076824
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268076818}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: 0, y: -0.00000023841858, z: 0}
 --- !u!1 &270332937 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d97aecf94ac79d4b99c61e9b623238c, type: 3}
@@ -12855,7 +12877,7 @@ AudioSource:
   m_GameObject: {fileID: 1258312549}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -6646284539624852302, guid: 2217056c2aefbf64e808b72472a7066a, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
@@ -16100,7 +16122,7 @@ AudioSource:
   m_GameObject: {fileID: 1590416113}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 3917827014952094886, guid: 2217056c2aefbf64e808b72472a7066a, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0

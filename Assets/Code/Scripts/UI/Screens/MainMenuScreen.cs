@@ -9,9 +9,29 @@ namespace Code.Scripts.UI.Screens
         [SerializeField] private Button _startButton;
         [SerializeField] private MainMenuOption[] _menuOptions;
         [SerializeField] private MainMenuSettingsPanel _settingsPanel;
+        [SerializeField] private AudioClip _menuMusic;
 
         public event Action<MainMenuOptionType> MenuOptionClicked;
         public event Action PlayButtonClicked;
+
+        public override void Show()
+        {
+            base.Show();
+
+            if (_menuMusic == null)
+            {
+                Debug.LogError("[MainMenu] Asigna la música del menú en MainMenuScreen.", this);
+                return;
+            }
+
+            if (AudioManager.Instance == null)
+            {
+                Debug.LogError("[MainMenu] No hay un AudioManager activo en la escena.", this);
+                return;
+            }
+
+            AudioManager.Instance.PlayMusic(_menuMusic);
+        }
 
         public void ShowOptionsPanel(MainMenuOptionType optionType)
         {

@@ -2244,6 +2244,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   _settingsPanel: {fileID: 0}
+  _menuMusic: {fileID: 8300000, guid: 43e48dbde19eb5c4b8233ac478f15840, type: 3}
 --- !u!1 &7086995791645366703
 GameObject:
   m_ObjectHideFlags: 0
