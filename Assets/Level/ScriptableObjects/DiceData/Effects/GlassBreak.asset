@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc3b434cd964ee29e7ce7b0b1c95261, type: 3}
   m_Name: GlassBreak
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.Collision.Effects.EliminateOnCollision
-  _priority: 0
-  _ignoreSameMaterial: 1
+  _priority: -10
+  _ignoreSameMaterial: 0
   _immuneMaterials: []
   _minImpact: 0
-  _target: 0
-  _vanishDuration: 0
-  _vfx: {fileID: 0}
+  _target: 1
+  _vanishDuration: 0.05
+  _vfx: {fileID: 5884212840563812282, guid: b62e0e3bd941a554fa80a0fd0c229e90, type: 3}
   _blastForce: 0
   _blastRadius: 2.5
   _blastUpwards: 0.5

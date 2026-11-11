@@ -33,6 +33,9 @@ namespace Code.Scripts.Core
             ShopOffer = new ShopOffer(config.shopPool, config.shopOfferMin, config.shopOfferMax);
         }
         
+        public bool ReplaceDice(DiceInstance dice, DiceInstance replacement) =>
+            DiceCase.Replace(dice, replacement) || Bank.Replace(dice, replacement);
+        
         public bool RemoveDice(DiceInstance dice) => DiceCase.Remove(dice) || Bank.Remove(dice);
     }
 }

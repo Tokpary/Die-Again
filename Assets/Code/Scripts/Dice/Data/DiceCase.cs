@@ -29,5 +29,14 @@ namespace Code.Scripts.Dice
             Changed?.Invoke();
             return true;
         }
+        
+        public bool Replace(DiceInstance dice, DiceInstance replacement)
+        {
+            int index = _diceInstances.IndexOf(dice);
+            if (index < 0 || replacement == null) return false;
+            _diceInstances[index] = replacement;
+            Changed?.Invoke();
+            return true;
+        }
     }
 }

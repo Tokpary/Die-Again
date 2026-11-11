@@ -294,6 +294,40 @@ namespace Code.Scripts.Rolling
                 .SetLink(dice.gameObject)
                 .OnComplete(() => dice.gameObject.SetActive(false));
         }
+        
+        public Dice.Dice Convert(Dice.Dice target, Dice.Dice model)
+        {
+            if (!IsInPlay(target)) return null;
+
+            DiceInstance data = model.Data.Clone();
+            if (!_context.RunData.ReplaceDice(target.Data, data))
+                Debug.LogWarning("[RollSession] El dado convertido no estaba ni en el estuche ni en el cofre.", target);
+
+            Transform from = target.transform;
+            Dice.Dice converted = UnityEngine.Object.Instantiate(data.DiceData.prefab, from.position, from.rotation);
+            converted.Init(data);
+            Utils.Utils.SetLayer(converted.gameObject, target.gameObject.layer);   // si aún iba volando, sigue igual
+            Rigidbody oldBody = target.GetComponent<Rigidbody>();
+            Rigidbody newBody = converted.GetComponent<Rigidbody>();
+            newBody.isKinematic = false;
+            newBody.linearVelocity = oldBody.linearVelocity;
+            newBody.angularVelocity = oldBody.angularVelocity;
+
+            _tracker.Add(converted);
+            _tracker.Remove(target);
+            int index = _outOfDrawer.IndexOf(target);
+            if (index >= 0) _outOfDrawer[index] = converted;
+            else _outOfDrawer.Add(converted);
+            if (_origins.TryGetValue(target, out DiceDrawer home))
+            {
+                _origins.Remove(target);
+                _origins[converted] = home;
+            }
+            NotifyBudgetChanged();
+
+            UnityEngine.Object.Destroy(target.gameObject);
+            return converted;
+        }
 
         public void Blast(Vector3 center, float force, float radius, float upwards = 0.5f)
         {

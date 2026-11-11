@@ -16,7 +16,7 @@ MonoBehaviour:
   _ignoreSameMaterial: 1
   _immuneMaterials: []
   _minImpact: 0
-  _repelDistance: 10
+  _repelDistance: 0.5
   _repelDuration: 0.5
   _fusionHeight: 0
   _collapseDuration: 0.6
