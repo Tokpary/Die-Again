@@ -25,6 +25,7 @@ public class MainMenuCurtains : MonoBehaviour
     private Vector3 posicionInicialIzquierda;
     private Vector3 posicionInicialDerecha;
     private bool abiertas;
+    private Coroutine movimientoCortinas;
 
     private void Awake()
     {
@@ -45,7 +46,10 @@ public class MainMenuCurtains : MonoBehaviour
     private void AlPulsarOpcion(MainMenuOptionType opcion)
     {
         if (opcion == MainMenuOptionType.Play && !abiertas)
-            StartCoroutine(Abrir());
+        {
+            if (movimientoCortinas != null) StopCoroutine(movimientoCortinas);
+            movimientoCortinas = StartCoroutine(Abrir());
+        }
     }
 
     private IEnumerator Abrir()
@@ -76,8 +80,37 @@ public class MainMenuCurtains : MonoBehaviour
 
         paredIzquierda.localPosition = destinoIzquierda;
         paredDerecha.localPosition = destinoDerecha;
+        movimientoCortinas = null;
 
        // yield return StartCoroutine(MoverCamara());
+    }
+
+    public void Cerrar()
+    {
+        if (!abiertas) return;
+        if (movimientoCortinas != null) StopCoroutine(movimientoCortinas);
+        movimientoCortinas = StartCoroutine(CerrarCortinas());
+    }
+
+    private IEnumerator CerrarCortinas()
+    {
+        Vector3 inicioIzquierda = paredIzquierda.localPosition;
+        Vector3 inicioDerecha = paredDerecha.localPosition;
+        float tiempo = 0f;
+
+        while (tiempo < duracion)
+        {
+            tiempo += Time.deltaTime;
+            float progreso = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(tiempo / duracion));
+            paredIzquierda.localPosition = Vector3.Lerp(inicioIzquierda, posicionInicialIzquierda, progreso);
+            paredDerecha.localPosition = Vector3.Lerp(inicioDerecha, posicionInicialDerecha, progreso);
+            yield return null;
+        }
+
+        paredIzquierda.localPosition = posicionInicialIzquierda;
+        paredDerecha.localPosition = posicionInicialDerecha;
+        abiertas = false;
+        movimientoCortinas = null;
     }
 
  /*   private IEnumerator MoverCamara()

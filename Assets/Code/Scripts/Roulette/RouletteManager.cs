@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Code.Scripts.Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -12,6 +13,7 @@ namespace Code.Scripts.Roulette
     {
         [SerializeField] private RouletteSO _settings;
         [SerializeField] private RouletteView _view;
+        [SerializeField] private TMP_Text _luckyNumberText;
         private readonly System.Random _random = new System.Random();
         private readonly List<RaycastResult> _pointerHits = new List<RaycastResult>();
         private PointerEventData _pointerEvent;
@@ -29,8 +31,19 @@ namespace Code.Scripts.Roulette
             _view.Hide();
         }
 
-        private void HandleSpinCompleted(RouletteResult result) => OnSpinCompleted?.Invoke(result);
+        private void HandleSpinCompleted(RouletteResult result)
+        {
+            SetLuckyNumberText(result);
+            OnSpinCompleted?.Invoke(result);
+        }
+
         private void HandleSpinCancelled() => OnSpinCancelled?.Invoke();
+
+        private void SetLuckyNumberText(RouletteResult result)
+        {
+            if (_luckyNumberText != null)
+                _luckyNumberText.text = result.LuckyNumber.ToString();
+        }
 
         private void Update()
         {
@@ -131,7 +144,11 @@ namespace Code.Scripts.Roulette
             _view.Show(GetBossProbability(progress.Day, passives), progress.SelectedLuckyNumbers, onPresented);
         }
 
-        public void ShowResult(RouletteResult result) => _view.ShowResult(result);
+        public void ShowResult(RouletteResult result)
+        {
+            SetLuckyNumberText(result);
+            _view.ShowResult(result);
+        }
         public void Hide() => _view.Hide();
         public void Dismiss(Action completed) => _view.Dismiss(completed);
 

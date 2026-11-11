@@ -1,4 +1,5 @@
 using Code.Scripts.Core;
+using Code.Scripts.Camera;
 using Code.Scripts.UI;
 using Code.Scripts.UI.Screens;
 using UnityEngine;
@@ -20,6 +21,11 @@ namespace Code.Scripts.States.State
             _screen = _context.UIManager.ShowScreen<MainMenuScreen>();
             _screen.PlayButtonClicked += OnPlayButtonClicked;
             _screen.MenuOptionClicked += OnMenuOptionClicked;
+            _context.CameraController.MoveTo(CameraShotId.MainMenu, () =>
+            {
+                MainMenuCurtains curtains = UnityEngine.Object.FindFirstObjectByType<MainMenuCurtains>();
+                if (curtains != null) curtains.Cerrar();
+            });
         }
 
         public override void Exit()
