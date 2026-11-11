@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Antimatter D6
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
   displayName: Antimatter D6
-  description: An antimatter dice it's destroyed once it contacts with another dice
+  description: Annihilates itself and the first dice it collides with. Immune to
+    Antimatter and Lava dice.
   preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
   faceValues: 010000000200000003000000040000000500000006000000
   diceMaterial: {fileID: 11400000, guid: 60bb761868d4411b9f830e845f727d5e, type: 2}

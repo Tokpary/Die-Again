@@ -78,6 +78,7 @@ namespace Code.Scripts.Roulette
         }
 
 
+
         public void PrepareRound(GameProgress progress)
         {
             if (progress == null)
@@ -89,13 +90,26 @@ namespace Code.Scripts.Roulette
             if (!_settings.TryValidate(out string error))
                 throw new InvalidOperationException(error);
 
+            // Seleccionar el rango de la semana y día actuales.
+            RouletteSO.NumberRange range = _settings.GetNumberRange(
+                progress.Week,
+                progress.Day
+            );
+
             progress.PrepareNextRound(
-                _settings.luckyNumberMinimum,
-                _settings.luckyNumberMaximum,
+                range.minimum,
+                range.maximum,
                 _settings.maximumSlices,
                 _random
             );
+
+            Debug.Log(
+                $"[Roulette] Week {progress.Week} | " +
+                $"Day {progress.Day} | " +
+                $"Range: {range.minimum}-{range.maximum}"
+            );
         }
+
 
 
         public int GetBossProbability(int day, IReadOnlyList<Code.Scripts.CursedObject.CursedObject> passives = null, bool logEffects = false)

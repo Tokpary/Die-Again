@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Lava D6
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
   displayName: Lava D6
-  description: This D6 destroys everything on his path
+  description: Destroys any dice it collides with without destroying itself. Immune
+    to other Lava dice.
   preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
   faceValues: 010000000200000003000000040000000500000006000000
   diceMaterial: {fileID: 11400000, guid: 3b863c6b1adbb9f468f01fe298bef6ca, type: 2}

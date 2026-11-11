@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4a5d8b89e134494b7b51bd15c577381, type: 3}
   m_Name: D10
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
-  displayName: 
-  description: 
+  displayName: Basic D10
+  description: Just a basic D10.
   preview: {fileID: 21300000, guid: 36508bd9ee00b0047bb9b28a8e7e0bd5, type: 3}
   faceValues: 0100000002000000030000000400000005000000060000000700000008000000090000000a000000
   diceMaterial: {fileID: 0}
