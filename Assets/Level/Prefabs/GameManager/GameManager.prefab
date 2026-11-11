@@ -280,7 +280,7 @@ MonoBehaviour:
   _rerollButton: {fileID: 5851607075849945236}
   _rerollHintText: {fileID: 7886766596583440154}
   _shotsText: {fileID: 1520571224031232863}
-  _rerollsText: {fileID: 9137354525910395089}
+  _rerollButtonText: {fileID: 9196438889624653627}
   _scoreText: {fileID: 6101198714043200129}
   _winningScoreText: {fileID: 6588652987942997229}
   _tableControls: {fileID: 1570658599578290789}

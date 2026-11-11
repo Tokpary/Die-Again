@@ -12,7 +12,7 @@ namespace Code.Scripts.UI.Screens
         
         [SerializeField] private TMP_Text _rerollHintText;
         [SerializeField] private TMP_Text _shotsText;
-        [SerializeField] private TMP_Text _rerollsText;
+        [SerializeField] private TMP_Text _rerollButtonText;
         [SerializeField] private TMP_Text _scoreText;
         [SerializeField] private TMP_Text _winningScoreText;
 
@@ -32,7 +32,7 @@ namespace Code.Scripts.UI.Screens
         public void ShowBudget(int shots, int rerolls)
         {
             _shotsText.text = $"Shots: {shots}";
-            _rerollsText.text = $"Rerolls: {rerolls}";
+            _rerollButtonText.text = $"REROLL ({rerolls})";
         }
         
         public void ShowScore(int score)

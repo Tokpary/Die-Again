@@ -16588,6 +16588,10 @@ PrefabInstance:
       propertyPath: '_zones.Array.data[3]'
       value: 
       objectReference: {fileID: 1232814071}
+    - target: {fileID: 1212537304574505765, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 230
+      objectReference: {fileID: 0}
     - target: {fileID: 1824590424287504302, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
       propertyPath: _shotsRoot
       value: 
