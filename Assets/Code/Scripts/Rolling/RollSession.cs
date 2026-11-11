@@ -245,19 +245,35 @@ namespace Code.Scripts.Rolling
 
         #region COLLISIONS
 
-        private void OnDiceCollided(Dice.Dice self, Dice.Dice other, Collision collision)
+        private void OnDiceCollided(Dice.Dice a, Dice.Dice b, Collision collision)
         {
-            if (!IsInPlay(self) || !IsInPlay(other)) return;
-            DiceMaterial material = self.Data.DiceMaterial;
-            if (material == null) return;
+            if (!IsInPlay(a) || !IsInPlay(b)) return;
 
-            Vector3 point = collision.contactCount > 0 ? collision.GetContact(0).point : self.transform.position;
-            material.OnCollision(new DiceCollision(self, other, point, collision.relativeVelocity.magnitude, this));
+            Vector3 point = collision.contactCount > 0 ? collision.GetContact(0).point : a.transform.position;
+            float impact = collision.relativeVelocity.magnitude;
+
+            var hits = EffectsOf(a, b, point, impact).Concat(EffectsOf(b, a, point, impact))
+                .OrderByDescending(h => h.Effect.Priority)
+                .ToList();
+
+            foreach ((DiceCollisionEffect effect, DiceCollision hit) in hits)
+                if (IsInPlay(hit.Self)) effect.Apply(hit); 
         }
+        
+        private IEnumerable<(DiceCollisionEffect Effect, DiceCollision Hit)> EffectsOf(Dice.Dice self, Dice.Dice other, Vector3 point, float impact)
+        {
+            DiceMaterial material = self.Data.DiceMaterial;
+            if (material == null || material.collisionEffects == null) yield break;
+
+            var hit = new DiceCollision(self, other, point, impact, this);
+            foreach (DiceCollisionEffect effect in material.collisionEffects)
+                if (effect != null) yield return (effect, hit);
+        }
+
 
         public bool IsInPlay(Dice.Dice dice) => _running && _tracker.Dice.Contains(dice);
 
-        public void Eliminate(Dice.Dice dice)
+        public void Eliminate(Dice.Dice dice, Func<Transform, Tween> vanish = null)
         {
             if (!IsInPlay(dice)) return;
             _tracker.Remove(dice);   
@@ -269,9 +285,34 @@ namespace Code.Scripts.Rolling
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
-            dice.transform.DOScale(Vector3.zero, _settings.EliminateDuration).SetEase(Ease.InBack)
+
+            Transform t = dice.transform;
+            Tween tween = vanish != null
+                ? vanish(t)
+                : t.DOScale(Vector3.zero, _settings.EliminateDuration).SetEase(Ease.InBack);
+            tween.SetTarget(t)
                 .SetLink(dice.gameObject)
                 .OnComplete(() => dice.gameObject.SetActive(false));
+        }
+
+        public void Blast(Vector3 center, float force, float radius, float upwards = 0.5f)
+        {
+            foreach (Rigidbody rb in PhysicalDiceInPlay())
+                rb.AddExplosionForce(force, center, radius, upwards, ForceMode.Impulse);
+        }
+
+        public void Pull(Vector3 center, float acceleration, float radius, float duration)
+        {
+            DOVirtual.Float(0f, 1f, duration, _ =>
+            {
+                foreach (Rigidbody rb in PhysicalDiceInPlay())
+                {
+                    Vector3 toCenter = center - rb.position;
+                    float distance = toCenter.magnitude;
+                    if (distance > radius || distance < 0.01f) continue;
+                    rb.AddForce(toCenter / distance * (acceleration * (1f - distance / radius)), ForceMode.Acceleration);
+                }
+            }).SetUpdate(UpdateType.Fixed);   
         }
 
         private void BringBack(List<Dice.Dice> dice, List<DiceDrawer> homes, int firstReturnIndex, Action onDone)
@@ -285,6 +326,16 @@ namespace Code.Scripts.Rolling
             _context.DiceAnimator.Appear(dice, d => homes[dice.IndexOf(d)].Add(d), onDone);
         }
 
+        private IEnumerable<Rigidbody> PhysicalDiceInPlay()
+        {
+            if (!_running) yield break;
+            foreach (Dice.Dice dice in _tracker.Dice.ToList())
+            {
+                Rigidbody rb = dice.GetComponent<Rigidbody>();
+                if (!rb.isKinematic) yield return rb;
+            }
+        }
+        
         private void ConsumeEliminated()
         {
             foreach (Dice.Dice dice in _eliminated)
@@ -450,7 +501,6 @@ namespace Code.Scripts.Rolling
             return _tracker.Dice.Contains(dice) && dice.Motion.IsSettled;
         }
 
-        public IReadOnlyList<Dice.Dice> ThrownDices { get; }
 
     }
 }

@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 933f8d3536dec2e4b98976750c1f25d3, type: 3}
   m_Name: Antimatter
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceMaterials.AntimatterMaterial
+  collisionEffects:
+  - {fileID: 11400000, guid: 743828078ae8c8f478dfb197fdac1579, type: 2}
   displayName: Antimateria
+  description: 
   _visualMaterial: {fileID: 2100000, guid: bf25eb5c1aaf488e901603ea1864cd02, type: 2}
