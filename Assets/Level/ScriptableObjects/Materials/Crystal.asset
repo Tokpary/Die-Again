@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceMaterials.CrystalMaterial
   collisionEffects:
   - {fileID: 11400000, guid: af7b9b82a5bd11343afcfaf2f3ac820f, type: 2}
-  displayName: Crystal
+  displayName: 
   description: 
   _visualMaterial: {fileID: 2100000, guid: 128ed67da911e8749aca9cfa251cf79a, type: 2}
   _logOnApply: 0

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f1ba57065f9474dae976522ea45dd8, type: 3}
   m_Name: CursedRunic
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceMaterials.CursedRunicMaterial
-  displayName: Cursed
+  collisionEffects: []
+  displayName: 
+  description: 
   _visualMaterial: {fileID: 2100000, guid: 5cde571b2da13b5478ffc969b394817a, type: 2}
   _logOnApply: 0
