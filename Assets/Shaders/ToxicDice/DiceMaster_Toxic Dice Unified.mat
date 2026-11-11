@@ -40,6 +40,14 @@ Material:
     - _PatternContrast: 1.24
     - _PatternInvSize: 1
     - _PatternSoftness: 0.073
+    - _SlimeImpact: 0
+    - _SlimeImpactAge: 0
+    - _SlimeImpactFrequency: 23
+    - _SlimeImpactSquash: 0.12
+    - _SlimeSquash: 0.0482
+    - _SlimeWaveAmplitude: 0.0393
+    - _SlimeWaveFrequency: 2.65
+    - _SlimeWobbleSpeed: 0.93
     m_Colors:
     - _AcidBright: {r: 0.7, g: 1, b: 0.21999997, a: 1}
     - _AcidDark: {r: 0.42999998, g: 0.8, b: 0.24999997, a: 1}
@@ -48,5 +56,6 @@ Material:
     - _InkColor: {r: 0.015, g: 0.035, b: 0.012, a: 1}
     - _NumberOutlineColor: {r: 0.78, g: 1, b: 0.45, a: 1}
     - _PatternCenter: {r: 0, g: 0, b: 0, a: 0}
+    - _SlimeImpactAxisOS: {r: 0, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -2485,22 +2485,22 @@ MonoBehaviour:
   chaseGroupSize: 3
   resultFlashDuration: 0.85
   bossFlashSpeed: 3
-  pointerBounceDegrees: 3
+  pointerBounceDegrees: 5
   fastVibrationDegrees: 0.22
   brakingTickMultiplier: 1.6
-  stopImpactDegrees: 4
+  stopImpactDegrees: 7
   stopImpactDuration: 0.24
   sparkMaterial: {fileID: 2100000, guid: 20fdd157129f03a40ae447534dd4603c, type: 2}
   sparkPrefab: {fileID: 763799897560185547, guid: 798157bad7358b04499c9d71cd3c0d9b, type: 3}
   winnerImpactPrefab: {fileID: 5880797563127281583, guid: 265d3a5ba69981a4698ceabcedf368b0, type: 3}
-  winnerImpactScale: 0.0004
-  winnerImpactLifetime: 0.3
+  winnerImpactScale: 0.0008
+  winnerImpactLifetime: 0.45
   sparkTip: {x: 0, y: 0.000675, z: 0.0033}
   tickSparkCount: 2
   impactSparkCount: 12
-  sparkSize: 0.025
-  sparkLifetime: 0.2
-  sparkSpeed: 0.7
+  sparkSize: 0.05
+  sparkLifetime: 0.3
+  sparkSpeed: 1.1
   bloomIntensity: 0.18
   sparkCooldown: 0.06
   view: {fileID: 8460459884974005371}
@@ -2587,7 +2587,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: GIRAR / REPETIR
+  m_Text: GIRAR
 --- !u!1 &7388910982070909215
 GameObject:
   m_ObjectHideFlags: 0

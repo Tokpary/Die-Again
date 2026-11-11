@@ -19,6 +19,7 @@ namespace Code.Scripts.UI.Screens
         protected override void Awake()
         {
             base.Awake();
+            SetButtons(false, false);
             if (_nextButton != null) _nextButton.onClick.AddListener(OnNextClicked);
             if (_spinButton != null) _spinButton.onClick.AddListener(OnSpinClicked);
         }
@@ -38,7 +39,7 @@ namespace Code.Scripts.UI.Screens
                 _previewText.text = $"SEMANA {progress.Week} · DÍA {progress.Day}\n" +
                     $"Rango de prueba: {progress.NextLuckyNumberMinimum}-{progress.NextLuckyNumberMaximum}" +
                     $"     |     Jefe: {probability}%\nVERDE: NORMAL     ·     ROJO: JEFE";
-            if (_resultText != null) _resultText.text = "Pulsa GIRAR para revelar el resultado";
+            if (_resultText != null) _resultText.text = "Pulsa la ruleta para revelar el resultado";
             SetButtons(true, false);
         }
 
@@ -53,7 +54,7 @@ namespace Code.Scripts.UI.Screens
             if (_resultText != null)
                 _resultText.text = $"<b>LUCKY NUMBER: {result.LuckyNumber}</b>\n" +
                     (result.IsBoss ? "<color=#F27E85>ENCUENTRO: JEFE</color>" :
-                        "<color=#8ED6B2>ENCUENTRO: NORMAL</color>");
+                        "<color=#8ED6B2>ENCUENTRO: NORMAL</color>") + "\nPulsa la ruleta para continuar";
             SetButtons(canRepeat, true);
         }
 
@@ -66,8 +67,9 @@ namespace Code.Scripts.UI.Screens
 
         private void SetButtons(bool canSpin, bool canContinue)
         {
-            if (_spinButton != null) _spinButton.interactable = canSpin;
-            if (_nextButton != null) _nextButton.interactable = canContinue;
+            // Keep serialized controls for compatibility; interaction now belongs to the model.
+            if (_spinButton != null) _spinButton.gameObject.SetActive(false);
+            if (_nextButton != null) _nextButton.gameObject.SetActive(false);
         }
 
         private void OnDestroy()

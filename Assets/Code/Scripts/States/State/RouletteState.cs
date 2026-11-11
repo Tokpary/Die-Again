@@ -35,6 +35,7 @@ namespace Code.Scripts.States.State
                 _screen.NextButtonClicked += OnPlayButtonClicked;
                 _rouletteManager.OnSpinCompleted += OnSpinCompleted;
                 _rouletteManager.OnSpinCancelled += OnSpinCancelled;
+                _rouletteManager.SpinRequested += OnRouletteClicked;
             
 
                 if (!TryValidate(out string error))
@@ -55,7 +56,7 @@ namespace Code.Scripts.States.State
                     if (_progress.HasResult)
                     {
                         _rouletteManager.ShowResult(_progress.CurrentResult);
-                        _screen.ShowResult(_progress.CurrentResult, !_progress.IsRoundStarted);
+                        _screen.ShowResult(_progress.CurrentResult, false);
                     }
                 });
             });
@@ -69,10 +70,10 @@ namespace Code.Scripts.States.State
             return error == null;
         }
 
-        // The test button and future automatic entry both use this single operation.
+        // Both the UI button and clicking the model use this single operation.
         public void RequestSpin()
         {
-            if (!_active || _transitioning || _spinning || _progress.IsRoundStarted) return;
+            if (!_active || _transitioning || _spinning || _progress.IsRoundStarted || _progress.HasResult) return;
             if (!TryValidate(out string error))
             {
                 _screen.ShowError(error);
@@ -96,6 +97,13 @@ namespace Code.Scripts.States.State
 
         private void OnSpinButtonClicked() => RequestSpin();
 
+        private void OnRouletteClicked()
+        {
+            if (!_active || _transitioning || _spinning) return;
+            if (_progress.HasResult) OnPlayButtonClicked();
+            else RequestSpin();
+        }
+
         private void OnSpinCompleted(RouletteResult result)
         {
             if (!_active || !_spinning) return;
@@ -103,7 +111,7 @@ namespace Code.Scripts.States.State
             try
             {
                 _progress.RecordResult(result);
-                _screen.ShowResult(result, true);
+                _screen.ShowResult(result, false);
                 ScoreResult preview = DiceCalculator.PreviewTolerance(_context.RunData.CursedObject,
                     result.LuckyNumber, result.VictoryTolerance, result.Day);
                 _rouletteManager.GetBossProbability(result.Day, _context.RunData.CursedObject, true);
@@ -154,6 +162,7 @@ namespace Code.Scripts.States.State
             }
             _rouletteManager.OnSpinCompleted -= OnSpinCompleted;
             _rouletteManager.OnSpinCancelled -= OnSpinCancelled;
+            _rouletteManager.SpinRequested -= OnRouletteClicked;
             _rouletteManager.Hide();
             base.Exit();
         }

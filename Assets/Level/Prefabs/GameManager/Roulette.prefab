@@ -99,6 +99,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6213094501812783734}
+  - component: {fileID: 823164502371951001}
   m_Layer: 0
   m_Name: Roulette Presentation
   m_TagString: Untagged
@@ -322,3 +323,36 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4f57a7becb098ac4a8c4ee2be4398300, type: 3}
   m_PrefabInstance: {fileID: 9195439592210587524}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &823164502371951001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7816108570696117232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e9bc1dc21db4da5bc7d6f08d98215f5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Roulette.RouletteVFXRig
+  wheel: {fileID: 8229006875093701229}
+  trailShader: {fileID: 4800000, guid: 1ed8dd0e43e344d292a002010608232e, type: 3}
+  springFrequency: 8
+  springDamping: 0.42
+  pointerLimit: 8
+  startKick: 0.045
+  stopRecoil: 0.03
+  wobbleDegrees: 0.25
+  spinLightIntensity: 2
+  resultLightIntensity: 3.5
+  contactLightPulse: 0.08
+  trailIntensity: 0.8
+  trailArcDegrees: 24
+  trailWidthRatio: 0.007
+  rimSparksPerSecond: 10
+  trailEmission: 3
+  ambientGlowsPrefab: {fileID: 4364354964670000192, guid: 3801a320e9ae1bf44a14efa194c86c3f, type: 3}
+  normalGlowsColor: {r: 1, g: 0.78, b: 0.08, a: 1}
+  bossGlowsColor: {r: 1, g: 0.04, b: 0.02, a: 1}
+  ambientGlowsRate: 10
+  ambientGlowsSize: 0.03

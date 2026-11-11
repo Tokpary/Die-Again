@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using Code.Scripts.Core;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace Code.Scripts.Roulette
 {
@@ -11,8 +13,12 @@ namespace Code.Scripts.Roulette
         [SerializeField] private RouletteSO _settings;
         [SerializeField] private RouletteView _view;
         private readonly System.Random _random = new System.Random();
+        private readonly List<RaycastResult> _pointerHits = new List<RaycastResult>();
+        private PointerEventData _pointerEvent;
+        private EventSystem _pointerEventSystem;
         public event Action<RouletteResult> OnSpinCompleted;
         public event Action OnSpinCancelled;
+        public event Action SpinRequested;
         public bool IsSpinning => _view != null && _view.IsSpinning;
 
         private void Awake()
@@ -25,6 +31,31 @@ namespace Code.Scripts.Roulette
 
         private void HandleSpinCompleted(RouletteResult result) => OnSpinCompleted?.Invoke(result);
         private void HandleSpinCancelled() => OnSpinCancelled?.Invoke();
+
+        private void Update()
+        {
+            if (SpinRequested == null || _view == null || IsSpinning) return;
+            var mouse = Mouse.current;
+            if (mouse == null || !mouse.leftButton.wasPressedThisFrame) return;
+            var events = EventSystem.current;
+            if (events != null)
+            {
+                if (_pointerEvent == null || _pointerEventSystem != events)
+                {
+                    _pointerEventSystem = events;
+                    _pointerEvent = new PointerEventData(events);
+                }
+                _pointerEvent.Reset();
+                _pointerEvent.position = mouse.position.ReadValue();
+                _pointerHits.Clear();
+                events.RaycastAll(_pointerEvent, _pointerHits);
+                foreach (var hit in _pointerHits)
+                    if (hit.gameObject.GetComponentInParent<UnityEngine.UI.Selectable>() != null) return;
+            }
+            var camera = UnityEngine.Camera.main;
+            if (camera != null && _view.ContainsScreenPoint(camera, mouse.position.ReadValue()))
+                SpinRequested.Invoke();
+        }
 
         private void OnDestroy()
         {
@@ -94,8 +125,9 @@ namespace Code.Scripts.Roulette
         {
             if (!TryValidate(progress, out string error)) throw new InvalidOperationException(error);
             if (_view.IsSpinning) throw new InvalidOperationException("The roulette is already spinning.");
+            if (progress.HasResult || progress.IsRoundStarted)
+                throw new InvalidOperationException("Esta ronda ya tiene un resultado de ruleta.");
             RouletteResult result = RouletteRules.Roll(progress, GetBossProbability(progress.Day, passives), _random);
-            progress.ClearTestResult();
             _view.Show(result.BossProbability, progress.SelectedLuckyNumbers);
             _view.Spin(result);
             return result;
