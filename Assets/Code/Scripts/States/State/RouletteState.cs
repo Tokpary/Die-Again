@@ -1,4 +1,5 @@
 using System;
+using Code.Scripts.Camera;
 using Code.Scripts.Core;
 using Code.Scripts.Roulette;
 using Code.Scripts.UI.Screens;
@@ -11,6 +12,8 @@ namespace Code.Scripts.States.State
         private RouletteScreen _screen;
         private bool _active;
         private bool _spinning;
+        private bool _transitioning;
+        private bool _entered;
         
         private RouletteManager _rouletteManager => _context.RouletteManager;
         private GameProgress _progress => _context.RunData.Progress;
@@ -21,29 +24,42 @@ namespace Code.Scripts.States.State
         public override void Enter()
         {
             base.Enter();
+            _entered = true;
             Debug.Log("Entering Roulette State");
-            _active = true;
-            _screen = _context.UIManager.ShowScreen<RouletteScreen>();
-            _screen.SpinButtonClicked += OnSpinButtonClicked;
-            _screen.NextButtonClicked += OnPlayButtonClicked;
-            _rouletteManager.OnSpinCompleted += OnSpinCompleted;
-            _rouletteManager.OnSpinCancelled += OnSpinCancelled;
-
-            if (!TryValidate(out string error))
+            _context.CameraController.MoveTo(CameraShotId.Roulette, () =>
             {
-                _screen.ShowError(error);
-                return;
-            }
+                if (!_entered) return;
+                _active = true;
+                _screen = _context.UIManager.ShowScreen<RouletteScreen>();
+                _screen.SpinButtonClicked += OnSpinButtonClicked;
+                _screen.NextButtonClicked += OnPlayButtonClicked;
+                _rouletteManager.OnSpinCompleted += OnSpinCompleted;
+                _rouletteManager.OnSpinCancelled += OnSpinCancelled;
             
-            if (!_progress.IsRoundPrepared) _rouletteManager.PrepareRound(_progress);
 
-            _rouletteManager.Show(_progress);
-            _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day));
-            if (_progress.HasResult)
-            {
-               _rouletteManager.ShowResult(_progress.CurrentResult);
-                _screen.ShowResult(_progress.CurrentResult, !_progress.IsRoundStarted);
-            }
+                if (!TryValidate(out string error))
+                {
+                    _screen.ShowError(error);
+                    return;
+                }
+            
+                if (!_progress.IsRoundPrepared) _rouletteManager.PrepareRound(_progress);
+
+                _transitioning = true;
+                _screen.ShowTransition("Preparando la ruleta...");
+                _rouletteManager.Show(_progress, _context.RunData.CursedObject, () =>
+                {
+                    if (!_active) return;
+                    _transitioning = false;
+                    _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day, _context.RunData.CursedObject));
+                    if (_progress.HasResult)
+                    {
+                        _rouletteManager.ShowResult(_progress.CurrentResult);
+                        _screen.ShowResult(_progress.CurrentResult, !_progress.IsRoundStarted);
+                    }
+                });
+            });
+            
         }
 
         private bool TryValidate(out string error)
@@ -56,7 +72,7 @@ namespace Code.Scripts.States.State
         // The test button and future automatic entry both use this single operation.
         public void RequestSpin()
         {
-            if (!_active || _spinning || _progress.IsRoundStarted) return;
+            if (!_active || _transitioning || _spinning || _progress.IsRoundStarted) return;
             if (!TryValidate(out string error))
             {
                 _screen.ShowError(error);
@@ -65,10 +81,10 @@ namespace Code.Scripts.States.State
 
             try
             {
-                _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day));
+                _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day, _context.RunData.CursedObject));
                 _screen.ShowSpinning();
                 _spinning = true;
-                _rouletteManager.Spin(_progress);
+                _rouletteManager.Spin(_progress, _context.RunData.CursedObject);
             }
             catch (Exception exception) when (exception is ArgumentException || exception is InvalidOperationException)
             {
@@ -88,6 +104,14 @@ namespace Code.Scripts.States.State
             {
                 _progress.RecordResult(result);
                 _screen.ShowResult(result, true);
+                ScoreResult preview = DiceCalculator.PreviewTolerance(_context.RunData.CursedObject,
+                    result.LuckyNumber, result.VictoryTolerance, result.Day);
+                _rouletteManager.GetBossProbability(result.Day, _context.RunData.CursedObject, true);
+                Debug.Log($"[Ruleta] Semana {result.Week}, día {result.Day} | Lucky Number: {result.LuckyNumber} | " +
+                    $"Tolerancia base: +/-{result.VictoryTolerance} | " +
+                    $"Rango para ganar: [{preview.MinimumScore}, {preview.MaximumScore}] (inclusive) | " +
+                    $"Jefe: {_rouletteManager.GetBossProbability(result.Day)}% base -> {result.BossProbability}% aplicado | " +
+                    $"Encuentro: {(result.IsBoss ? "JEFE" : "NORMAL")}");
             }
             catch (InvalidOperationException exception)
             {
@@ -105,15 +129,23 @@ namespace Code.Scripts.States.State
 
         private void OnPlayButtonClicked()
         {
-            if (!_active || _spinning || !_progress.HasResult) return;
-            _progress.StartRound();
-            _stateMachine.ChangeState(new GameplayState(_context, _stateMachine));
+            if (!_active || _transitioning || _spinning || !_progress.HasResult) return;
+            _transitioning = true;
+            _screen.ShowTransition("Continuando...");
+            _rouletteManager.Dismiss(() =>
+            {
+                if (!_active) return;
+                _progress.StartRound();
+                _stateMachine.ChangeState(new GameplayState(_context, _stateMachine));
+            });
         }
 
         public override void Exit()
         {
+            _entered = false;
             if (!_active) return;
             _active = false;
+            _transitioning = false;
             _spinning = false;
             if (_screen != null)
             {

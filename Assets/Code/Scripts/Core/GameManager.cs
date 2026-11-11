@@ -1,9 +1,13 @@
 using System;
+using Code.Scripts.Camera;
+using Code.Scripts.CursedObject;
 using Code.Scripts.Dice;
 using Code.Scripts.States;
 using Code.Scripts.States.State;
 using Code.Scripts.UI;
 using Code.Scripts.Roulette;
+using Code.Scripts.Shop;
+using Code.Scripts.Table;
 using UnityEngine;
 
 namespace Code.Scripts.Core
@@ -17,6 +21,13 @@ namespace Code.Scripts.Core
         [SerializeField] private DiceDrawer _diceDrawer;
         [SerializeField] private DiceDragController _diceDragController;
         [SerializeField] private DiceAnimator _diceAnimator;
+        [SerializeField] private CameraController _cameraController;
+        [SerializeField] private DicePlayArea _dicePlayArea;
+        [SerializeField] private PurchaseEffect _purchaseEffect;
+        [SerializeField] private CameraViewInput _cameraViewInput;
+        [SerializeField] private DiceDrawer _bankChest;
+        [SerializeField] private CursedShelf _cursedShelf;
+        [SerializeField] private HoverController _hoverController;
         
         private RunData _runData;
         private GameInputs _gameInputs;
@@ -29,9 +40,15 @@ namespace Code.Scripts.Core
             _gameInputs = new GameInputs();
             if (_diceThrower != null) _diceThrower.Init(_gameInputs, _diceDragController);
             if(_diceDragController != null) _diceDragController.Init(_gameInputs);
+            if(_cameraController != null) _cameraController.Init(_gameInputs);
+            if (_cameraViewInput != null) _cameraViewInput.Init(_gameInputs, _diceDragController, _diceThrower, _cameraController);
+            if (_hoverController != null) _hoverController.Init(_gameInputs, _cameraController, _diceDragController);
             _gameInputs.Gameplay.Disable();
             _runData = new RunData(_gameConfig);
-            _gameContext = new GameContext(_uiManager, _gameInputs, _diceThrower, _rouletteManager, _runData, _gameConfig, _diceDrawer, _diceDragController, _diceAnimator);
+            _gameContext = new GameContext(_uiManager, _gameInputs, _diceThrower, _rouletteManager, _runData, _gameConfig, _diceDrawer, _diceDragController, _diceAnimator, _cameraController, _dicePlayArea, _purchaseEffect);
+            _gameContext.CameraViewInput = _cameraViewInput;
+            _gameContext.BankChest = _bankChest;
+            _gameContext.CursedShelf = _cursedShelf;
             _stateMachine = new GameStateMachine();
         }
 

@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5cac17921b67194cbd9419a57c6a97d, type: 3}
+  m_Name: LavaCartoon
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceMaterials.LavaCartoonMaterial
+  displayName: Lava Cartoon
+  _visualMaterial: {fileID: 2100000, guid: db9a2fc207f54db4585aa3add9928bf3, type: 2}

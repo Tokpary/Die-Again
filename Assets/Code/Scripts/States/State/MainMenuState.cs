@@ -36,6 +36,9 @@ namespace Code.Scripts.States.State
             _context.RunData = new RunData(_context.GameConfig); 
             _context.DiceDrawer.Clear();
             _context.DiceDrawer.Populate(_context.RunData.DiceCase);
+            _context.BankChest.Clear();
+            _context.BankChest.Populate(_context.RunData.Bank);
+            _context.CursedShelf.Populate(_context.RunData.CursedObject);
             _stateMachine.ChangeState(new RouletteState(_context, _stateMachine));
         }
 

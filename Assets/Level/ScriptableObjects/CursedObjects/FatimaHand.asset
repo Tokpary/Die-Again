@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 347dae4811d14a46890e70867cc4c361, type: 3}
+  m_Name: FatimaHand
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.CursedObject.CursedObjects.FatimaHand
+  description: +1 de tolerancia superior.
+  displayName: "Mano de F\xE1tima"
+  descriptionInGame: +1 Tolerance
+  preview: {fileID: 0}
+  prefab: {fileID: 622951479409091938, guid: 8c56ea0664e4a274dbaeb9c17eb10e1a, type: 3}
+  toleranceIncrease: 1

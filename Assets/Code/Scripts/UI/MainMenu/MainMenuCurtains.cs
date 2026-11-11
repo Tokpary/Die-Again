@@ -12,7 +12,7 @@ public class MainMenuCurtains : MonoBehaviour
     [SerializeField] private Transform breakpoint;
     [SerializeField] private float duracionMovimientoCamara = 2f;
 
-    // Ajusta estos desplazamientos según la orientación de las paredes.
+    // Ajusta estos desplazamientos segï¿½n la orientaciï¿½n de las paredes.
     [SerializeField]
     private Vector3 desplazamientoIzquierda =
         new Vector3(-5f, 0f, 0f);
@@ -77,10 +77,10 @@ public class MainMenuCurtains : MonoBehaviour
         paredIzquierda.localPosition = destinoIzquierda;
         paredDerecha.localPosition = destinoDerecha;
 
-        yield return StartCoroutine(MoverCamara());
+       // yield return StartCoroutine(MoverCamara());
     }
 
-    private IEnumerator MoverCamara()
+ /*   private IEnumerator MoverCamara()
     {
         Vector3 posicionInicial = camara.position;
         Quaternion rotacionInicial = camara.rotation;
@@ -104,5 +104,5 @@ public class MainMenuCurtains : MonoBehaviour
 
         camara.position = breakpoint.position;
         camara.rotation = breakpoint.rotation;
-    }
+    }*/
 }
