@@ -694,14 +694,14 @@ MonoBehaviour:
   - {fileID: 539395506}
   - {fileID: 808622301}
   - {fileID: 750394544}
-  _defaultDiceMaterial: {fileID: 11400000, guid: 59f4d863dd659c14eb3ce7245d9dea0d, type: 2}
+  _defaultDiceMaterial: {fileID: 11400000, guid: 973af96661ae694478caac56d21bddfc, type: 2}
   _returnDropHeight: 1
   _drawerTransform: {fileID: 725293140}
   _drawerRigidbody: {fileID: 1129135155}
   _area: {fileID: 127915809}
   _selectLift: 0.4
   _dropZone: {fileID: 670693898}
-  _dragHeight: 4
+  _dragHeight: 5
   _openMode: 0
   _slideOffset: {x: 0, y: 0, z: -2.5}
   _hingeOpenEuler: {x: -110, y: 0, z: 0}
