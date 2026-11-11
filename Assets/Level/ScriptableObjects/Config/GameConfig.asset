@@ -26,6 +26,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1833768530ff21e479b6ea396c65a001, type: 2}
   - {fileID: 11400000, guid: e172d267daab6ea43aacea88c4fd7f29, type: 2}
   - {fileID: 11400000, guid: f221d4fa3d140e44083a1a5023002573, type: 2}
+  - {fileID: 11400000, guid: e172d267daab6ea43aacea88c4fd7f29, type: 2}
+  - {fileID: 11400000, guid: e172d267daab6ea43aacea88c4fd7f29, type: 2}
   shotsPerDay: 5
   rerollsPerDay: 2
   shopPool:
@@ -59,11 +61,19 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
   coinChoices: 3
   cursedCapacity: 5
-  startingCursedObjects: []
+  startingCursedObjects:
+  - {fileID: 11400000, guid: 72b459c5ac421ed44b8b61bb1415e495, type: 2}
+  - {fileID: 11400000, guid: 694dfb95157b2c840823759d7eb7141f, type: 2}
+  - {fileID: 11400000, guid: 2970c5f9aa834d249b034ae433816f27, type: 2}
+  - {fileID: 11400000, guid: bd81d257dd9a4004f9d0987bfb240ffc, type: 2}
   cursedPool:
   - {fileID: 11400000, guid: 48ec1dc4da8546a4ad838e200fcb985b, type: 2}
   - {fileID: 11400000, guid: 17138a3891f84b229422aa8e6cfcffce, type: 2}
   - {fileID: 11400000, guid: b2322f3498c4410d8c87c5c1cbceb7bb, type: 2}
   - {fileID: 11400000, guid: 8372d0c28a2241fcb932c4a4b41f78e5, type: 2}
+  - {fileID: 11400000, guid: 72b459c5ac421ed44b8b61bb1415e495, type: 2}
+  - {fileID: 11400000, guid: 2970c5f9aa834d249b034ae433816f27, type: 2}
+  - {fileID: 11400000, guid: 694dfb95157b2c840823759d7eb7141f, type: 2}
+  - {fileID: 11400000, guid: bd81d257dd9a4004f9d0987bfb240ffc, type: 2}
   cursedChoices: 3
   KillPlaneHeight: -1

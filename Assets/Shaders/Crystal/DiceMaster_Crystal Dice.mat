@@ -29,24 +29,24 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CloudStrength: 0.502
-    - _EmissionIntensity: 0.5
-    - _FacetContrast: 1.039
+    - _CloudStrength: 1
+    - _EmissionIntensity: 0.55
+    - _FacetContrast: 2
     - _FacetScale: 1
-    - _FresnelPower: 2.53
-    - _FresnelStrength: 2.77
+    - _FresnelPower: 8
+    - _FresnelStrength: 3
     - _NumberMode: 0
     - _OutlineWidth: 0.008
     - _PatternInvSize: 1
     - _ReflectionSharpness: 128
     - _ReflectionStrength: 3
     - _ShardStrength: 1
-    - _ShimmerSpeed: 1.47
-    - _ShimmerStrength: 0.85
+    - _ShimmerSpeed: 0.72
+    - _ShimmerStrength: 1.099
     - _Translucency: 0
     - _TransmissionStrength: 2
     m_Colors:
-    - _BodyColor: {r: 0.27999997, g: 0.7, b: 0.85, a: 1}
+    - _BodyColor: {r: 0.1462264, g: 0.77193725, b: 1, a: 1}
     - _CoreColor: {r: 1, g: 1, b: 1, a: 1}
     - _D4Values: {r: 1, g: 2, b: 3, a: 4}
     - _EdgeColor: {r: 0.35, g: 1.2, b: 1.6, a: 1}

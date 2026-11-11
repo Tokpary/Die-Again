@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44874b70b57d4da8b5b7561e9db19aab, type: 3}
   m_Name: FourLeafClover
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.CursedObject.CursedObjects.FourLeafClover
-  description: "+1 inferior y superior durante el d\xEDa 1 de cada semana."
-  displayName: "Tr\xE9bol de cuatro hojas"
-  descriptionInGame: "+1 inferior y superior durante el d\xEDa 1 de cada semana."
+  description: Increases both lower and upper score tolerance by 1 on the first day
+    of each week.
+  displayName: Four Leaf Clover
+  descriptionInGame: Increases both lower and upper score tolerance by 1 on the first
+    day of each week.
   preview: {fileID: 0}
   prefab: {fileID: 353137530324026634, guid: 9c316e8d4684b444d8ac3f6ad9740589, type: 3}
   lowerToleranceIncrease: 1

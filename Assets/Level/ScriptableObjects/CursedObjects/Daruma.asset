@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70426430210e03644bcf7205316efbb0, type: 3}
+  m_Name: Daruma
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.CursedObject.CursedObjects.Daruma
+  description: Grants 1 additional reroll per round.
+  displayName: Daruma
+  descriptionInGame: Grants 1 additional reroll per round.
+  preview: {fileID: 0}
+  prefab: {fileID: 1244191093587220075, guid: a32996af6528b3a439f76dda189a9f1f, type: 3}
+  extraRerolls: 1
