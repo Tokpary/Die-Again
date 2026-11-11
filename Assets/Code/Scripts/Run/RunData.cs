@@ -9,6 +9,7 @@ namespace Code.Scripts.Core
         public GameProgress Progress { get; }
         public DiceCase DiceCase { get; }
         public ShopOffer ShopOffer { get; }
+        public DiceCase Bank { get; }
 
         public List<CursedObject.CursedObject> CursedObject { get; } = new List<CursedObject.CursedObject>();
 
@@ -20,11 +21,14 @@ namespace Code.Scripts.Core
                     if (passive != null && !CursedObject.Contains(passive))
                         CursedObject.Add(passive);
             DiceCase = new DiceCase(config.diceCaseCapacity);
+            Bank = new DiceCase(config.bankCapacity);
             foreach (DiceSO dice in config.startingDices)
             {
                 DiceCase.TryAdd(new DiceInstance(dice));
             }
             ShopOffer = new ShopOffer(config.shopPool, config.shopOfferMin, config.shopOfferMax);
         }
+        
+        public bool RemoveDice(DiceInstance dice) => DiceCase.Remove(dice) || Bank.Remove(dice);
     }
 }

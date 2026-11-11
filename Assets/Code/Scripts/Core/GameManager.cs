@@ -24,6 +24,7 @@ namespace Code.Scripts.Core
         [SerializeField] private DicePlayArea _dicePlayArea;
         [SerializeField] private PurchaseEffect _purchaseEffect;
         [SerializeField] private CameraViewInput _cameraViewInput;
+        [SerializeField] private DiceDrawer _bankChest;
         
         private RunData _runData;
         private GameInputs _gameInputs;
@@ -42,6 +43,7 @@ namespace Code.Scripts.Core
             _runData = new RunData(_gameConfig);
             _gameContext = new GameContext(_uiManager, _gameInputs, _diceThrower, _rouletteManager, _runData, _gameConfig, _diceDrawer, _diceDragController, _diceAnimator, _cameraController, _dicePlayArea, _purchaseEffect);
             _gameContext.CameraViewInput = _cameraViewInput;
+            _gameContext.BankChest = _bankChest;
             _stateMachine = new GameStateMachine();
         }
 

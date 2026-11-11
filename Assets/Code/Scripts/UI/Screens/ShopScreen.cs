@@ -46,6 +46,6 @@ namespace Code.Scripts.UI.Screens
         public void SetClaimAvailable(bool available) => _claimButton.interactable = available;
         public void SetLeaveAvailable(bool available) => _nextButton.interactable = available;
         
-        private static string DiceLabel(DiceSO dice) => dice.diceMaterial != null ? $"{dice.name} ({dice.diceMaterial.displayName})" : dice.name;
+        private static string DiceLabel(DiceSO dice) => dice.diceMaterial != null ? $"{dice.DisplayName} ({dice.diceMaterial.displayName})" : dice.DisplayName;
     }
 }

@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4a5d8b89e134494b7b51bd15c577381, type: 3}
   m_Name: D4
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
+  displayName: Basic D4
+  description: Just a regular D4
+  preview: {fileID: 21300034, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
   faceValues: 01000000020000000300000004000000
   diceMaterial: {fileID: 0}
   prefab: {fileID: -2287452370266603689, guid: 02baab6d0f74ab84ead543ae484d51c4, type: 3}

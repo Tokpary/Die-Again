@@ -28,13 +28,14 @@ namespace Code.Scripts.States.State
             _context.CameraController.MoveTo(CameraShotId.Gameplay, () =>
             {
                 _screen = _context.UIManager.ShowScreen<ShopScreen>();
-                _context.DiceDrawer.Open(_context.RunData.DiceCase);
+                _context.DiceDrawer.Open();   
+                _context.BankChest.Open();
                 _session = new RollSession(_context, new RollSessionSettings
                 {
                     Shots = 0,
                     Rerolls = 0,
                     RestShot = CameraShotId.Gameplay,
-                    Views = new[] {CameraShotId.Drawer, CameraShotId.Throwing, CameraShotId.CursedShelf, CameraShotId.Shop},
+                    Views = new[] {CameraShotId.Drawer, CameraShotId.Chest, CameraShotId.Throwing, CameraShotId.CursedShelf, CameraShotId.Shop},
                 });
                 
                 _screen.TableControls.Bind(_session);
@@ -81,6 +82,10 @@ namespace Code.Scripts.States.State
             _screen.ShowSum(_sum);
             _screen.SetClaimAvailable(canClaim);
             _screen.SetLeaveAvailable(!_busy && NothingRolling());
+            
+            if (!canClaim && !_busy)
+                Debug.Log($"[Tienda] No se puede plantar: lanzados={_session.ThrownDice.Count}, quietos={TableIsStill()}, " +
+                          $"suma={_sum}, dados en la oferta={_context.RunData.ShopOffer.Count}");
         }
         
         private bool TableIsStill() => _session.ThrownDice.Count > 0 && _session.ThrownDice.All(d => d.Motion.IsSettled);
@@ -96,7 +101,7 @@ namespace Code.Scripts.States.State
             RefreshScreen();
 
             List<Dice.Dice> spent = _session.TakeThrownDice();
-            foreach (Dice.Dice d in spent) _context.RunData.DiceCase.Remove(d.Data);
+            foreach (Dice.Dice d in spent) _context.RunData.RemoveDice(d.Data);
             var bought = new DiceInstance(offered);
             if(!_context.RunData.DiceCase.TryAdd(bought))  
                 Debug.LogWarning(("[ShopState] No se pudo añadir el dado comprado al inventario"));
@@ -123,13 +128,12 @@ namespace Code.Scripts.States.State
             _session.Stop();
             RefreshScreen();
             
-            List<Dice.Dice> spent = _session.TakeThrownDice();
-            _context.DiceAnimator.Vanish(spent, d => _context.DiceDrawer.Discard(d, _context.RunData.DiceCase),
-                () =>
-                {
-                    _context.DiceDrawer.Close();
-                    _stateMachine.ChangeState(new RouletteState(_context, _stateMachine));
-                });
+            _session.DiscardThrown(() =>
+            {
+                _context.DiceDrawer.Close();
+                _context.BankChest.Close();
+                _stateMachine.ChangeState(new RouletteState(_context, _stateMachine));
+            });
         }
         
     }

@@ -8,6 +8,7 @@ namespace Code.Scripts.Camera
         Throwing,
         Shop,
         CursedShelf,
-        Drawer
+        Drawer,
+        Chest
     }
 }

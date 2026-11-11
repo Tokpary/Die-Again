@@ -106,12 +106,15 @@ namespace Code.Scripts.States.State
             
             _session.ReturnAllToDrawer(() =>
             {
-                _context.DiceDrawer.Close();
-                _stateMachine.ChangeState(success
-                    ? (IState) new ShopState(_context, _stateMachine)
-                    : new GameOverState(_context, _stateMachine));
+                if (!success) _context.DiceDrawer.Close();   
+                _stateMachine.ChangeState(NextStateAfterDay(success));
             });
         }
-        
+        private IState NextStateAfterDay(bool success)
+        {
+            if (!success) return new GameOverState(_context, _stateMachine);
+            if (_result.IsBoss) return new ShopState(_context, _stateMachine);
+            return new DiceCoinRewardState(_context, _stateMachine);
+        }
     }
 }

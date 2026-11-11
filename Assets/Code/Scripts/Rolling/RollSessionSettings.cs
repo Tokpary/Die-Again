@@ -7,6 +7,7 @@ namespace Code.Scripts.Rolls
     {
         public int Shots;
         public int Rerolls;
+        public CameraShotId ChestShot = CameraShotId.Chest;
         public CameraShotId RestShot = CameraShotId.Gameplay;
         public CameraShotId AimShot = CameraShotId.Throwing;
         public CameraShotId DrawerShot = CameraShotId.Drawer;

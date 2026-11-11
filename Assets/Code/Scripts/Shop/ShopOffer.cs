@@ -39,6 +39,6 @@ namespace Code.Scripts.Shop
             }
         }
         
-        public DiceSO Get(int number) => number >= 1 && number < _dice.Count ? _dice[number - 1] : null;
+        public DiceSO Get(int number) => number >= 1 && number <= _dice.Count ? _dice[number - 1] : null;
     }
 }

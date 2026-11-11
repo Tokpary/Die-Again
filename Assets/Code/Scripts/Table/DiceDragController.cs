@@ -9,9 +9,10 @@ namespace Code.Scripts.Table
     {
         [SerializeField] private UnityEngine.Camera _camera;
         [SerializeField] private LayerMask _diceLayerMask;
-        [SerializeField] private DiceDrawer _diceDrawer;
-        [SerializeField] private float _dragHeight = 1.5f;
 
+        public DiceDrawer ActiveContainer { get; set; }
+        private DiceDropZone DropZone => ActiveContainer != null ? ActiveContainer.DropZone : null;
+        
         private GameInputs _gameInputs;
         private Dice.Dice _draggedDice;
 
@@ -20,7 +21,6 @@ namespace Code.Scripts.Table
         public bool DragEnabled { get; set; }
         public bool PressConsumed { get; private set; }
 
-        public IDiceDropTarget DropTarget { get; set; }
 
         public event Action<Dice.Dice> DiceSelected;
         public event Action<Dice.Dice> DroppedOnTarget;
@@ -48,7 +48,7 @@ namespace Code.Scripts.Table
                 return;
             }
 
-            if (!DragEnabled)
+            if (!DragEnabled || ActiveContainer == null)
             {
                 if (_draggedDice != null) ReturnToDrawer(TakeDragged());   
                 return;
@@ -60,8 +60,8 @@ namespace Code.Scripts.Table
             if (_draggedDice == null) return;
 
             MoveDragged(ray);
-            bool overTarget = DropTarget != null && DropTarget.ContainsScreenPoint(pointer);
-            DropTarget?.SetHover(overTarget);
+            bool overTarget = DropZone != null && DropZone.Contains(_draggedDice.transform.position);
+            if (DropZone != null) DropZone.SetHover(overTarget);
 
             if (_gameInputs.Gameplay.Disparo.WasReleasedThisFrame())
             {
@@ -73,7 +73,7 @@ namespace Code.Scripts.Table
 
         private void TryPick(Ray ray)
         {
-            if (!TryGetDice(ray, out Dice.Dice dice) || !_diceDrawer.Contains(dice)) return;
+            if (!TryGetDice(ray, out Dice.Dice dice) || !ActiveContainer.Contains(dice)) return;
 
             _draggedDice = dice;
             dice.GetComponent<Rigidbody>().isKinematic = true;
@@ -82,11 +82,12 @@ namespace Code.Scripts.Table
 
         private void MoveDragged(Ray ray)
         {
-            var plane = new Plane(Vector3.up, new Vector3(0f, _dragHeight, 0f));
+            float height = ActiveContainer.DragHeight;
+            var plane = new Plane(Vector3.up, new Vector3(0f, height, 0f));
             if (!plane.Raycast(ray, out float distance)) return;
 
-            Vector3 target = _diceDrawer.Area.ClosestPoint(ray.GetPoint(distance));
-            target.y = _dragHeight;
+            Vector3 target = ActiveContainer.Area.ClosestPoint(ray.GetPoint(distance));
+            target.y = height;
             _draggedDice.transform.position = target;
         }
 
@@ -94,7 +95,7 @@ namespace Code.Scripts.Table
         {
             Dice.Dice dice = _draggedDice;
             _draggedDice = null;
-            DropTarget?.SetHover(false);
+            if(DropZone != null) DropZone.SetHover(false);
             return dice;
         }
 

@@ -24,6 +24,7 @@ namespace Code.Scripts
         public DicePlayArea PlayArea { get; set; }
         public PurchaseEffect PurchaseEffect { get; set; }
         public CameraViewInput CameraViewInput { get; set; }
+        public DiceDrawer BankChest { get; set; }
         public GameContext(UIManager uiManager, GameInputs gameInputs, DiceThrower diceThrower, RouletteManager rouletteManager, 
             RunData runData, GameConfigSO gameConfig, DiceDrawer diceDrawer, DiceDragController diceDragController = null,
             DiceAnimator diceAnimator = null, CameraController cameraController = null, DicePlayArea dicePlayArea = null, PurchaseEffect purchaseEffect = null)

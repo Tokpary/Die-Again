@@ -322,7 +322,7 @@ namespace Code.Scripts.Roulette
                 if (carnivalBoss) reveal *= 0.25f + 0.75f * (0.5f + 0.5f * Mathf.Cos(resultClock * bossFlashSpeed * Mathf.PI * 2f));
                 if (resultClock >= resultFlashDuration) resultClock = -1f;
             }
-            float facing = Camera.main != null && frame.transform.InverseTransformPoint(Camera.main.transform.position).z > 0f ? -1f : 1f;
+            float facing = UnityEngine.Camera.main != null && frame.transform.InverseTransformPoint(UnityEngine.Camera.main.transform.position).z > 0f ? -1f : 1f;
             bulbMaterial.SetFloat("_Facing", facing);
             bulbMaterial.SetFloat("_ChasePhase", chasePhase);
             bulbMaterial.SetFloat("_ChaseSize", chaseGroupSize);
@@ -431,9 +431,9 @@ namespace Code.Scripts.Roulette
 
         private void SetBloom(bool active)
         {
-            if (active && bloomVolume == null && Camera.main != null)
+            if (active && bloomVolume == null && UnityEngine.Camera.main != null)
             {
-                bloomCamera = Camera.main.GetUniversalAdditionalCameraData();
+                bloomCamera = UnityEngine.Camera.main.GetUniversalAdditionalCameraData();
                 previousPostProcessing = bloomCamera.renderPostProcessing;
                 var obj = new GameObject("Roulette subtle Bloom");
                 obj.transform.SetParent(transform, false);

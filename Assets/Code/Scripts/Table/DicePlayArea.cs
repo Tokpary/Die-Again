@@ -14,6 +14,7 @@ namespace Code.Scripts.Dice
                    point.z >= bounds.min.z - margin && point.z <= bounds.max.z + margin;
         }
         
+        public Vector3 Center => _area.bounds.center;
         public bool HasFallen (Vector3 point) => point.y < _area.bounds.min.y - _fallMargin;
     }
 }

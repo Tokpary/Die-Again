@@ -20,6 +20,7 @@ namespace Code.Scripts.Rolling
         private readonly ThrownDiceTracker _tracker = new ThrownDiceTracker();
         private readonly List<Dice.Dice> _outOfDrawer = new List<Dice.Dice>();
         private readonly HashSet<Dice.Dice> _freeShots = new HashSet<Dice.Dice>();
+        private readonly Dictionary<Dice.Dice, DiceDrawer> _origins = new Dictionary<Dice.Dice, DiceDrawer>(); 
         private readonly int _inFlightLayer;
         private readonly int _diceLayer;
 
@@ -48,11 +49,14 @@ namespace Code.Scripts.Rolling
         public CameraShotId CurrentView => _context.CameraController.CurrentShotId;
         public bool IsInHub => CurrentView == _settings.RestShot;
         public bool IsInDrawer => CurrentView == _settings.DrawerShot;
+        public bool IsInChest => CurrentView == _settings.ChestShot;
 
         public event Action AllSettled;
         public event Action BudgetChanged;
         public event Action<bool> RerollModeChanged;
         public event Action ViewChanged;   
+        
+        private DiceDrawer ActiveContainer => IsInDrawer ? _context.DiceDrawer : IsInChest ? _context.BankChest : null;
 
         #endregion
 
@@ -153,22 +157,19 @@ namespace Code.Scripts.Rolling
 
         private void UpdateDicePicking()
         {
-            _context.DiceDragController.SelectionMode = _running && _rerollSelecting;
-            _context.DiceDragController.DragEnabled = _running && IsInDrawer && CanPlace;
+            _context.DiceDragController.SelectionMode = _running && _rerollSelecting; 
+            _context.DiceDragController.ActiveContainer = _running ? ActiveContainer : null;
+            _context.DiceDragController.DragEnabled = _running && ActiveContainer != null && CanPlace;
         }
 
         #endregion
 
         #region DRAWER: PLACE
-
-        public void SetPlaceTarget(IDiceDropTarget target)
-        {
-            _context.DiceDragController.DropTarget = target;
-        }
-
+        
         private void OnDiceDroppedOnSlot(Dice.Dice dice)
         {
-            if (!CanPlace || !_context.DiceDrawer.Contains(dice))
+            DiceDrawer container = ActiveContainer;
+            if (!CanPlace || container == null || !container.Contains(dice))
             {
                 dice.GetComponent<Rigidbody>().isKinematic = false;   
                 return;
@@ -178,7 +179,8 @@ namespace Code.Scripts.Rolling
             CancelCameraReturn();
             NotifyBudgetChanged();   
 
-            _context.DiceDrawer.Release(dice);
+            container.Release(dice);
+            _origins[dice] = container;
             ReturnLoadedDiceToDrawer();   
             _outOfDrawer.Add(dice);
 
@@ -228,8 +230,9 @@ namespace Code.Scripts.Rolling
 
             _context.DiceAnimator.Vanish(new[] { dice }, onVanish =>
             {
-                onVanish.transform.position = _context.DiceDrawer.DropPoint;
-                _context.DiceAnimator.Appear(new[] { onVanish }, d => _context.DiceDrawer.Add(d), null);
+                DiceDrawer home = ContainerOf(onVanish);
+                onVanish.transform.position = home.DropPoint;
+                _context.DiceAnimator.Appear(new[] { onVanish }, d => home.Add(d), null);
             }, null);
         }
 
@@ -305,8 +308,8 @@ namespace Code.Scripts.Rolling
             if (loadedDice == null) return;
             _outOfDrawer.Remove(loadedDice);
             _freeShots.Remove(loadedDice);
-            _context.DiceAnimator.ArcTo(new[] { loadedDice }, _context.DiceDrawer.GetReturnPoint,
-                d => _context.DiceDrawer.Add(d), null);
+            DiceDrawer home = ContainerOf(loadedDice);
+            _context.DiceAnimator.ArcTo(new[] { loadedDice }, home.GetReturnPoint, d => home.Add(d), null);
         }
 
         #endregion
@@ -317,6 +320,7 @@ namespace Code.Scripts.Rolling
         {
             _context.DiceThrower.UnloadDice();
             var dice = new List<Dice.Dice>(_outOfDrawer);
+            var homes = dice.Select(ContainerOf).ToList();
             ClearTable();
             _context.DiceAnimator.ArcTo(dice, _context.DiceDrawer.GetReturnPoint,
                 d => _context.DiceDrawer.Add(d), onDone);
@@ -325,7 +329,11 @@ namespace Code.Scripts.Rolling
         public void DiscardThrown(Action onDone)
         {
             List<Dice.Dice> thrown = TakeThrownDice();
-            _context.DiceAnimator.Vanish(thrown, d => _context.DiceDrawer.Discard(d, _context.RunData.DiceCase), onDone);
+            _context.DiceAnimator.Vanish(thrown, d =>
+            {
+                _context.RunData.RemoveDice(d.Data);   
+                UnityEngine.Object.Destroy(d.gameObject);
+            }, onDone);
         }
 
         public List<Dice.Dice> TakeThrownDice()
@@ -338,6 +346,7 @@ namespace Code.Scripts.Rolling
 
         public void ClearTable()
         {
+            _origins.Clear();
             _tracker.Clear();
             _outOfDrawer.Clear();
             _freeShots.Clear();
@@ -353,6 +362,9 @@ namespace Code.Scripts.Rolling
             if (_cameraReturn != null && _cameraReturn.IsActive()) _cameraReturn.Kill();
             _cameraReturn = null;
         }
+        private DiceDrawer ContainerOf(Dice.Dice dice) =>
+            _origins.TryGetValue(dice, out DiceDrawer home) ? home : _context.DiceDrawer;
+        
 
         private void NotifyBudgetChanged()
         {

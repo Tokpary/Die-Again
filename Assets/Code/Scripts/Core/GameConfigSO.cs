@@ -24,6 +24,10 @@ namespace Code.Scripts.Core
         public int shopOfferMin = 10;
         public int shopOfferMax = 20;
         
+        [Header("Dice coins ")]
+        public int bankCapacity = 5;              
+        public DiceSO[] coinPool;               
+        public int coinChoices = 3;  
         
         public CursedObject.CursedObject[] startingCursedObjects = new CursedObject.CursedObject[0];
         
