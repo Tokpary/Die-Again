@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Glass D6
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
   displayName: Glass D6
-  description: If it comes into contact with another die, it will break
+  description: Shatters when it collides with another dice.
   preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
   faceValues: 010000000200000003000000040000000500000006000000
   diceMaterial: {fileID: 11400000, guid: 59f4d863dd659c14eb3ce7245d9dea0d, type: 2}

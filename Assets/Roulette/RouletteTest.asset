@@ -12,8 +12,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8898eede5cf8004c8514bcdb8f4def8, type: 3}
   m_Name: RouletteTest
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Roulette.RouletteSO
-  luckyNumberMinimum: 1
-  luckyNumberMaximum: 10
+  week1:
+    day1:
+      minimum: 3
+      maximum: 16
+    day2:
+      minimum: 5
+      maximum: 18
+    day3:
+      minimum: 7
+      maximum: 20
+    day4:
+      minimum: 10
+      maximum: 30
+  week2:
+    day1:
+      minimum: 12
+      maximum: 32
+    day2:
+      minimum: 14
+      maximum: 34
+    day3:
+      minimum: 14
+      maximum: 34
+    day4:
+      minimum: 30
+      maximum: 50
+  week3:
+    day1:
+      minimum: 32
+      maximum: 52
+    day2:
+      minimum: 40
+      maximum: 60
+    day3:
+      minimum: 40
+      maximum: 60
+    day4:
+      minimum: 50
+      maximum: 98
   maximumSlices: 20
   day1BossProbability: 1
   day2BossProbability: 25

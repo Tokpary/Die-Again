@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Golden D4
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
   displayName: Golden D4
-  description: A golden D2, JUST FOR THE SHOP
+  description: Can be spent in the shop to make purchases. Consumed when used.
   preview: {fileID: 21300034, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
   faceValues: 01000000020000000300000004000000
   diceMaterial: {fileID: 11400000, guid: a789ba506fff2b8409c657b645ce2917, type: 2}
