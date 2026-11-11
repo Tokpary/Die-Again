@@ -15,5 +15,7 @@ namespace Code.Scripts.Dice
         void Blast(Vector3 center, float force, float radius, float upwards = 0.5f);
 
         void Pull(Vector3 center, float acceleration, float radius, float duration);
+        
+        Dice Convert(Dice target, Dice model);
     }
 }

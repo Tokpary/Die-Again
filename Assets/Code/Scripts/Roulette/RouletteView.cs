@@ -74,6 +74,21 @@ namespace Code.Scripts.Roulette
 
         public bool IsSpinning { get; private set; }
 
+        // Hit the visible wheel plane; no collider or gameplay transform changes required.
+        public bool ContainsScreenPoint(UnityEngine.Camera camera, Vector2 screenPoint)
+        {
+            if (_wheel == null || !_wheel.gameObject.activeInHierarchy || _visualRoot == null ||
+                !_visualRoot.activeInHierarchy || IsSpinning) return false;
+            Ray ray = camera.ScreenPointToRay(screenPoint);
+            var plane = new Plane(_wheel.forward, _wheel.position);
+            if (!plane.Raycast(ray, out float distance)) return false;
+            Vector3 point = _wheel.InverseTransformPoint(ray.GetPoint(distance));
+            return point.x * point.x + point.y * point.y <= 0.55f * 0.55f;
+        }
+        // Read-only presentation telemetry. Does not participate in result selection.
+        public float SpinTravelDegrees { get; private set; }
+        public float SpinStartPointerAngle { get; private set; }
+
         public event Action<RouletteResult> SpinCompleted;
         public event Action SpinCancelled;
 
@@ -425,6 +440,8 @@ namespace Code.Scripts.Roulette
             float target =
                 CalculateTargetRotation(result.StopAngle);
 
+            SpinTravelDegrees = 0f;
+            SpinStartPointerAngle = GetPointerSectorAngle();
             IsSpinning = true;
             _spin = StartCoroutine(Animate(result, target));
         }
@@ -490,10 +507,12 @@ namespace Code.Scripts.Roulette
                 float eased =
                     1f - remaining * remaining * remaining;
 
+                SpinTravelDegrees = distance * eased;
                 SetAngle(start + distance * eased);
                 yield return null;
             }
 
+            SpinTravelDegrees = distance;
             SetAngle(target);
 
             _spin = null;

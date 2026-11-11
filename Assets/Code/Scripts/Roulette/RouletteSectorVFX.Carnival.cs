@@ -19,6 +19,9 @@ namespace Code.Scripts.Roulette
         private bool spinShakeApplied;
         private Transform presentationRoot;
         private Vector3 presentationHome;
+        private Quaternion presentationHomeRotation;
+        private RouletteVFXRig premiumRig;
+        private float measuredSpinSpeed;
         private Tween presentationTween;
         private bool presentationVisible;
         public bool IsPresentationBusy => presentationTween != null && presentationTween.IsActive();
@@ -35,6 +38,7 @@ namespace Code.Scripts.Roulette
                 return false;
             }
             presentationHome = presentationRoot.localPosition;
+            presentationHomeRotation = presentationRoot.localRotation;
             return true;
         }
 
@@ -67,7 +71,7 @@ namespace Code.Scripts.Roulette
             sequence.AppendCallback(() =>
             {
                 // Reuse the latch impact, warm bulbs and short JMO sparks, without a gameplay result.
-                RevealCarnival(false);
+                RevealCarnival(false, true);
             });
             sequence.Append(presentationRoot.DOPunchPosition(LocalLift(-landingBounce), 0.22f, 3, 0.3f));
             sequence.OnComplete(() =>
@@ -100,6 +104,7 @@ namespace Code.Scripts.Roulette
             if (!PreparePresentation()) return;
             presentationRoot.gameObject.SetActive(false);
             presentationRoot.localPosition = presentationHome + LocalLift(retractHeight);
+            presentationRoot.localRotation = presentationHomeRotation;
             OnSpinCancelled();
         }
 
@@ -148,6 +153,8 @@ namespace Code.Scripts.Roulette
         private float chasePhase, resultClock = -1f, bounceClock = 1f, nextSpark;
         private float previousSectorAngle;
         private bool carnivalBoss;
+        [SerializeField, Range(0f, 8f)] private float resultHoldIntensity = 3f;
+        private bool holdingResult;
         private readonly System.Random visualRandom = new System.Random();
         private Tween stopTween;
         private float stopBounce, tickStrength, currentBounce;
@@ -180,6 +187,9 @@ namespace Code.Scripts.Roulette
             materials[4] = bulbMaterial;
             materials[5] = pointerMaterial;
             frame.sharedMaterials = materials;
+            premiumRig = sectors.GetComponentInParent<RouletteVFXRig>(true);
+            if (premiumRig != null) premiumRig.Initialize();
+            else Debug.LogWarning("[Roulette VFX] No se encuentra RouletteVFXRig en Roulette Presentation. Recarga la escena para incorporar el componente del prefab actualizado.", sectors);
             previousSectorAngle = view.GetPointerSectorAngle();
             if (sparkPrefab != null || sparkMaterial != null)
             {
@@ -283,13 +293,24 @@ namespace Code.Scripts.Roulette
             }
             if (spinning && !wasSpinning)
             {
+                if (premiumRig != null) premiumRig.Begin(view.SpinStartPointerAngle);
                 ClearWinnerImpact();
                 stopTween?.Kill(); stopBounce = 0f; tickStrength = 0f;
                 if (sparks != null) sparks.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 resultClock = -1f;
+                holdingResult = false;
                 previousSectorAngle = view.GetPointerSectorAngle();
             }
-            float speed = Quaternion.Angle(previousRotation, sectors.transform.rotation) / Mathf.Max(dt, 0.001f);
+            sectors.GetPropertyBlock(block);
+            int sectorCount = Mathf.Max(1, Mathf.RoundToInt(block.GetFloat("_SliceCount")));
+            int crossed = 0;
+            float speed = premiumRig != null
+                ? premiumRig.Tick(dt, view.SpinTravelDegrees, spinning, sectorCount, maximumSpinSpeed,
+                    pointerBounceDegrees * Mathf.Lerp(brakingTickMultiplier, 0.5f, spinEnergy), amber, bossRed, out crossed)
+                : Quaternion.Angle(previousRotation, sectors.transform.rotation) / Mathf.Max(dt, 0.001f);
+            measuredSpinSpeed = speed;
+            if (premiumRig != null && spinning && premiumRig.TakeRimSpark(out Vector3 rimPoint))
+                EmitAccentSparks(rimPoint, 1, amber, 0.6f);
             UpdateSpinShake(spinning, speed);
             if (spinning)
             {
@@ -297,7 +318,7 @@ namespace Code.Scripts.Roulette
                 sectors.GetPropertyBlock(block);
                 int count = Mathf.Max(1, Mathf.RoundToInt(block.GetFloat("_SliceCount")));
                 float angle = view.GetPointerSectorAngle();
-                if (Mathf.FloorToInt(angle * count / 360f) != Mathf.FloorToInt(previousSectorAngle * count / 360f))
+                if (premiumRig != null ? crossed > 0 : Mathf.FloorToInt(angle * count / 360f) != Mathf.FloorToInt(previousSectorAngle * count / 360f))
                 {
                     bounceClock = 0f;
                     tickStrength = pointerBounceDegrees * Mathf.Lerp(brakingTickMultiplier, 0.35f, Mathf.Clamp01(speed / maximumSpinSpeed));
@@ -312,7 +333,8 @@ namespace Code.Scripts.Roulette
             }
             bounceClock += dt;
             float vibration = spinning ? Mathf.Sin(Time.unscaledTime * 110f) * fastVibrationDegrees * Mathf.Clamp01(speed / maximumSpinSpeed) : 0f;
-            currentBounce = Mathf.Sin(bounceClock * 65f) * Mathf.Exp(-bounceClock * 22f) * tickStrength + vibration + stopBounce;
+            currentBounce = premiumRig != null ? premiumRig.PointerAngle + vibration
+                : Mathf.Sin(bounceClock * 65f) * Mathf.Exp(-bounceClock * 22f) * tickStrength + vibration + stopBounce;
             pointerMaterial.SetFloat("_Bounce", currentBounce);
             float reveal = 0f;
             if (resultClock >= 0f)
@@ -329,28 +351,32 @@ namespace Code.Scripts.Roulette
             bulbMaterial.SetFloat("_Chasing", spinning ? 1f : 0f);
             bulbMaterial.SetFloat("_Idle", idleIntensity);
             bulbMaterial.SetFloat("_Intensity", chaseIntensity);
-            bulbMaterial.SetFloat("_Reveal", reveal * resultIntensity);
-            bulbMaterial.SetColor("_GlowColor", resultClock >= 0f && carnivalBoss ? bossRed : amber);
+            bulbMaterial.SetFloat("_Reveal", Mathf.Max(reveal * resultIntensity, holdingResult ? resultHoldIntensity : 0f));
+            bulbMaterial.SetColor("_GlowColor", (holdingResult || resultClock >= 0f) && carnivalBoss ? bossRed : amber);
         }
 
         private void UpdateSpinShake(bool spinning, float speed)
         {
             if (presentationRoot == null || !presentationVisible || IsPresentationBusy) return;
-            if (!spinning)
+            float recoil = premiumRig != null ? premiumRig.Recoil : 0f;
+            float wobble = premiumRig != null ? premiumRig.Wobble : 0f;
+            if (!spinning && Mathf.Abs(recoil) < 0.00001f && Mathf.Abs(wobble) < 0.0001f)
             {
                 if (spinShakeApplied) presentationRoot.localPosition = presentationHome;
+                presentationRoot.localRotation = presentationHomeRotation;
                 spinShakeApplied = false;
                 return;
             }
 
-            float amplitude = spinShakeAmplitude * Mathf.Clamp01(speed / maximumSpinSpeed);
+            float amplitude = spinning ? spinShakeAmplitude * (premiumRig != null ? premiumRig.Energy : Mathf.Clamp01(speed / maximumSpinSpeed)) : 0f;
             float phase = Time.unscaledTime * spinShakeFrequency * Mathf.PI * 2f;
             // Translation in the face plane only: wheel and pointer keep their relative alignment.
             Vector3 worldOffset = presentationRoot.right * (Mathf.Sin(phase) * amplitude)
-                + presentationRoot.up * (Mathf.Sin(phase * 1.37f) * amplitude * 0.55f);
+                + presentationRoot.up * (Mathf.Sin(phase * 1.37f) * amplitude * 0.55f + recoil);
             Vector3 localOffset = presentationRoot.parent != null
                 ? presentationRoot.parent.InverseTransformVector(worldOffset) : worldOffset;
             presentationRoot.localPosition = presentationHome + localOffset;
+            presentationRoot.localRotation = presentationHomeRotation * Quaternion.Euler(wobble, 0f, wobble * 0.35f);
             spinShakeApplied = true;
         }
 
@@ -375,19 +401,52 @@ namespace Code.Scripts.Roulette
             }
         }
 
-        private void RevealCarnival(bool boss)
+        private void EmitAccentSparks(Vector3 position, int count, Color tint, float sizeMultiplier)
         {
+            if (sparks == null || frame == null) return;
+            if (!sparks.isPlaying) sparks.Play();
+            Vector3 radial = (position - frame.transform.TransformPoint(new Vector3(0f, -0.00884f, 0.00355f))).normalized;
+            for (int i = 0; i < count; i++)
+            {
+                var emit = new ParticleSystem.EmitParams
+                {
+                    position = position,
+                    velocity = radial * sparkSpeed * (0.2f + (float)visualRandom.NextDouble() * 0.35f),
+                    startSize = sparkSize * sizeMultiplier,
+                    startLifetime = sparkLifetime * (0.8f + (float)visualRandom.NextDouble() * 0.4f),
+                    startColor = new Color(tint.r, tint.g, tint.b, 1f)
+                };
+                sparks.Emit(emit, 1);
+            }
+        }
+
+        private void RevealCarnival(bool boss, bool landing = false)
+        {
+            if (premiumRig != null)
+            {
+                sectors.GetPropertyBlock(block);
+                int count = Mathf.Max(1, Mathf.RoundToInt(block.GetFloat("_SliceCount")));
+                if (!landing)
+                    premiumRig.Tick(0f, view.SpinTravelDegrees, true, count, maximumSpinSpeed,
+                        pointerBounceDegrees, amber, bossRed, out _);
+                premiumRig.Reveal(landing ? -1 : winningSlice, count, boss, stopImpactDegrees);
+            }
             carnivalBoss = boss; resultClock = 0f;
+            holdingResult = !landing;
             stopTween?.Kill();
             tickStrength = 0f;
             stopTween = DOVirtual.Float(0f, 1f, stopImpactDuration,
                 t => stopBounce = Mathf.Sin(t * Mathf.PI * 4f) * Mathf.Pow(1f - t, 2f) * stopImpactDegrees)
                 .SetEase(Ease.Linear).SetUpdate(true).OnComplete(() => stopBounce = 0f);
-            EmitSparks(impactSparkCount, boss ? bossRed : amber);
+            if (premiumRig != null)
+                EmitAccentSparks(landing ? premiumRig.LandingWorld : premiumRig.WinnerWorld,
+                    landing ? 6 : Mathf.Min(20, impactSparkCount + (boss ? 4 : 0)), boss ? bossRed : amber, landing ? 0.6f : 1f);
+            else EmitSparks(impactSparkCount, boss ? bossRed : amber);
             if (winnerImpactRoot != null)
             {
                 ClearWinnerImpact();
-                winnerImpactRoot.transform.localPosition = sparkTip;
+                winnerImpactRoot.transform.position = premiumRig != null && !landing
+                    ? premiumRig.WinnerWorld : frame.transform.TransformPoint(sparkTip);
                 winnerImpactRoot.transform.localScale = Vector3.one * winnerImpactScale;
                 winnerImpactRoot.SetActive(true);
                 foreach (var particles in winnerParticles)
@@ -413,10 +472,12 @@ namespace Code.Scripts.Roulette
 
         private void ResetCarnival()
         {
+            if (premiumRig != null) premiumRig.Clear();
             UpdateSpinShake(false, 0f);
             spinShakeApplied = false;
             ClearWinnerImpact();
             resultClock = -1f; bounceClock = 1f;
+            holdingResult = false;
             stopTween?.Kill(); stopTween = null;
             stopBounce = 0f; tickStrength = 0f; currentBounce = 0f; nextSpark = 0f;
             if (bulbMaterial != null)
@@ -454,6 +515,8 @@ namespace Code.Scripts.Roulette
         {
             presentationTween?.Kill();
             if (presentationRoot != null) presentationRoot.localPosition = presentationHome;
+            if (presentationRoot != null) presentationRoot.localRotation = presentationHomeRotation;
+            if (premiumRig != null) premiumRig.Clear();
             stopTween?.Kill();
             SetBloom(false);
             if (frame != null && originalFrameMaterials != null) frame.sharedMaterials = originalFrameMaterials;

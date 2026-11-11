@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 933f8d3536dec2e4b98976750c1f25d3, type: 3}
   m_Name: Toxic
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceMaterials.AntimatterMaterial
+  collisionEffects:
+  - {fileID: 11400000, guid: 3d7ec41944b43f14b9ae0888f6a2255f, type: 2}
   displayName: Toxic
   description: 
   _visualMaterial: {fileID: 2100000, guid: e9cc8d8703596de41b09e0db2628773a, type: 2}

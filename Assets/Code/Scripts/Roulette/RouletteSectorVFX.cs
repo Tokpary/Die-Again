@@ -98,6 +98,7 @@ namespace Code.Scripts.Roulette
                 previousRotation = sectors.transform.rotation;
             }
 
+            UpdateCarnival(dt, spinning);
             if (spinning)
             {
                 float degrees = Quaternion.Angle(
@@ -105,7 +106,7 @@ namespace Code.Scripts.Roulette
                     sectors.transform.rotation
                 );
 
-                float speed = degrees / Mathf.Max(dt, 0.001f);
+                float speed = premiumRig != null ? measuredSpinSpeed : degrees / Mathf.Max(dt, 0.001f);
 
                 float target = Mathf.Clamp01(
                     speed / maximumSpinSpeed
@@ -125,7 +126,6 @@ namespace Code.Scripts.Roulette
                 );
             }
 
-            UpdateCarnival(dt, spinning);
             previousRotation = sectors.transform.rotation;
             wasSpinning = spinning;
 
@@ -152,8 +152,8 @@ namespace Code.Scripts.Roulette
 
         private void OnSpinCompleted(RouletteResult result)
         {
-            RevealCarnival(result.IsBoss);
             winningSlice = result.SliceIndex;
+            RevealCarnival(result.IsBoss);
             bossResult = result.IsBoss ? 1f : 0f;
 
             spinEnergy = 0f;

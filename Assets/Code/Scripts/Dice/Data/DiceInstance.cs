@@ -15,5 +15,11 @@ namespace Code.Scripts.Dice
             FaceValues = (int[])diceData.faceValues.Clone();
             DiceMaterial = diceData.diceMaterial;
         }
+        
+        public DiceInstance Clone() => new DiceInstance(DiceData)
+        {
+            FaceValues = (int[])FaceValues.Clone(),
+            DiceMaterial = DiceMaterial
+        };
     }
 }
