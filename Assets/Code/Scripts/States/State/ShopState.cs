@@ -5,6 +5,7 @@ using Code.Scripts.Core;
 using Code.Scripts.Dice;
 using Code.Scripts.Rolling;
 using Code.Scripts.Rolls;
+using Code.Scripts.Shop;
 using Code.Scripts.UI.Screens;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace Code.Scripts.States.State
     {
         private ShopScreen _screen;
         private RollSession _session;
+        private ShopDisplayRotation _shopDisplay;
         private int _sum;
         private bool _busy;
         public ShopState(GameContext context, IStateMachine stateMachine) : base(context, stateMachine)
@@ -24,7 +26,22 @@ namespace Code.Scripts.States.State
         {
             base.Enter();
             _context.RunData.ShopOffer.RefreshShopOffer(_context.RunData.Progress.Week);
-            
+            _screen = _context.UIManager.Get<ShopScreen>();
+            _screen.ShowOffer(_context.RunData.ShopOffer.Dice, _sum);
+
+            _shopDisplay = UnityEngine.Object.FindFirstObjectByType<ShopDisplayRotation>();
+            if (_shopDisplay == null)
+            {
+                Debug.LogError("ShopDisplayRotation is missing from the shop root. The shop will open without its entrance animation.");
+                StartShop();
+                return;
+            }
+
+            _shopDisplay.Show(StartShop);
+        }
+
+        private void StartShop()
+        {
             _context.CameraController.MoveTo(CameraShotId.Gameplay, () =>
             {
                 _screen = _context.UIManager.ShowScreen<ShopScreen>();
@@ -58,6 +75,7 @@ namespace Code.Scripts.States.State
         public override void Exit()
         {
             base.Exit();
+            _shopDisplay?.Hide();
             if(_session == null) return;
             
             _session.Stop();
@@ -132,7 +150,10 @@ namespace Code.Scripts.States.State
             {
                 _context.DiceDrawer.Close();
                 _context.BankChest.Close();
-                _stateMachine.ChangeState(new RouletteState(_context, _stateMachine));
+                if (_shopDisplay != null)
+                    _shopDisplay.Hide(() => _stateMachine.ChangeState(new RouletteState(_context, _stateMachine)));
+                else
+                    _stateMachine.ChangeState(new RouletteState(_context, _stateMachine));
             });
         }
         
