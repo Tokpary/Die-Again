@@ -29,7 +29,11 @@ namespace Code.Scripts.Core
         public DiceSO[] coinPool;               
         public int coinChoices = 3;  
         
+        [Header("Cursed objects")]
+        public int cursedCapacity = 5;
         public CursedObject.CursedObject[] startingCursedObjects = new CursedObject.CursedObject[0];
+        public CursedObject.CursedObject[] cursedPool;
+        public int cursedChoices = 3;
         
         public float KillPlaneHeight = -1f;
     }

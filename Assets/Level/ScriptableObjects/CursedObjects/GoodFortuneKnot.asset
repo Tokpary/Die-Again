@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e5eecedcdb544589fc346c79c5c081d, type: 3}
   m_Name: GoodFortuneKnot
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.CursedObject.CursedObjects.GoodFortuneKnot
+  description: "-10 puntos de probabilidad de jefe, m\xEDnimo 1%; d\xEDa 4 intacto."
   displayName: Nudo de la buena fortuna
-  description: -10 puntos de probabilidad de jefe, mínimo 1%; día 4 intacto.
+  descriptionInGame: 
+  preview: {fileID: 0}
+  prefab: {fileID: 8741338117756418383, guid: 3db0581d43066db41bc5503878434435, type: 3}
   probabilityReduction: 10

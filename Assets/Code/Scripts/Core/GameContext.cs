@@ -2,6 +2,7 @@ using Code.Scripts.Camera;
 using Code.Scripts.States;
 using Code.Scripts.UI;
 using Code.Scripts.Core;
+using Code.Scripts.CursedObject;
 using Code.Scripts.Dice;
 using Code.Scripts.Roulette;
 using Code.Scripts.Shop;
@@ -24,6 +25,7 @@ namespace Code.Scripts
         public DicePlayArea PlayArea { get; set; }
         public PurchaseEffect PurchaseEffect { get; set; }
         public CameraViewInput CameraViewInput { get; set; }
+        public CursedShelf CursedShelf { get; set; }
         public DiceDrawer BankChest { get; set; }
         public GameContext(UIManager uiManager, GameInputs gameInputs, DiceThrower diceThrower, RouletteManager rouletteManager, 
             RunData runData, GameConfigSO gameConfig, DiceDrawer diceDrawer, DiceDragController diceDragController = null,

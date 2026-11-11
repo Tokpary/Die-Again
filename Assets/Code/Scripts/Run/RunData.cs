@@ -10,15 +10,19 @@ namespace Code.Scripts.Core
         public DiceCase DiceCase { get; }
         public ShopOffer ShopOffer { get; }
         public DiceCase Bank { get; }
+        
+        public int CursedCapacity { get; }
+        public bool HasCursedRoom => CursedObject.Count < CursedCapacity;
 
         public List<CursedObject.CursedObject> CursedObject { get; } = new List<CursedObject.CursedObject>();
 
         public RunData(GameConfigSO config)
         {
             Progress = new GameProgress(config.InitialWeek, config.InitialDay);
+            CursedCapacity = config.cursedCapacity;
             if (config.startingCursedObjects != null)
                 foreach (var passive in config.startingCursedObjects)
-                    if (passive != null && !CursedObject.Contains(passive))
+                    if (passive != null && !CursedObject.Contains(passive) && HasCursedRoom)
                         CursedObject.Add(passive);
             DiceCase = new DiceCase(config.diceCaseCapacity);
             Bank = new DiceCase(config.bankCapacity);

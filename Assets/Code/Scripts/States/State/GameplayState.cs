@@ -36,7 +36,9 @@ namespace Code.Scripts.States.State
             {
                 
                 _screen = _context.UIManager.ShowScreen<GameplayScreen>();
-                _screen.ShowWinningScore(_result.LuckyNumber, _result.VictoryTolerance);
+                ScoreResult range = DiceCalculator.PreviewTolerance(_context.RunData.CursedObject,
+                    _result.LuckyNumber, _result.VictoryTolerance, _result.Day);
+                _screen.ShowWinningScore(range.MinimumScore, range.MaximumScore);
                 _context.DiceDrawer.Open(_context.RunData.DiceCase);
                 
                 _session = new RollSession(_context, new RollSessionSettings
@@ -113,7 +115,7 @@ namespace Code.Scripts.States.State
         private IState NextStateAfterDay(bool success)
         {
             if (!success) return new GameOverState(_context, _stateMachine);
-            if (_result.IsBoss) return new ShopState(_context, _stateMachine);
+            if (_result.IsBoss) return new CursedRewardState(_context, _stateMachine);
             return new DiceCoinRewardState(_context, _stateMachine);
         }
     }

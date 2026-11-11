@@ -13,5 +13,7 @@ namespace Code.Scripts.Rolls
         public CameraShotId DrawerShot = CameraShotId.Drawer;
         public CameraShotId[] Views = { CameraShotId.Drawer, CameraShotId.Throwing, CameraShotId.CursedShelf };
         public float ResultViewDelay = 1f;
+        public float EliminateDuration = 0.3f; 
+        public CameraShotId[] HoverViews = { CameraShotId.Drawer, CameraShotId.Chest, CameraShotId.Throwing };
     }
 }

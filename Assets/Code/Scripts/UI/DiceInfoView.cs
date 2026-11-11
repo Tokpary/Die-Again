@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Code.Scripts.UI
 {
-    public class DiceInfoView : MonoBehaviour
+    public class DiceInfoView : InfoView<DiceInstance>
     {
         [SerializeField] private TMP_Text _nameText;
         [SerializeField] private Image _previewImage;
@@ -17,7 +17,7 @@ namespace Code.Scripts.UI
         [SerializeField] private TMP_Text _materialNameText;
         [SerializeField] private TMP_Text _materialDescriptionText;
 
-        public void Show(DiceInstance dice)
+        public override void Show(DiceInstance dice)
         {
             DiceSO data = dice.DiceData;
 

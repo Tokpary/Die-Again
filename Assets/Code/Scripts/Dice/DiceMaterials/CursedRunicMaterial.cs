@@ -17,7 +17,6 @@ namespace Code.Scripts.Dice.DiceMaterials
         [SerializeField]
         private bool _logOnApply = false;
 
-        // The die subtracts its rolled value.
         public override int ModifyValue(int value)
         {
             return value > 0 ? -value : value;
@@ -61,8 +60,6 @@ namespace Code.Scripts.Dice.DiceMaterials
                 return;
             }
 
-            // Apply material to every render slot.
-            // Do not modify the material asset itself.
             Material[] materials = renderer.sharedMaterials;
 
             if (materials.Length == 0)
@@ -79,8 +76,6 @@ namespace Code.Scripts.Dice.DiceMaterials
                 renderer.sharedMaterials = materials;
             }
 
-            // Preserve existing per-die properties,
-            // including any D4 number data.
             MaterialPropertyBlock block =
                 new MaterialPropertyBlock();
 
@@ -88,9 +83,6 @@ namespace Code.Scripts.Dice.DiceMaterials
 
             int faceCount = dice.Data.FaceValues.Length;
 
-            // D4: corner numbers
-            // D6: procedural pips
-            // Others: number atlas
             int numberMode;
 
             if (dice.GetComponent<D4FaceShaderData>() != null)
@@ -111,8 +103,6 @@ namespace Code.Scripts.Dice.DiceMaterials
                 numberMode
             );
 
-            // Normalize procedural patterns to
-            // the actual dimensions of each die.
             Bounds bounds = filter.sharedMesh.bounds;
 
             float largestDimension = Mathf.Max(

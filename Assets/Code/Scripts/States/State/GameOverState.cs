@@ -1,3 +1,4 @@
+using Code.Scripts.Camera;
 using Code.Scripts.Core;
 using Code.Scripts.UI;
 using Code.Scripts.UI.Screens;
@@ -25,6 +26,7 @@ namespace Code.Scripts.States.State
         {
             base.Exit();
             _screen.ReturnToMainMenuClicked -= OnReturnToMainMenuClicked;
+            _context.CameraController.MoveTo(CameraShotId.MainMenu);
         }
 
         private void OnReturnToMainMenuClicked()
