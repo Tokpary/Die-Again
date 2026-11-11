@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
   displayName: Toxic D6
   description: Transforms any dice it touches into an exact copy of itself, including
-    its dice type and Toxic material. Immune to other Toxic dice.
+    its dice type. Immune to other Toxic dice.
   preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
   faceValues: 010000000200000003000000040000000500000006000000
   diceMaterial: {fileID: 11400000, guid: 973af96661ae694478caac56d21bddfc, type: 2}

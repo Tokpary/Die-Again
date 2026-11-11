@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a5d8b89e134494b7b51bd15c577381, type: 3}
+  m_Name: Cursed D8
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
+  displayName: Cursed D8
+  description: Converts the dice's rolled value into a negative score.
+  preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
+  faceValues: 0100000002000000030000000400000005000000060000000700000008000000
+  diceMaterial: {fileID: 11400000, guid: 624c3a5a8ce43b749bb5eeba4fbad017, type: 2}
+  prefab: {fileID: -3470391934397304992, guid: 6a8a811d755680046afea6f4af581601, type: 3}
