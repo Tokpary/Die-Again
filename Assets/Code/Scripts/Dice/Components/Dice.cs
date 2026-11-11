@@ -17,6 +17,7 @@ namespace Code.Scripts.Dice
             FaceValueProbe = GetComponent<DiceFaceValueProbe>();
             Motion = GetComponent<DiceSettleDetector>();
             BaseScale = transform.localScale;
+            if (GetComponent<DiceHover>() == null) gameObject.AddComponent<DiceHover>();
         }
         
         public void Init(DiceInstance data)

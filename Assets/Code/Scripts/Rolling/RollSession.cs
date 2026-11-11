@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Code.Scripts.Rolling
 {
-    public class RollSession
+    public class RollSession : IDiceHoverRules
     {
         #region VARIABLES
 
@@ -66,7 +66,7 @@ namespace Code.Scripts.Rolling
         {
             if (_running) return;
             _running = true;
-
+            DiceHover.HoverRules = this;
             _context.CameraViewInput.ViewRequested += OnViewRequested;
             _context.CameraViewInput.BackRequested += GoBack;
             _context.DiceDragController.DiceSelected += OnDiceSelected;
@@ -91,6 +91,7 @@ namespace Code.Scripts.Rolling
             _context.GameInputs.Gameplay.Disable();
             _context.CameraViewInput.SetAvailableViews(null);
 
+            if (DiceHover.HoverRules == this) DiceHover.HoverRules = null;
             _context.CameraViewInput.ViewRequested -= OnViewRequested;
             _context.CameraViewInput.BackRequested -= GoBack;
             _context.DiceDragController.DiceSelected -= OnDiceSelected;
@@ -373,5 +374,12 @@ namespace Code.Scripts.Rolling
         }
 
         #endregion
+
+        public bool CanHover(Dice.Dice dice, CameraShotId view)
+        {
+            if (!_running || Array.IndexOf(_settings.HoverViews, view) < 0) return false;
+            if (_context.DiceDrawer.Contains(dice) || (_context.BankChest != null && _context.BankChest.Contains(dice))) return true;
+            return _tracker.Dice.Contains(dice) && dice.Motion.IsSettled;
+        }
     }
 }

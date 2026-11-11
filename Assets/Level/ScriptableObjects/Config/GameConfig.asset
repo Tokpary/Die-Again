@@ -55,5 +55,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 394b551d943a8534fa2162eb71c26f90, type: 2}
   - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
   coinChoices: 3
-  startingCursedObjects: []
+  cursedCapacity: 5
+  startingCursedObjects:
+  - {fileID: 11400000, guid: 17138a3891f84b229422aa8e6cfcffce, type: 2}
+  - {fileID: 11400000, guid: 48ec1dc4da8546a4ad838e200fcb985b, type: 2}
+  - {fileID: 11400000, guid: b2322f3498c4410d8c87c5c1cbceb7bb, type: 2}
+  - {fileID: 11400000, guid: 8372d0c28a2241fcb932c4a4b41f78e5, type: 2}
+  cursedPool:
+  - {fileID: 11400000, guid: 48ec1dc4da8546a4ad838e200fcb985b, type: 2}
+  - {fileID: 11400000, guid: 17138a3891f84b229422aa8e6cfcffce, type: 2}
+  - {fileID: 11400000, guid: 48ec1dc4da8546a4ad838e200fcb985b, type: 2}
+  - {fileID: 11400000, guid: 17138a3891f84b229422aa8e6cfcffce, type: 2}
+  - {fileID: 11400000, guid: 48ec1dc4da8546a4ad838e200fcb985b, type: 2}
+  - {fileID: 11400000, guid: 17138a3891f84b229422aa8e6cfcffce, type: 2}
+  cursedChoices: 3
   KillPlaneHeight: -1

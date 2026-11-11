@@ -10,6 +10,9 @@ namespace Code.Scripts.Core
         public DiceCase DiceCase { get; }
         public ShopOffer ShopOffer { get; }
         public DiceCase Bank { get; }
+        
+        public int CursedCapacity { get; }
+        public bool HasCursedRoom => CursedObject.Count < CursedCapacity;
 
         public List<CursedObject.CursedObject> CursedObject { get; } = new List<CursedObject.CursedObject>();
 
@@ -18,7 +21,7 @@ namespace Code.Scripts.Core
             Progress = new GameProgress(config.InitialWeek, config.InitialDay);
             if (config.startingCursedObjects != null)
                 foreach (var passive in config.startingCursedObjects)
-                    if (passive != null && !CursedObject.Contains(passive))
+                    if (passive != null && !CursedObject.Contains(passive) && HasCursedRoom)
                         CursedObject.Add(passive);
             DiceCase = new DiceCase(config.diceCaseCapacity);
             Bank = new DiceCase(config.bankCapacity);
@@ -26,6 +29,7 @@ namespace Code.Scripts.Core
             {
                 DiceCase.TryAdd(new DiceInstance(dice));
             }
+            CursedCapacity = config.cursedCapacity;
             ShopOffer = new ShopOffer(config.shopPool, config.shopOfferMin, config.shopOfferMax);
         }
         

@@ -113,7 +113,7 @@ namespace Code.Scripts.States.State
         private IState NextStateAfterDay(bool success)
         {
             if (!success) return new GameOverState(_context, _stateMachine);
-            if (_result.IsBoss) return new ShopState(_context, _stateMachine);
+            if (_result.IsBoss) return new CursedRewardState(_context, _stateMachine);
             return new DiceCoinRewardState(_context, _stateMachine);
         }
     }

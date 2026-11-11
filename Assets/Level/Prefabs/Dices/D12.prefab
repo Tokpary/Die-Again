@@ -98,6 +98,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5442804745898795882}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8127452789467660331}
   m_SourcePrefab: {fileID: 100100000, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}
 --- !u!1 &6292107850414759720 stripped
 GameObject:
@@ -205,6 +208,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSettleDetector
   _settleThreshold: 0.05
   _settleTime: 0.3
+--- !u!114 &8127452789467660331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6292107850414759720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbe8232c920e4e99a709fc9d143f0d81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceHover
+  _highlight: {fileID: 0}
 --- !u!33 &7761397575308298807 stripped
 MeshFilter:
   m_CorrespondingSourceObject: {fileID: -5754084199372789682, guid: 0be2fc8b197959945901219042ac5d2e, type: 3}

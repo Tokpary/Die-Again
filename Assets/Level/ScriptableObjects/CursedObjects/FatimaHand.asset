@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 347dae4811d14a46890e70867cc4c361, type: 3}
   m_Name: FatimaHand
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.CursedObject.CursedObjects.FatimaHand
-  displayName: Mano de Fátima
   description: +1 de tolerancia superior.
+  displayName: "Mano de F\xE1tima"
+  descriptionInGame: +1 Tolerance
+  preview: {fileID: 0}
+  prefab: {fileID: 622951479409091938, guid: 8c56ea0664e4a274dbaeb9c17eb10e1a, type: 3}
   toleranceIncrease: 1
