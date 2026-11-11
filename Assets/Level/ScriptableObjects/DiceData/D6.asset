@@ -16,5 +16,5 @@ MonoBehaviour:
   description: An antimatter dice it's destroyed once it contacts with another dice
   preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
   faceValues: 010000000200000003000000040000000500000006000000
-  diceMaterial: {fileID: 11400000, guid: 60bb761868d4411b9f830e845f727d5e, type: 2}
+  diceMaterial: {fileID: 0}
   prefab: {fileID: 6939954841522258775, guid: ffd69c4107fb6934ba4fd146910a12a8, type: 3}

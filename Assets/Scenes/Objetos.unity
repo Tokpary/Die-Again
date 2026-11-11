@@ -588,6 +588,7 @@ MonoBehaviour:
   _drawerTransform: {fileID: 725293140}
   _drawerRigidbody: {fileID: 1129135155}
   _area: {fileID: 127915809}
+  _selectLift: 0.4
 --- !u!4 &127915808
 Transform:
   m_ObjectHideFlags: 0
@@ -4453,6 +4454,8 @@ MonoBehaviour:
   dropDuration: 0.65
   retractDuration: 0.5
   landingBounce: 0.09
+  spinShakeAmplitude: 0.025
+  spinShakeFrequency: 18
   carnivalShader: {fileID: 4800000, guid: c3da8a728b22454f808e0c221d9a2311, type: 3}
   frame: {fileID: 0}
   amber: {r: 1, g: 0.42, b: 0.07, a: 1}
@@ -8252,6 +8255,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1232814069}
     - target: {fileID: 6197147481225680792, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
+      propertyPath: _startButton
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197147481225680792, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
       propertyPath: _settingsPanel
       value: 
       objectReference: {fileID: 268076823}
@@ -9420,6 +9427,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1822465063}
   - component: {fileID: 1822465064}
+  - component: {fileID: 1822465065}
   m_Layer: 0
   m_Name: CameraManager
   m_TagString: Untagged
@@ -9460,6 +9468,26 @@ MonoBehaviour:
   _defaultEase: 4
   _orbitSpeed: 90
   _unwindDuration: 0.6
+--- !u!114 &1822465065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1822465062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c50e9e4b53943989c834dc473684dc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Camera.CameraViewInput
+  _camera: {fileID: 683896409}
+  _zoneLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  _zones: []
+  _navigateActionName: NavegarVista
+  _confirmAction: ConfirmarVista
+  _backAction: Volver
 --- !u!1 &1861346066
 GameObject:
   m_ObjectHideFlags: 0

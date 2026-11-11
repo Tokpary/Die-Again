@@ -3,24 +3,33 @@ Shader "DiceMaster/Antimatter Dice"
 {
     Properties
     {
-        _BaseColor ("Black Color", Color) = (0.003,0.003,0.005,1)
+        _BaseColor ("Primary Color", Color) = (0.003,0.003,0.005,1)
+        _WaveColor ("Secondary Color", Color) = (1,1,1,1)
+        _InkColor ("Number Color", Color) = (1,1,1,1)
+
         _WaveSpeed ("Wave Speed", Range(0,3)) = 0.22
         _WaveScale ("Wave Scale", Range(0.5,12)) = 4
         _Distortion ("Distortion", Range(0,4)) = 2.2
-        _EffectIntensity ("White Effect Intensity", Range(0,5)) = 1
+        _EffectIntensity ("Wave Effect Intensity", Range(0,5)) = 1
         _WaveWidth ("Flame Reach From Edges", Range(0.05,0.8)) = 0.35
-        _EdgeWidth ("White Edge Width", Range(0,0.2)) = 0.035
+        _EdgeWidth ("Wave Edge Width", Range(0,0.2)) = 0.035
 
-        // NEW: Animated mesh deformation
         _DeformAmount ("Mesh Deformation", Range(0,0.05)) = 0.012
         _DeformFrequency ("Deformation Frequency", Range(0.5,8)) = 2
 
+        _D2PatternScale ("D2 Pattern Scale", Range(0.2,8)) = 1.2
+        _D2Balance ("D2 Color Balance", Range(0.1,0.9)) = 0.5
+
+        [HideInInspector] _D2Pattern ("D2 Enabled", Float) = 0
+        [HideInInspector] _D2HalfSize ("D2 Half Size", Vector) = (0.5,0.5,0.5,0)
+        [HideInInspector] _D2FlatAxis ("D2 Flat Axis", Float) = 2
+
         _NumberAtlas ("Existing Number Atlas", 2D) = "black" {}
+
         [Enum(Numbers,0,Pips,1,D4Corners,2)]
         _NumberMode ("Number Mode (automatic at spawn)", Float) = 0
 
-        _InkColor ("Number Color", Color) = (1,1,1,1)
-        _NumberClearance ("Black Clearance Around Numbers", Range(0,0.15)) = 0.035
+        _NumberClearance ("Pip Clearance", Range(0,0.15)) = 0.035
 
         [HideInInspector] _D4Values ("D4 Values", Vector) = (1,2,3,4)
         [HideInInspector] _PatternCenter ("Pattern Center", Vector) = (0,0,0,0)
@@ -52,23 +61,30 @@ Shader "DiceMaster/Antimatter Dice"
         CBUFFER_START(UnityPerMaterial)
 
             float4 _BaseColor;
+            float4 _WaveColor;
             float4 _InkColor;
             float4 _D4Values;
             float4 _PatternCenter;
+            float4 _D2HalfSize;
 
             float _WaveSpeed;
             float _WaveScale;
             float _Distortion;
             float _EffectIntensity;
             float _WaveWidth;
+            float _EdgeWidth;
+
+            float _DeformAmount;
+            float _DeformFrequency;
+
+            float _D2Pattern;
+            float _D2PatternScale;
+            float _D2Balance;
+            float _D2FlatAxis;
+
             float _NumberMode;
             float _NumberClearance;
             float _PatternInvSize;
-            float _EdgeWidth;
-
-            // NEW
-            float _DeformAmount;
-            float _DeformFrequency;
 
         CBUFFER_END
 
@@ -92,7 +108,6 @@ Shader "DiceMaster/Antimatter Dice"
 
             float3 positionOS : TEXCOORD0;
             float3 positionWS : TEXCOORD1;
-
             half3 normalWS : TEXCOORD2;
 
             float4 face : TEXCOORD3;
@@ -103,15 +118,14 @@ Shader "DiceMaster/Antimatter Dice"
             float3 valueAlphaFog : TEXCOORD7;
         };
 
-        // ------------------------------------------
+        // ==========================================
         // NOISE
-        // ------------------------------------------
+        // ==========================================
 
         float Hash(float3 p)
         {
             p = frac(p * 0.1031);
             p += dot(p, p.yzx + 33.33);
-
             return frac((p.x + p.y) * p.z);
         }
 
@@ -120,7 +134,7 @@ Shader "DiceMaster/Antimatter Dice"
             float3 i = floor(p);
             float3 f = frac(p);
 
-            f = f * f * (3 - 2 * f);
+            f = f * f * (3.0 - 2.0 * f);
 
             return lerp(
                 lerp(
@@ -153,9 +167,9 @@ Shader "DiceMaster/Antimatter Dice"
             );
         }
 
-        // ------------------------------------------
-        // NEW: ANIMATED MESH DEFORMATION
-        // ------------------------------------------
+        // ==========================================
+        // VISUAL MESH DEFORMATION
+        // ==========================================
 
         float3 DeformPositionOS(float3 positionOS)
         {
@@ -167,32 +181,23 @@ Shader "DiceMaster/Antimatter Dice"
                 : 1.0;
 
             float3 p =
-                (positionOS - _PatternCenter.xyz) * invSize;
+                (positionOS - _PatternCenter.xyz)
+                * invSize;
 
             float t = _Time.y * _WaveSpeed;
 
-            // Animated organic noise
             float n = Noise(
                 p * (_DeformFrequency * 4.0)
-                + float3(
-                    t,
-                    -t * 0.8,
-                    t * 0.45
-                )
+                + float3(t, -t * 0.8, t * 0.45)
             );
 
-            // Animated wave movement
             float wave = sin(
-                dot(
-                    p,
-                    float3(1.7, 2.3, -1.4)
-                )
+                dot(p, float3(1.7, 2.3, -1.4))
                 * _DeformFrequency * 5.0
                 - t * 3.0
                 + n * 3.0
             );
 
-            // Combine wave and noise
             float displacement =
                 (
                     wave * 0.65
@@ -201,10 +206,7 @@ Shader "DiceMaster/Antimatter Dice"
                 * _DeformAmount
                 / invSize;
 
-            // Radial displacement avoids gaps
-            // between vertices shared by faces.
-            float3 radial =
-                positionOS - _PatternCenter.xyz;
+            float3 radial = positionOS - _PatternCenter.xyz;
 
             float3 direction =
                 radial / max(length(radial), 0.0001);
@@ -212,15 +214,14 @@ Shader "DiceMaster/Antimatter Dice"
             return positionOS + direction * displacement;
         }
 
-        // ------------------------------------------
-        // VERTEX SHADER
-        // ------------------------------------------
+        // ==========================================
+        // VERTEX
+        // ==========================================
 
         Varyings Vert(Attributes v)
         {
             Varyings o;
 
-            // NEW: Deform visual geometry
             float3 deformedPosition =
                 DeformPositionOS(v.positionOS.xyz);
 
@@ -230,8 +231,6 @@ Shader "DiceMaster/Antimatter Dice"
             o.positionCS = p.positionCS;
             o.positionWS = p.positionWS;
 
-            // Keep original coordinates for
-            // the animated white wave pattern.
             o.positionOS =
                 (v.positionOS.xyz - _PatternCenter.xyz)
                 * _PatternInvSize;
@@ -239,7 +238,6 @@ Shader "DiceMaster/Antimatter Dice"
             o.normalWS =
                 TransformObjectToWorldNormal(v.normalOS);
 
-            // Preserve existing number rendering
             o.face = float4(v.faceUV, v.d4UV);
             o.d4Ids = v.d4Ids;
 
@@ -255,9 +253,10 @@ Shader "DiceMaster/Antimatter Dice"
             return o;
         }
 
-        // ------------------------------------------
-        // ANIMATED WHITE WAVES
-        // ------------------------------------------
+        // ==========================================
+        // ORIGINAL HEATWAVE
+        // Used by D4, D6, D8, D10, D12, D20
+        // ==========================================
 
         float Waves(float3 p, float edgeDistance)
         {
@@ -282,47 +281,116 @@ Shader "DiceMaster/Antimatter Dice"
             float fine = Noise(q * 1.63 + 19.3);
 
             float tongue = pow(
-                saturate(
-                    coarse * 0.8 + fine * 0.2
-                ),
+                saturate(coarse * 0.8 + fine * 0.2),
                 2.4
             );
 
             float reach =
-                _EdgeWidth
-                + _WaveWidth * tongue * 2;
+                _EdgeWidth + _WaveWidth * tongue * 2;
 
             float aa = max(
                 fwidth(edgeDistance - reach),
                 0.004
             );
 
-            return 1 - smoothstep(
+            return 1.0 - smoothstep(
                 reach - aa,
                 reach + aa,
                 edgeDistance
             );
         }
 
-        // ------------------------------------------
-        // NUMBER RENDERING
-        // ------------------------------------------
+        // ==========================================
+        // D2 HEATWAVE
+        // Circular perimeter approximation
+        // ==========================================
 
-        float Rectangle(
-            float2 p,
-            float2 center,
-            float2 extent
-        )
+        float D2Waves(float3 p)
         {
-            float2 d = abs(p - center) - extent;
-            float sd = max(d.x, d.y);
+            float t = _Time.y * _WaveSpeed;
 
-            return 1 - smoothstep(
-                0,
-                max(fwidth(sd), 0.001),
-                sd
+            // Normalize using the actual D2 bounds.
+            float3 normalized = p / max(
+                _D2HalfSize.xyz,
+                float3(0.001, 0.001, 0.001)
+            );
+
+            // Select the plane perpendicular to
+            // the D2's thinnest local axis.
+            float2 planar;
+
+            if (_D2FlatAxis < 0.5)
+            {
+                planar = normalized.yz;
+            }
+            else if (_D2FlatAxis < 1.5)
+            {
+                planar = normalized.xz;
+            }
+            else
+            {
+                planar = normalized.xy;
+            }
+
+            // Distance is zero at the outer edge
+            // and increases towards the center.
+            float edgeDistance = saturate(
+                1.0 - length(planar)
+            );
+
+            // Animated organic noise.
+            float3 q =
+                p * _D2PatternScale * 3.0;
+
+            float3 drift = float3(
+                t * 0.45,
+                -t * 0.30,
+                t * 0.25
+            );
+
+            float coarse = Noise(q + drift);
+
+            float fine = Noise(
+                q * 2.0 - drift * 0.7 + 12.4
+            );
+
+            float pattern =
+                coarse * 0.8 + fine * 0.2;
+
+            // Distort the progression from
+            // the outer perimeter inward.
+            float distortedDistance = edgeDistance * (
+                1.0 +
+                (pattern - 0.5) * _Distortion * 0.35
+            );
+
+            // Determine how far the effect
+            // extends from the D2 edge.
+            float reach =
+                _EdgeWidth +
+                _WaveWidth * (0.45 + pattern * 1.35);
+
+            reach *= lerp(
+                1.4,
+                0.65,
+                saturate(_D2Balance)
+            );
+
+            float aa = max(
+                fwidth(distortedDistance),
+                0.01
+            );
+
+            return 1.0 - smoothstep(
+                reach - aa,
+                reach + aa,
+                distortedDistance
             );
         }
+
+        // ==========================================
+        // NUMBER ATLAS
+        // ==========================================
 
         float Digits(
             float2 uv,
@@ -359,34 +427,23 @@ Shader "DiceMaster/Antimatter Dice"
                 ).r * unitsMask
             );
 
-            float2 p = (uv - 0.05) / 0.90;
-
-            clearance = value >= 10
-                ? Rectangle(
-                    p,
-                    float2(0.5,0.5),
-                    float2(0.18,0.25)
-                        + _NumberClearance
-                )
-                : Rectangle(
-                    p,
-                    float2(0.5,0.5),
-                    float2(0.125,0.32)
-                        + _NumberClearance
-                );
+            // No rectangular clearance
+            // around atlas numbers.
+            clearance = 0.0;
 
             return ink;
         }
 
-        // ------------------------------------------
-        // FRAGMENT SHADER
-        // ------------------------------------------
+        // ==========================================
+        // FRAGMENT
+        // ==========================================
 
         half4 Frag(Varyings i) : SV_Target
         {
             float ink = 0;
             float clearance = 0;
 
+            // D4 corner values
             if (_NumberMode > 1.5)
             {
                 [unroll]
@@ -422,6 +479,8 @@ Shader "DiceMaster/Antimatter Dice"
                 ink *= i.d4Ids.a;
                 clearance *= i.d4Ids.a;
             }
+
+            // D6 pips
             else if (_NumberMode > 0.5)
             {
                 float aa = max(
@@ -448,6 +507,8 @@ Shader "DiceMaster/Antimatter Dice"
                 ink *= i.valueAlphaFog.y;
                 clearance *= i.valueAlphaFog.y;
             }
+
+            // D2 and other numbered dice
             else
             {
                 ink = Digits(
@@ -459,7 +520,10 @@ Shader "DiceMaster/Antimatter Dice"
                 clearance *= i.valueAlphaFog.y;
             }
 
-            // Lighting
+            // --------------------------------------
+            // LIGHTING
+            // --------------------------------------
+
             half3 n = normalize(i.normalWS);
 
             Light light = GetMainLight(
@@ -469,15 +533,16 @@ Shader "DiceMaster/Antimatter Dice"
             half3 illumination =
                 SampleSH(n)
                 + light.color
-                * saturate(
-                    dot(n, light.direction)
-                )
+                * saturate(dot(n, light.direction))
                 * light.shadowAttenuation;
 
             half3 color =
                 _BaseColor.rgb * (0.2 + illumination);
 
-            // Original animated Heatwave effect
+            // --------------------------------------
+            // EXISTING EDGE CHANNELS
+            // --------------------------------------
+
             float4 nearest = min(
                 i.edgeA,
                 i.edgeB
@@ -491,12 +556,35 @@ Shader "DiceMaster/Antimatter Dice"
                 )
             );
 
-            color +=
-                Waves(i.positionOS, edgeDistance)
-                * (1 - saturate(clearance))
-                * _EffectIntensity;
+            // --------------------------------------
+            // SELECT D2 OR ORIGINAL PATTERN
+            // --------------------------------------
 
-            // Keep numbers readable
+            float waveMask;
+
+            if (_D2Pattern > 0.5)
+            {
+                waveMask = D2Waves(i.positionOS);
+            }
+            else
+            {
+                waveMask = saturate(
+                    Waves(i.positionOS, edgeDistance)
+                    * _EffectIntensity
+                );
+            }
+
+            // Preserve D6 pip clearance.
+            waveMask *= 1.0 - saturate(clearance);
+
+            // Custom primary/secondary colors.
+            color = lerp(
+                color,
+                _WaveColor.rgb,
+                saturate(waveMask)
+            );
+
+            // Draw only the number glyph.
             color = lerp(
                 color,
                 _InkColor.rgb,
@@ -504,19 +592,16 @@ Shader "DiceMaster/Antimatter Dice"
             );
 
             return half4(
-                MixFog(
-                    color,
-                    i.valueAlphaFog.z
-                ),
+                MixFog(color, i.valueAlphaFog.z),
                 1
             );
         }
 
         ENDHLSL
 
-        // ------------------------------------------
+        // ==========================================
         // FORWARD PASS
-        // ------------------------------------------
+        // ==========================================
 
         Pass
         {
@@ -541,9 +626,9 @@ Shader "DiceMaster/Antimatter Dice"
             ENDHLSL
         }
 
-        // ------------------------------------------
+        // ==========================================
         // DEPTH PASS
-        // ------------------------------------------
+        // ==========================================
 
         Pass
         {
@@ -578,9 +663,9 @@ Shader "DiceMaster/Antimatter Dice"
             ENDHLSL
         }
 
-        // ------------------------------------------
+        // ==========================================
         // SHADOW PASS
-        // ------------------------------------------
+        // ==========================================
 
         Pass
         {
@@ -606,7 +691,6 @@ Shader "DiceMaster/Antimatter Dice"
 
             float4 ShadowVert(Attributes v) : SV_POSITION
             {
-                // NEW: Apply same geometry deformation
                 float3 deformedPosition =
                     DeformPositionOS(v.positionOS.xyz);
 
