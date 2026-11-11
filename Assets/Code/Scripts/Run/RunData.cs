@@ -19,6 +19,7 @@ namespace Code.Scripts.Core
         public RunData(GameConfigSO config)
         {
             Progress = new GameProgress(config.InitialWeek, config.InitialDay);
+            CursedCapacity = config.cursedCapacity;
             if (config.startingCursedObjects != null)
                 foreach (var passive in config.startingCursedObjects)
                     if (passive != null && !CursedObject.Contains(passive) && HasCursedRoom)
@@ -29,7 +30,6 @@ namespace Code.Scripts.Core
             {
                 DiceCase.TryAdd(new DiceInstance(dice));
             }
-            CursedCapacity = config.cursedCapacity;
             ShopOffer = new ShopOffer(config.shopPool, config.shopOfferMin, config.shopOfferMax);
         }
         

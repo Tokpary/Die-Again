@@ -40,9 +40,9 @@ namespace Code.Scripts.UI.Screens
             _scoreText.text = $"Score: {score}";
         }
         
-        public void ShowWinningScore(int score, int tolerance)
+        public void ShowWinningScore(int minimum, int maximum)
         {
-            _winningScoreText.text = $"Winning Score: {score + tolerance}-{score - tolerance}";
+            _winningScoreText.text = $"Winning Score: {minimum}-{maximum}";
         }
         
         public void ShowRerollMode(bool active) => _rerollHintText.gameObject.SetActive(active);

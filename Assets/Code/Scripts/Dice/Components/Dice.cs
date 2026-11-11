@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Code.Scripts.Dice
@@ -10,7 +11,7 @@ namespace Code.Scripts.Dice
         private DiceFaceValueProbe FaceValueProbe { get; set; }
         public Vector3 BaseScale { get; private set; }
         
-        
+        public static event Action<Dice, Dice, UnityEngine.Collision> CollidedWithDice;
         
         private void Awake()
         {
@@ -31,6 +32,13 @@ namespace Code.Scripts.Dice
         {
             int index = FaceValueProbe.GetUpwardFaceValue();
             return index >= 0 && index < Data.FaceValues.Length ? Data.FaceValues[index] : 0; 
+        }
+        
+        private void OnCollisionEnter(UnityEngine.Collision collision)
+        {
+            if (CollidedWithDice == null || collision.rigidbody == null) return;
+            Dice other = collision.rigidbody.GetComponent<Dice>();
+            if (other != null && other != this) CollidedWithDice(this, other, collision);
         }
     }
 }
