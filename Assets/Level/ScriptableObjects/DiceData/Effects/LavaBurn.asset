@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc3b434cd964ee29e7ce7b0b1c95261, type: 3}
   m_Name: LavaBurn
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.Collision.Effects.EliminateOnCollision
+  _priority: 0
   _ignoreSameMaterial: 1
   _immuneMaterials: []
   _minImpact: 0.5
   _vfx: {fileID: 8194992990867289339, guid: 99bc28c0d45f51c4fbac01080b73edc7, type: 3}
+  _blastForce: 15
+  _blastRadius: 40
+  _blastUpwards: 0.5

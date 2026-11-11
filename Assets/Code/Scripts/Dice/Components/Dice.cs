@@ -38,7 +38,7 @@ namespace Code.Scripts.Dice
         {
             if (CollidedWithDice == null || collision.rigidbody == null) return;
             Dice other = collision.rigidbody.GetComponent<Dice>();
-            if (other != null && other != this) CollidedWithDice(this, other, collision);
+            if (other != null && GetInstanceID() < other.GetInstanceID()) CollidedWithDice(this, other, collision);
         }
     }
 }

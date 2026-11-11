@@ -14,11 +14,5 @@ namespace Code.Scripts.Dice.DiceMaterials
         {
             return value;
         }
-        public virtual void OnCollision(DiceCollision hit)
-        {
-            if (collisionEffects == null) return;
-            foreach (DiceCollisionEffect effect in collisionEffects)
-                if (effect != null) effect.Apply(hit);
-        }
     }
 }
