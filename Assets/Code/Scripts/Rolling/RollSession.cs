@@ -4,6 +4,7 @@ using System.Linq;
 using Code.Scripts.Camera;
 using Code.Scripts.Core;
 using Code.Scripts.Dice;
+using Code.Scripts.Dice.DiceMaterials;
 using Code.Scripts.Rolls;
 using Code.Scripts.Rounds;
 using DG.Tweening;
@@ -11,7 +12,7 @@ using UnityEngine;
 
 namespace Code.Scripts.Rolling
 {
-    public class RollSession : IDiceHoverRules
+    public class RollSession : IDiceHoverRules, IDiceTable
     {
         #region VARIABLES
 
@@ -21,6 +22,7 @@ namespace Code.Scripts.Rolling
         private readonly List<Dice.Dice> _outOfDrawer = new List<Dice.Dice>();
         private readonly HashSet<Dice.Dice> _freeShots = new HashSet<Dice.Dice>();
         private readonly Dictionary<Dice.Dice, DiceDrawer> _origins = new Dictionary<Dice.Dice, DiceDrawer>(); 
+        private readonly List<Dice.Dice> _eliminated = new List<Dice.Dice>();  
         private readonly int _inFlightLayer;
         private readonly int _diceLayer;
 
@@ -72,6 +74,7 @@ namespace Code.Scripts.Rolling
             _context.DiceDragController.DiceSelected += OnDiceSelected;
             _context.DiceDragController.DroppedOnTarget += OnDiceDroppedOnSlot;
             _context.DiceThrower.OnDiceShot += OnDiceShot;
+            Dice.Dice.CollidedWithDice += OnDiceCollided;
             _tracker.AllSettled += OnAllSettled;
             Budget.OnBudgetChanged += NotifyBudgetChanged;
 
@@ -97,6 +100,7 @@ namespace Code.Scripts.Rolling
             _context.DiceDragController.DiceSelected -= OnDiceSelected;
             _context.DiceDragController.DroppedOnTarget -= OnDiceDroppedOnSlot;
             _context.DiceThrower.OnDiceShot -= OnDiceShot;
+            Dice.Dice.CollidedWithDice -= OnDiceCollided;
             _tracker.AllSettled -= OnAllSettled;
             Budget.OnBudgetChanged -= NotifyBudgetChanged;
         }
@@ -239,6 +243,111 @@ namespace Code.Scripts.Rolling
 
         #endregion
 
+        #region COLLISIONS
+
+        private void OnDiceCollided(Dice.Dice a, Dice.Dice b, Collision collision)
+        {
+            if (!IsInPlay(a) || !IsInPlay(b)) return;
+
+            Vector3 point = collision.contactCount > 0 ? collision.GetContact(0).point : a.transform.position;
+            float impact = collision.relativeVelocity.magnitude;
+
+            var hits = EffectsOf(a, b, point, impact).Concat(EffectsOf(b, a, point, impact))
+                .OrderByDescending(h => h.Effect.Priority)
+                .ToList();
+
+            foreach ((DiceCollisionEffect effect, DiceCollision hit) in hits)
+                if (IsInPlay(hit.Self)) effect.Apply(hit); 
+        }
+        
+        private IEnumerable<(DiceCollisionEffect Effect, DiceCollision Hit)> EffectsOf(Dice.Dice self, Dice.Dice other, Vector3 point, float impact)
+        {
+            DiceMaterial material = self.Data.DiceMaterial;
+            if (material == null || material.collisionEffects == null) yield break;
+
+            var hit = new DiceCollision(self, other, point, impact, this);
+            foreach (DiceCollisionEffect effect in material.collisionEffects)
+                if (effect != null) yield return (effect, hit);
+        }
+
+
+        public bool IsInPlay(Dice.Dice dice) => _running && _tracker.Dice.Contains(dice);
+
+        public void Eliminate(Dice.Dice dice, Func<Transform, Tween> vanish = null)
+        {
+            if (!IsInPlay(dice)) return;
+            _tracker.Remove(dice);   
+            _outOfDrawer.Remove(dice);
+            _eliminated.Add(dice);
+            NotifyBudgetChanged();
+
+            Rigidbody rb = dice.GetComponent<Rigidbody>();
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+
+            Transform t = dice.transform;
+            Tween tween = vanish != null
+                ? vanish(t)
+                : t.DOScale(Vector3.zero, _settings.EliminateDuration).SetEase(Ease.InBack);
+            tween.SetTarget(t)
+                .SetLink(dice.gameObject)
+                .OnComplete(() => dice.gameObject.SetActive(false));
+        }
+
+        public void Blast(Vector3 center, float force, float radius, float upwards = 0.5f)
+        {
+            foreach (Rigidbody rb in PhysicalDiceInPlay())
+                rb.AddExplosionForce(force, center, radius, upwards, ForceMode.Impulse);
+        }
+
+        public void Pull(Vector3 center, float acceleration, float radius, float duration)
+        {
+            DOVirtual.Float(0f, 1f, duration, _ =>
+            {
+                foreach (Rigidbody rb in PhysicalDiceInPlay())
+                {
+                    Vector3 toCenter = center - rb.position;
+                    float distance = toCenter.magnitude;
+                    if (distance > radius || distance < 0.01f) continue;
+                    rb.AddForce(toCenter / distance * (acceleration * (1f - distance / radius)), ForceMode.Acceleration);
+                }
+            }).SetUpdate(UpdateType.Fixed);   
+        }
+
+        private void BringBack(List<Dice.Dice> dice, List<DiceDrawer> homes, int firstReturnIndex, Action onDone)
+        {
+            for (int i = 0; i < dice.Count; i++)
+            {
+                dice[i].transform.DOKill();   
+                dice[i].transform.position = homes[i].GetReturnPoint(firstReturnIndex + i);
+                dice[i].gameObject.SetActive(true);
+            }
+            _context.DiceAnimator.Appear(dice, d => homes[dice.IndexOf(d)].Add(d), onDone);
+        }
+
+        private IEnumerable<Rigidbody> PhysicalDiceInPlay()
+        {
+            if (!_running) yield break;
+            foreach (Dice.Dice dice in _tracker.Dice.ToList())
+            {
+                Rigidbody rb = dice.GetComponent<Rigidbody>();
+                if (!rb.isKinematic) yield return rb;
+            }
+        }
+        
+        private void ConsumeEliminated()
+        {
+            foreach (Dice.Dice dice in _eliminated)
+            {
+                _context.RunData.RemoveDice(dice.Data);
+                UnityEngine.Object.Destroy(dice.gameObject);
+            }
+            _eliminated.Clear();
+        }
+
+        #endregion
+        
         #region REROLL
 
         public void ToggleReroll()
@@ -322,9 +431,19 @@ namespace Code.Scripts.Rolling
             _context.DiceThrower.UnloadDice();
             var dice = new List<Dice.Dice>(_outOfDrawer);
             var homes = dice.Select(ContainerOf).ToList();
+            var eliminated = new List<Dice.Dice>(_eliminated);
+            var eliminatedHomes = eliminated.Select(ContainerOf).ToList();
             ClearTable();
+
+            int pending = 2;
+            void Done()
+            {
+                if (--pending == 0) onDone?.Invoke();
+            }
+
             _context.DiceAnimator.ArcTo(dice, _context.DiceDrawer.GetReturnPoint,
-                d => _context.DiceDrawer.Add(d), onDone);
+                d => _context.DiceDrawer.Add(d), Done);
+            BringBack(eliminated, eliminatedHomes, dice.Count, Done);
         }
 
         public void DiscardThrown(Action onDone)
@@ -381,5 +500,7 @@ namespace Code.Scripts.Rolling
             if (_context.DiceDrawer.Contains(dice) || (_context.BankChest != null && _context.BankChest.Contains(dice))) return true;
             return _tracker.Dice.Contains(dice) && dice.Motion.IsSettled;
         }
+
+
     }
 }

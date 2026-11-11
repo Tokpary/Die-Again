@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02bb8588543745afa06b344da6451eb0, type: 3}
+  m_Name: AntimatterFusion
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.Collision.Effects.AnnihilateOnCollision
+  _priority: 10
+  _ignoreSameMaterial: 1
+  _immuneMaterials: []
+  _minImpact: 0
+  _repelDistance: 10
+  _repelDuration: 0.5
+  _fusionHeight: 0
+  _collapseDuration: 0.6
+  _spinTurns: 1.5
+  _pullStrength: 50
+  _pullRadius: 40
+  _pullLinger: 0.3
+  _startVfx: {fileID: 5208035526828389471, guid: 4be775da9cc4144439ff36b7d5dd9d94, type: 3}
+  _endVfx: {fileID: 1781338005938663254, guid: 59228ca4fdf881849908dc5c24b203e1, type: 3}

@@ -16,13 +16,14 @@ MonoBehaviour:
   InitialDay: 1
   diceCaseCapacity: 12
   startingDices:
-  - {fileID: 11400000, guid: f221d4fa3d140e44083a1a5023002573, type: 2}
-  - {fileID: 11400000, guid: 394b551d943a8534fa2162eb71c26f90, type: 2}
+  - {fileID: 11400000, guid: d052d533ab845f04daef40ef95250327, type: 2}
+  - {fileID: 11400000, guid: 0af68f70c2ea12b449091e9fdfa0f117, type: 2}
+  - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
+  - {fileID: 11400000, guid: c6c9b27d146a8f048b5ad0b43fa0901b, type: 2}
   - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
-  - {fileID: 11400000, guid: 87df873c24439b04882209ae6e570d41, type: 2}
-  - {fileID: 11400000, guid: 1833768530ff21e479b6ea396c65a001, type: 2}
-  - {fileID: 11400000, guid: b70000ccec238d44e9c61da5848b7eaa, type: 2}
-  - {fileID: 11400000, guid: 203dc907bb5ea4c45b36b540e1727fb7, type: 2}
+  - {fileID: 11400000, guid: 99a1409501a3d584baead24b35049e74, type: 2}
+  - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
+  - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
   shotsPerDay: 5
   rerollsPerDay: 2
   shopPool:
@@ -51,22 +52,16 @@ MonoBehaviour:
   shopOfferMax: 20
   bankCapacity: 5
   coinPool:
-  - {fileID: 11400000, guid: f221d4fa3d140e44083a1a5023002573, type: 2}
-  - {fileID: 11400000, guid: 394b551d943a8534fa2162eb71c26f90, type: 2}
-  - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
+  - {fileID: 11400000, guid: 615798a5695b6bf4abf5261c8ed95567, type: 2}
+  - {fileID: 11400000, guid: 413f8956ca4d76649b2a2d3f90989bc0, type: 2}
+  - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
   coinChoices: 3
   cursedCapacity: 5
-  startingCursedObjects:
-  - {fileID: 11400000, guid: 17138a3891f84b229422aa8e6cfcffce, type: 2}
-  - {fileID: 11400000, guid: 48ec1dc4da8546a4ad838e200fcb985b, type: 2}
-  - {fileID: 11400000, guid: b2322f3498c4410d8c87c5c1cbceb7bb, type: 2}
-  - {fileID: 11400000, guid: 8372d0c28a2241fcb932c4a4b41f78e5, type: 2}
+  startingCursedObjects: []
   cursedPool:
   - {fileID: 11400000, guid: 48ec1dc4da8546a4ad838e200fcb985b, type: 2}
   - {fileID: 11400000, guid: 17138a3891f84b229422aa8e6cfcffce, type: 2}
-  - {fileID: 11400000, guid: 48ec1dc4da8546a4ad838e200fcb985b, type: 2}
-  - {fileID: 11400000, guid: 17138a3891f84b229422aa8e6cfcffce, type: 2}
-  - {fileID: 11400000, guid: 48ec1dc4da8546a4ad838e200fcb985b, type: 2}
-  - {fileID: 11400000, guid: 17138a3891f84b229422aa8e6cfcffce, type: 2}
+  - {fileID: 11400000, guid: b2322f3498c4410d8c87c5c1cbceb7bb, type: 2}
+  - {fileID: 11400000, guid: 8372d0c28a2241fcb932c4a4b41f78e5, type: 2}
   cursedChoices: 3
   KillPlaneHeight: -1

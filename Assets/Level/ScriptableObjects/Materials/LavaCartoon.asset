@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5cac17921b67194cbd9419a57c6a97d, type: 3}
   m_Name: LavaCartoon
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceMaterials.LavaCartoonMaterial
+  collisionEffects:
+  - {fileID: 11400000, guid: a64109b1f0c98f746aa6ce1eab16906d, type: 2}
   displayName: Lava Cartoon
+  description: 
   _visualMaterial: {fileID: 2100000, guid: db9a2fc207f54db4585aa3add9928bf3, type: 2}
