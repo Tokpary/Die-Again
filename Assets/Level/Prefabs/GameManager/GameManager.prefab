@@ -281,8 +281,10 @@ MonoBehaviour:
   _rerollHintText: {fileID: 7886766596583440154}
   _shotsText: {fileID: 1520571224031232863}
   _rerollButtonText: {fileID: 9196438889624653627}
-  _scoreText: {fileID: 6101198714043200129}
+  _previousScoreText: {fileID: 6101198714043200129}
+  _scoreTexts: []
   _winningScoreText: {fileID: 6588652987942997229}
+  _bossIcon: {fileID: 0}
   _tableControls: {fileID: 1570658599578290789}
 --- !u!114 &1570658599578290789
 MonoBehaviour:
@@ -360,6 +362,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.UI.Screens.GameOverScreen
   _returnMainMenuButton: {fileID: 5021135089147138529}
+  _replayButton: {fileID: 0}
+  _defeatText: {fileID: 0}
+  _luckyNumberFormat: Defeated by the Lucky Number {0}, on day {1} of week {2}
+  _titleText: {fileID: 0}
+  _gameOverTitle: GAME OVER
+  _victoryTitle: YOU WIN
+  _victoryFormat: You defeated {0} and survived all {1} weeks
+  _diceRoot: {fileID: 0}
+  _diceIconTemplate: {fileID: 0}
 --- !u!1 &501740781240219551
 GameObject:
   m_ObjectHideFlags: 0
@@ -702,7 +713,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.UI.Screens.ShopScreen
   _nextButton: {fileID: 7220242001908325076}
-  _claimButton: {fileID: 6352165193352705362}
+  _nextButtonLabel: {fileID: 0}
+  _nextText: Next
+  _claimText: Claim
+  _claimNothingText: Claim
   _offerText: {fileID: 0}
   _sumText: {fileID: 2355708041808015442}
   _slotsContainer: {fileID: 0}
@@ -3038,8 +3052,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Shop.PurchaseEffect
   _animator: {fileID: 4009872141594354298}
   _diceDrawer: {fileID: 0}
-  _mergeVfx: {fileID: 0}
+  _playArea: {fileID: 0}
   _mergeHeight: 1.5
+  _mergeVfx: {fileID: 0}
+  _spawnVfx: {fileID: 0}
+  _failVfx: {fileID: 0}
+  _failHoldTime: 0.8
 --- !u!1 &7653780785569209526
 GameObject:
   m_ObjectHideFlags: 0
@@ -3653,12 +3671,14 @@ MonoBehaviour:
   musicSource: {fileID: 2005966371314947880}
   sfxSource: {fileID: 4096835684538901727}
   _coinRewardSelectionSfx: {fileID: 8300000, guid: 64d2977f0a778884d8a17d75a7d06ef6, type: 3}
-  _curtainSfx: {fileID: 8300000, guid: 1f9a7595a26ff134d90a1d19a028cfc3, type: 3}
+  _curtainSfx: {fileID: 8300000, guid: adcb2b4d45d55f047926395f40bb587f, type: 3}
   _settingsGearsSfx: {fileID: 8300000, guid: db4bb1420165d264fa670cbb9fcec6c0, type: 3}
   _shopPostSfx: {fileID: 8300000, guid: 6913530b34c94614bab3bb88fbc06e82, type: 3}
   _chestSfx: {fileID: 8300000, guid: 9ba7541946db04742a32641dc9c5f6cf, type: 3}
   _drawerSfx: {fileID: 8300000, guid: 5eff47262ce1c6b4196eadb2d2e8d7f1, type: 3}
   _winningScoreSfx: {fileID: 8300000, guid: d7655c170d63ffa46815d6d0e69cdb39, type: 3}
+  _rouletteTickSfx: {fileID: 8300000, guid: add2848ee815942458b01312ac0c254e, type: 3}
+  _rouletteTickVolume: 0.4
   _normalRouletteResultSfx: {fileID: 8300000, guid: 6923c8bf771df4746a25722e4585926a, type: 3}
   _bossRouletteResultSfx: {fileID: 8300000, guid: 7331b69ff5c5cf944b7f65c88038b9d0, type: 3}
 --- !u!1 &8619312007751239426
