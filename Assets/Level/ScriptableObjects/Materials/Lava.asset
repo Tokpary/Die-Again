@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceMaterials.LavaMaterial
   collisionEffects:
   - {fileID: 11400000, guid: a64109b1f0c98f746aa6ce1eab16906d, type: 2}
-  displayName: Lava
+  displayName: 
   description: 
   _visualMaterial: {fileID: 2100000, guid: d91ee464b3c6eb341a2d2e6a7b4d79ca, type: 2}
