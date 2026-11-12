@@ -533,24 +533,13 @@ namespace Code.Scripts.Roulette
                 Mathf.Repeat(target - start, 360f);
 
             float elapsed = 0f;
-
-            // ======================================
-            // ROULETTE TICK SOUND
-            // ======================================
-
-            // Every numbered wedge has the same angle.
             float sliceAngle =
                 360f / _displayedNumbers.Count;
 
-            // Index of the wedge under the pointer.
-            // We keep the angle unwrapped so that
-            // full revolutions can be counted.
             int lastBoundary = Mathf.FloorToInt(
                 SpinStartPointerAngle / sliceAngle
             );
 
-            // Play one tick for every wedge boundary
-            // crossed since the previous frame.
             void PlayCrossedTicks(float travelledDegrees)
             {
                 int currentBoundary = Mathf.FloorToInt(
@@ -568,10 +557,6 @@ namespace Code.Scripts.Roulette
 
                 lastBoundary = currentBoundary;
             }
-
-            // ======================================
-            // ORIGINAL SPIN ANIMATION
-            // ======================================
 
             while (elapsed < _spinDuration)
             {
@@ -597,15 +582,11 @@ namespace Code.Scripts.Roulette
                 SpinTravelDegrees = distance * eased;
 
                 SetAngle(start + distance * eased);
-
-                // Detect the boundaries crossed by
-                // the pointer during this frame.
                 PlayCrossedTicks(SpinTravelDegrees);
 
                 yield return null;
             }
 
-            // Check the final segment as well.
             SpinTravelDegrees = distance;
 
             SetAngle(target);

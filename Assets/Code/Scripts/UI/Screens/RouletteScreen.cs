@@ -36,25 +36,21 @@ namespace Code.Scripts.UI.Screens
         public void ShowPreview(GameProgress progress, int probability)
         {
             if (_previewText != null)
-                _previewText.text = $"SEMANA {progress.Week} · DÍA {progress.Day}\n" +
-                    $"Rango de prueba: {progress.NextLuckyNumberMinimum}-{progress.NextLuckyNumberMaximum}" +
-                    $"     |     Jefe: {probability}%\nVERDE: NORMAL     ·     ROJO: JEFE";
-            if (_resultText != null) _resultText.text = "Pulsa la ruleta para revelar el resultado";
+                _previewText.text = "";
+            if (_resultText != null) _resultText.text = "";
             SetButtons(true, false);
         }
 
         public void ShowSpinning()
         {
-            if (_resultText != null) _resultText.text = "GIRANDO…";
+            if (_resultText != null) _resultText.text = "";
             SetButtons(false, false);
         }
 
         public void ShowResult(RouletteResult result, bool canRepeat)
         {
             if (_resultText != null)
-                _resultText.text = $"<b>LUCKY NUMBER: {result.LuckyNumber}</b>\n" +
-                    (result.IsBoss ? "<color=#F27E85>ENCUENTRO: JEFE</color>" :
-                        "<color=#8ED6B2>ENCUENTRO: NORMAL</color>") + "\nPulsa la ruleta para continuar";
+                _resultText.text = "";
             SetButtons(canRepeat, true);
         }
 

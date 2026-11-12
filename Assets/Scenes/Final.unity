@@ -20623,6 +20623,14 @@ PrefabInstance:
       propertyPath: m_PreserveAspect
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8118824505253735195, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
+      propertyPath: _resultText
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8118824505253735195, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
+      propertyPath: _previewText
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8293703071546514046, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
       propertyPath: m_fontSize
       value: 54
