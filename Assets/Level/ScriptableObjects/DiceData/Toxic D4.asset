@@ -18,4 +18,4 @@ MonoBehaviour:
   preview: {fileID: 21300000, guid: f3595a63bc6d39949984f9541e97383f, type: 3}
   faceValues: 01000000020000000300000004000000
   diceMaterial: {fileID: 11400000, guid: 7692484387ceb084a8b22e484907cd4d, type: 2}
-  prefab: {fileID: 6939954841522258775, guid: ffd69c4107fb6934ba4fd146910a12a8, type: 3}
+  prefab: {fileID: -2287452370266603689, guid: 02baab6d0f74ab84ead543ae484d51c4, type: 3}

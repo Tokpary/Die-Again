@@ -81,6 +81,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7a46d858909d620489c8e0e676fd842a, type: 2}
   - {fileID: 11400000, guid: 806feeb37460f2a41aff4df0eadea80d, type: 2}
   coinChoices: 3
+  bossPool:
+  - {fileID: 11400000, guid: fd367cad8f3f563489502257ef4edab7, type: 2}
+  - {fileID: 11400000, guid: f64272912ef92de489feac8ac2f8640c, type: 2}
+  - {fileID: 11400000, guid: 52cadfa06af3c1040aa02c2542adc21a, type: 2}
   cursedCapacity: 5
   startingCursedObjects: []
   cursedPool:

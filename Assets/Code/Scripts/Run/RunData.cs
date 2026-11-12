@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Code.Scripts.Bosses;
 using Code.Scripts.Dice;
 using Code.Scripts.Shop;
+using UnityEngine;
 
 namespace Code.Scripts.Core
 {
@@ -15,6 +17,10 @@ namespace Code.Scripts.Core
         public bool HasCursedRoom => CursedObject.Count < CursedCapacity;
 
         public List<CursedObject.CursedObject> CursedObject { get; } = new List<CursedObject.CursedObject>();
+        
+        private readonly List<BossSO> _bossOrder = new List<BossSO>();
+        public BossSO BossOfWeek(int week) =>
+            _bossOrder.Count == 0 ? null : _bossOrder[(Mathf.Max(1, week) - 1) % _bossOrder.Count];
 
         public RunData(GameConfigSO config)
         {
@@ -30,7 +36,23 @@ namespace Code.Scripts.Core
             {
                 DiceCase.TryAdd(new DiceInstance(dice));
             }
-            ShopOffer = new ShopOffer(config.shopPool, config.shopOfferMin, config.shopOfferMax);
+            ShopOffer = new ShopOffer(config.shopPool, config.shopOfferSize, config.shopMaxNumber);
+            ShuffleBosses(config.bossPool);
+            
+        }
+        
+        private void ShuffleBosses(BossSO[] pool)
+        {
+            if (pool != null)
+                foreach (BossSO boss in pool)
+                    if (boss != null && !_bossOrder.Contains(boss))
+                        _bossOrder.Add(boss);
+
+            for (int i = _bossOrder.Count - 1; i > 0; i--)
+            {
+                int j = Random.Range(0, i + 1);
+                (_bossOrder[i], _bossOrder[j]) = (_bossOrder[j], _bossOrder[i]);
+            }
         }
         
         public bool ReplaceDice(DiceInstance dice, DiceInstance replacement) =>

@@ -39,13 +39,8 @@ namespace Code.Scripts.States.State
         {
             Debug.Log("[MainMenu] Botón Jugar pulsado");
             _screen.PlayButtonClicked -= OnPlayButtonClicked;
-            _context.RunData = new RunData(_context.GameConfig); 
             WeekDayBanner.Refresh(_context.RunData.Progress);
-            _context.DiceDrawer.Clear();
-            _context.DiceDrawer.Populate(_context.RunData.DiceCase);
-            _context.BankChest.Clear();
-            _context.BankChest.Populate(_context.RunData.Bank);
-            _context.CursedShelf.Populate(_context.RunData.CursedObject);
+            RunSetup.StartNewRun(_context);  
             _stateMachine.ChangeState(new RouletteState(_context, _stateMachine));
         }
 

@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Code.Scripts.Bosses;
 using Code.Scripts.Camera;
 using Code.Scripts.Core;
 using Code.Scripts.Utils;
@@ -24,6 +25,7 @@ namespace Code.Scripts.States.State
         private bool _ending;
         private RollSession _session;
         private bool _wasWithinWinningRange;
+        private BossSO _boss;
 
         public GameplayState(
             GameContext context,
@@ -37,6 +39,7 @@ namespace Code.Scripts.States.State
             base.Enter();
 
             _result = _context.RunData.Progress.CurrentResult;
+            _boss = _result.IsBoss ? _context.RunData.BossOfWeek(_result.Week) : null;
 
             _context.CameraController.MoveTo(
                 CameraShotId.Gameplay,
@@ -56,6 +59,8 @@ namespace Code.Scripts.States.State
                         range.MaximumScore
                     );
 
+                    _screen.ShowBoss(_boss);
+                    
                     _context.DiceDrawer.Open(
                         _context.RunData.DiceCase
                     );
@@ -102,6 +107,13 @@ namespace Code.Scripts.States.State
                             isBoss
                         );
                     }
+                    
+                    if (_boss != null)
+                    {
+                        if (!unlimitedShots)
+                            shots = _boss.ModifyShots(shots, _context.RunData.DiceCase.Dice.Count);
+                        rerolls = _boss.ModifyRerolls(rerolls);
+                    }
 
                     // Evitar presupuestos negativos.
                     if (!unlimitedShots)
@@ -122,6 +134,8 @@ namespace Code.Scripts.States.State
                     // CREATE ROLL SESSION
                     // ============================================
 
+                    if (_boss != null) _boss.OnFightStart(_context);
+                        
                     _session = new RollSession(
                         _context,
                         new RollSessionSettings
@@ -150,7 +164,10 @@ namespace Code.Scripts.States.State
         {
             base.Update();
             _session?.Tick();
+            if (_session != null) _screen.SetCheckAvailable(!_ending && CanCheck());
         }
+        
+        private bool CanCheck() => _boss == null || _boss.CanCheck(_context, _session);
 
         public override void Exit()
         {
@@ -240,9 +257,10 @@ namespace Code.Scripts.States.State
 
             _session.ReturnAllToDrawer(() =>
             {
-                if (!success)
+                if (_boss != null) _boss.OnFightEnd(_context);
+                if (!success || _context.RunData.Progress.IsComplete)
                 {
-                    _context.DiceDrawer.Close();
+                    _context.DiceDrawer.Close();   
                 }
 
                 _stateMachine.ChangeState(
@@ -261,6 +279,15 @@ namespace Code.Scripts.States.State
                 );
             }
 
+            if (_context.RunData.Progress.IsComplete)
+            {
+                return new GameOverState(
+                    _context,
+                    _stateMachine,
+                    victory: true
+                );
+            }
+            
             if (_result.IsBoss)
             {
                 return new CursedRewardState(

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Code.Scripts.Dice;
+using Code.Scripts.Shop;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,8 +13,12 @@ namespace Code.Scripts.UI.Screens
     {
         private const int MaxOfferSlots = 10;
 
+        [Header("Botón principal")]
         [SerializeField] private Button _nextButton;
-        [SerializeField] private Button _claimButton;
+        [SerializeField] private TMP_Text _nextButtonLabel;
+        [SerializeField] private string _nextText = "Next";
+        [SerializeField] private string _claimText = "Claim";
+        [SerializeField] private string _claimNothingText = "Claim";
         [SerializeField] private TMP_Text _offerText;
         [SerializeField] private TMP_Text _sumText;
         [SerializeField] private Transform _slotsContainer;
@@ -22,7 +27,6 @@ namespace Code.Scripts.UI.Screens
         public TableControlsView TableControls => _tableControls;
         
         public event Action NextButtonClicked;
-        public event Action ClaimButtonClicked;
 
         private readonly List<ShopOfferSlot> _offerSlots = new List<ShopOfferSlot>();
 
@@ -30,11 +34,11 @@ namespace Code.Scripts.UI.Screens
         {
             base.Awake();
             _nextButton.onClick.AddListener(() => NextButtonClicked?.Invoke());
-            _claimButton.onClick.AddListener(() => ClaimButtonClicked?.Invoke());
+            if (_nextButtonLabel == null) _nextButtonLabel = _nextButton.GetComponentInChildren<TMP_Text>(true);
             CacheOfferSlots();
         }
         
-        public void ShowOffer(IReadOnlyList<DiceSO> offer, int highlightedNumber)
+        public void ShowOffer(IReadOnlyList<ShopOffer.Entry> offer, int highlightedNumber)
         {
             if (offer == null)
             {
@@ -57,8 +61,8 @@ namespace Code.Scripts.UI.Screens
             var text = new StringBuilder();
             for (int i = 0; i < offer.Count; i++)
             {
-                int number = i + 1;
-                string line = $"{number}. {DiceLabel(offer[i])}";
+                int number = offer[i].Number;
+                string line = $"{number}. {DiceLabel(offer[i].Dice)}";
                 text.AppendLine(number == highlightedNumber ? $"<color=#FFD54A><b>{line}</b></color>" : line);
             }
             _offerText.text = text.ToString();
@@ -106,7 +110,7 @@ namespace Code.Scripts.UI.Screens
             }
         }
 
-        private void ShowOfferInSlots(IReadOnlyList<DiceSO> offer, int highlightedNumber)
+        private void ShowOfferInSlots(IReadOnlyList<ShopOffer.Entry> offer, int highlightedNumber)
         {
             if (_offerSlots.Count == 0)
             {
@@ -120,7 +124,7 @@ namespace Code.Scripts.UI.Screens
             for (int i = 0; i < _offerSlots.Count; i++)
             {
                 ShopOfferSlot slot = _offerSlots[i];
-                bool hasOffer = i < offer.Count && offer[i] != null;
+                bool hasOffer = i < offer.Count && offer[i].Dice != null;
                 slot.SetContentActive(hasOffer);
                 if (!hasOffer)
                 {
@@ -129,13 +133,13 @@ namespace Code.Scripts.UI.Screens
                     continue;
                 }
 
-                int number = i + 1;
+                int number = offer[i].Number;
                 bool highlighted = number == highlightedNumber;
                 string numberLabel = highlighted
                     ? $"<color=#FFD54A><b>{number}.</b></color>"
                     : $"{number}.";
-                string nameLabel = DiceLabel(offer[i]);
-                slot.SetOffer(numberLabel, offer[i].preview, highlighted
+                string nameLabel = DiceLabel(offer[i].Dice);
+                slot.SetOffer(numberLabel, offer[i].Dice.preview, highlighted
                     ? $"<color=#FFD54A><b>{nameLabel}</b></color>"
                     : nameLabel);
             }
@@ -187,11 +191,13 @@ namespace Code.Scripts.UI.Screens
                 if (_name != null) _name.text = name;
             }
         }
-        
-        public void ShowSum(int sum) => _sumText.text = sum > 0 ? $"Suma: {sum}" : "Lanza dados para elegir";
 
-        public void SetClaimAvailable(bool available) => _claimButton.interactable = available;
-        public void SetLeaveAvailable(bool available) => _nextButton.interactable = available;
+        public void SetNextButton(bool claim, bool hasPrize, bool interactable)
+        {
+            _nextButton.interactable = interactable;
+            if (_nextButtonLabel != null)
+                _nextButtonLabel.text = !claim ? _nextText : hasPrize ? _claimText : _claimNothingText;
+        }
         
         private static string DiceLabel(DiceSO dice) => dice.diceMaterial != null ? $"{dice.DisplayName}" : dice.DisplayName;
     }

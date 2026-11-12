@@ -52,7 +52,7 @@ namespace Code.Scripts.Rolling
         public bool IsInHub => CurrentView == _settings.RestShot;
         public bool IsInDrawer => CurrentView == _settings.DrawerShot;
         public bool IsInChest => CurrentView == _settings.ChestShot;
-
+        public int EliminatedCount => _eliminated.Count;
         public event Action AllSettled;
         public event Action BudgetChanged;
         public event Action<bool> RerollModeChanged;
@@ -165,6 +165,7 @@ namespace Code.Scripts.Rolling
             _context.DiceDragController.SelectionMode = _running && _rerollSelecting; 
             _context.DiceDragController.ActiveContainer = _running ? ActiveContainer : null;
             _context.DiceDragController.DragEnabled = _running && ActiveContainer != null && CanPlace;
+            _context.DiceThrower.ShootEnabled = _running && !IsAnimating;
         }
 
         #endregion
