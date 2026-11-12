@@ -3375,6 +3375,8 @@ MonoBehaviour:
   settingsContent: {fileID: 173162419}
   creditsContent: {fileID: 81301629}
   movementDuration: 1
+  gearsAnimator: {fileID: 582849634}
+  gearsAnimationState: Base Layer.Engranajes
 --- !u!65 &268076824
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7940,6 +7942,28 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.2732478, y: 0.86933756, z: 0.30921978}
   m_Center: {x: -1.1979063, y: 0.44299218, z: 0.020460987}
+--- !u!95 &582849634
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582849630}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a133599d90cb2864b920bef6b6fa76ae, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &583825883
 GameObject:
   m_ObjectHideFlags: 0
@@ -8338,6 +8362,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d1076131b2ba36146b96a781faade423, type: 3}
       insertIndex: -1
       addedObject: {fileID: 582849633}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d1076131b2ba36146b96a781faade423, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 582849634}
   m_SourcePrefab: {fileID: 100100000, guid: d1076131b2ba36146b96a781faade423, type: 3}
 --- !u!1 &635150712
 GameObject:

@@ -97,8 +97,8 @@ namespace Code.Scripts.Dice.DiceMaterials
             // --------------------------------------
 
             // D4: corner numbers.
-            // D6: procedural pips.
-            // D2/D8/D10/D12/D20: number atlas.
+            // D2/D6: procedural pips.
+            // D8/D10/D12/D20: number atlas.
 
             int numberMode;
 
@@ -106,7 +106,7 @@ namespace Code.Scripts.Dice.DiceMaterials
             {
                 numberMode = 2;
             }
-            else if (faceCount == 6)
+            else if (faceCount == 2 || faceCount == 6)
             {
                 numberMode = 1;
             }

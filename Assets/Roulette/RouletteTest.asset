@@ -15,10 +15,10 @@ MonoBehaviour:
   week1:
     day1:
       minimum: 3
-      maximum: 16
+      maximum: 10
     day2:
       minimum: 5
-      maximum: 18
+      maximum: 15
     day3:
       minimum: 7
       maximum: 20

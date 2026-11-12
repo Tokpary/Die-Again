@@ -16,13 +16,20 @@ MonoBehaviour:
   InitialDay: 1
   diceCaseCapacity: 12
   startingDices:
-  - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
-  - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
+  - {fileID: 11400000, guid: 644d1bb061bada340a5d553b89a1edaa, type: 2}
+  - {fileID: 11400000, guid: b719d5f1d3fa98e4fb026c467c59cd9c, type: 2}
+  - {fileID: 11400000, guid: f221d4fa3d140e44083a1a5023002573, type: 2}
+  - {fileID: 11400000, guid: 207eb407d1002064a8d18abdc3f74c93, type: 2}
+  - {fileID: 11400000, guid: 615798a5695b6bf4abf5261c8ed95567, type: 2}
+  - {fileID: 11400000, guid: 821ce9e92f9326e4da103c8b735de0e5, type: 2}
+  - {fileID: 11400000, guid: 99a1409501a3d584baead24b35049e74, type: 2}
+  - {fileID: 11400000, guid: d052d533ab845f04daef40ef95250327, type: 2}
+  - {fileID: 11400000, guid: 0af68f70c2ea12b449091e9fdfa0f117, type: 2}
   - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
   - {fileID: 11400000, guid: e172d267daab6ea43aacea88c4fd7f29, type: 2}
-  - {fileID: 11400000, guid: eb932b259911a244ca745aa40adb727f, type: 2}
+  - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
   - {fileID: 11400000, guid: c6c9b27d146a8f048b5ad0b43fa0901b, type: 2}
-  - {fileID: 11400000, guid: d052d533ab845f04daef40ef95250327, type: 2}
+  - {fileID: 11400000, guid: 5b171cfb70ce4894aa2f64ebcb702b35, type: 2}
   shotsPerDay: 5
   rerollsPerDay: 2
   shopPool:
@@ -75,6 +82,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 615798a5695b6bf4abf5261c8ed95567, type: 2}
   - {fileID: 11400000, guid: 413f8956ca4d76649b2a2d3f90989bc0, type: 2}
   - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
+  - {fileID: 11400000, guid: 9c849528c1ec1b842a1d3bc0cd727dfb, type: 2}
+  - {fileID: 11400000, guid: 26ffdf7b6d3a70445bf20263d0d962a6, type: 2}
+  - {fileID: 11400000, guid: 7a46d858909d620489c8e0e676fd842a, type: 2}
+  - {fileID: 11400000, guid: 806feeb37460f2a41aff4df0eadea80d, type: 2}
   coinChoices: 3
   cursedCapacity: 5
   startingCursedObjects: []
