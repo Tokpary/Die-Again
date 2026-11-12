@@ -31,7 +31,7 @@ namespace Code.Scripts.UI.Screens
         
         public void ShowBudget(int shots, int rerolls)
         {
-            _shotsText.text = $"Shots: {shots}";
+            _shotsText.text = shots.ToString();
             _rerollButtonText.text = $"REROLL ({rerolls})";
         }
         
