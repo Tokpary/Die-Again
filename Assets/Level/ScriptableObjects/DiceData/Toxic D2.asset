@@ -17,5 +17,5 @@ MonoBehaviour:
     its dice type. Immune to other Toxic dice.
   preview: {fileID: 21300000, guid: d3467909cdb078b4eaa4e8a6a1af8d25, type: 3}
   faceValues: 0100000002000000
-  diceMaterial: {fileID: 11400000, guid: 973af96661ae694478caac56d21bddfc, type: 2}
+  diceMaterial: {fileID: 11400000, guid: 7692484387ceb084a8b22e484907cd4d, type: 2}
   prefab: {fileID: -490025098210845299, guid: 005f5999ca6c22c48a82ce973c5be2fe, type: 3}
