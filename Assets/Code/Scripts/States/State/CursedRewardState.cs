@@ -31,12 +31,12 @@ namespace Code.Scripts.States.State
             {
                 if (_options.Count == 0)
                 {
-                    GoToShop();   
+                    GoToCoinReward();   
                     return;
                 }
 
                 _screen = _context.UIManager.ShowScreen<CursedRewardScreen>();
-                _screen.SkipClicked += GoToShop;
+                _screen.SkipClicked += GoToCoinReward;
                 ShowOptions();
             });
         }
@@ -45,7 +45,7 @@ namespace Code.Scripts.States.State
         {
             base.Exit();
             if (_screen == null) return;
-            _screen.SkipClicked -= GoToShop;
+            _screen.SkipClicked -= GoToCoinReward;
             _screen.ClearChoices();
         }
 
@@ -106,7 +106,7 @@ namespace Code.Scripts.States.State
             int pending = 2;
             void OnStepDone()
             {
-                if (--pending == 0) DOVirtual.DelayedCall(LandedViewDelay, GoToShop);
+                if (--pending == 0) DOVirtual.DelayedCall(LandedViewDelay, GoToCoinReward);
             }
 
             Vector3 spawnPoint = _context.PlayArea.Center + Vector3.up;
@@ -115,6 +115,6 @@ namespace Code.Scripts.States.State
                 OnStepDone);
         }
 
-        private void GoToShop() => _stateMachine.ChangeState(new ShopState(_context, _stateMachine));
+        private void GoToCoinReward() => _stateMachine.ChangeState(new DiceCoinRewardState(_context, _stateMachine));
     }
 }

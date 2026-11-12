@@ -2,6 +2,7 @@ using Code.Scripts.Camera;
 using Code.Scripts.Table;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace Code.Scripts.UI
 {
@@ -29,12 +30,20 @@ namespace Code.Scripts.UI
 
         private void Update()
         {
+            UIHoverTarget ui = UIHoverTarget.Current;
+            if (ui != null)
+            {
+                SetHovered(null, ui.TooltipData);
+                if (_hoveredData != null && Pointer.current != null) _tooltip.MoveTo(Pointer.current.position.ReadValue());
+                return;
+            }
+
             IHoverable target = FindTarget(out Vector2 pointer);
-            SetHovered(target);
+            SetHovered(target, target?.TooltipData);
             if (_hoveredData != null) _tooltip.MoveTo(pointer);
         }
 
-        private void OnDisable() => SetHovered(null);
+        private void OnDisable() => SetHovered(null, null);
 
         private IHoverable FindTarget(out Vector2 pointer)
         {
@@ -51,9 +60,8 @@ namespace Code.Scripts.UI
             return hoverable != null && hoverable.CanHover(_cameraController.CurrentShotId) ? hoverable : null;
         }
 
-        private void SetHovered(IHoverable target)
+        private void SetHovered(IHoverable target, object data)
         {
-            object data = target?.TooltipData;
             if (target == _hovered && ReferenceEquals(data, _hoveredData)) return;
 
             if (IsAlive(_hovered)) _hovered.OnHoverExit();   

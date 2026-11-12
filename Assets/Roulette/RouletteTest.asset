@@ -52,7 +52,7 @@ MonoBehaviour:
       minimum: 30
       maximum: 50
   maximumSlices: 20
-  day1BossProbability: 1
+  day1BossProbability: 100
   day2BossProbability: 25
   day3BossProbability: 50
   day4BossProbability: 100

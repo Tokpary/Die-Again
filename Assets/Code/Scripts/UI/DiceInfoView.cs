@@ -23,7 +23,7 @@ namespace Code.Scripts.UI
 
             if (_nameText != null) _nameText.text = data.DisplayName;
             if (_descriptionText != null) _descriptionText.text = data.description;
-            if (_facesText != null) _facesText.text = string.Join("  ", dice.FaceValues);
+            if (_facesText != null) _facesText.text = FaceRange(dice.FaceValues);
 
             if (_previewImage != null)
             {
@@ -36,6 +36,19 @@ namespace Code.Scripts.UI
             if (!hasMaterial) return;
             if (_materialNameText != null) _materialNameText.text = dice.DiceMaterial.displayName;
             if (_materialDescriptionText != null) _materialDescriptionText.text = dice.DiceMaterial.description;
+        }
+        
+        private static string FaceRange(int[] faces)
+        {
+            if (faces == null || faces.Length == 0) return string.Empty;
+
+            int min = faces[0], max = faces[0];
+            foreach (int face in faces)
+            {
+                if (face < min) min = face;
+                if (face > max) max = face;
+            }
+            return min == max ? min.ToString() : $"{min}-{max}";
         }
     }
 }

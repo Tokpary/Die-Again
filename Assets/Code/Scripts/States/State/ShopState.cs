@@ -27,7 +27,7 @@ namespace Code.Scripts.States.State
             base.Enter();
             _context.RunData.ShopOffer.RefreshShopOffer(_context.RunData.Progress.Week);
             _screen = _context.UIManager.Get<ShopScreen>();
-            _screen.ShowOffer(_context.RunData.ShopOffer.Dice, _sum);
+            _screen.ShowOffer(_context.RunData.ShopOffer.Entries, _sum);
 
             _shopDisplay = UnityEngine.Object.FindFirstObjectByType<ShopDisplayRotation>();
             if (_shopDisplay == null)
@@ -58,8 +58,7 @@ namespace Code.Scripts.States.State
                 _screen.TableControls.Bind(_session);
                 _session.AllSettled += OnTableSettled;
                 _session.BudgetChanged += RefreshScreen;
-                _screen.ClaimButtonClicked += OnClaimClicked;
-                _screen.NextButtonClicked += OnLeaveButtonClicked;
+                _screen.NextButtonClicked += OnNextClicked;
                 
                 RefreshScreen();
                 _session.Start();
@@ -82,8 +81,7 @@ namespace Code.Scripts.States.State
             _screen.TableControls.Unbind();
             _session.AllSettled -= OnTableSettled;
             _session.BudgetChanged -= RefreshScreen;
-            _screen.ClaimButtonClicked -= OnClaimClicked;
-            _screen.NextButtonClicked -= OnLeaveButtonClicked;
+            _screen.NextButtonClicked -= OnNextClicked;
         }
 
         private void OnTableSettled()
@@ -94,32 +92,41 @@ namespace Code.Scripts.States.State
         
         private void RefreshScreen()
         {
-            bool canClaim = !_busy && TableIsStill() && _context.RunData.ShopOffer.Get(_sum) != null;
-            
-            _screen.ShowOffer(_context.RunData.ShopOffer.Dice, _sum);
-            _screen.ShowSum(_sum);
-            _screen.SetClaimAvailable(canClaim);
-            _screen.SetLeaveAvailable(!_busy && NothingRolling());
-            
-            if (!canClaim && !_busy)
-                Debug.Log($"[Tienda] No se puede plantar: lanzados={_session.ThrownDice.Count}, quietos={TableIsStill()}, " +
-                          $"suma={_sum}, dados en la oferta={_context.RunData.ShopOffer.Count}");
+            bool claim = _session.ThrownDice.Count > 0;
+            bool hasPrize = _context.RunData.ShopOffer.Get(_sum) != null;
+
+            _screen.ShowOffer(_context.RunData.ShopOffer.Entries, _sum);
+            _screen.SetNextButton(claim, hasPrize, !_busy && NothingRolling());
+        }
+
+        private bool NothingRolling() => _session.ThrownDice.All(d => d.Motion.IsSettled);
+
+        private void OnNextClicked()
+        {
+            if (_busy || !NothingRolling()) return;
+            if (_session.ThrownDice.Count > 0) Claim();
+            else Leave();
         }
         
         private bool TableIsStill() => _session.ThrownDice.Count > 0 && _session.ThrownDice.All(d => d.Motion.IsSettled);
-        private bool NothingRolling() => _session.ThrownDice.All(d => d.Motion.IsSettled);
-        private void OnClaimClicked()
+        private void Claim()
         {
-            if(_busy || !TableIsStill()) return;
-            DiceSO offered = _context.RunData.ShopOffer.Get(_sum);
-            if(offered == null) return;
-            
+            DiceSO offered = _context.RunData.ShopOffer.Get(_sum); 
+
             _busy = true;
             _session.Stop();
             RefreshScreen();
 
             List<Dice.Dice> spent = _session.TakeThrownDice();
             foreach (Dice.Dice d in spent) _context.RunData.RemoveDice(d.Data);
+
+            if (offered == null)
+            {
+                _context.CameraController.MoveTo(CameraShotId.Throwing, () =>
+                    _context.PurchaseEffect.PlayFailed(spent, FinishPurchase));
+                return;
+            }
+
             var bought = new DiceInstance(offered);
             if(!_context.RunData.DiceCase.TryAdd(bought))  
                 Debug.LogWarning(("[ShopState] No se pudo añadir el dado comprado al inventario"));
@@ -139,7 +146,7 @@ namespace Code.Scripts.States.State
             RefreshScreen();
         }
         
-        private void OnLeaveButtonClicked()
+        private void Leave()
         {
             if(_busy) return;
             _busy = true;

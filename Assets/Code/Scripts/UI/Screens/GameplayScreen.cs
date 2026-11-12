@@ -1,4 +1,5 @@
 using System;
+using Code.Scripts.Bosses;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -18,6 +19,7 @@ namespace Code.Scripts.UI.Screens
         [SerializeField] private TMP_Text _previousScoreText;
         [SerializeField] private TMP_Text[] _scoreTexts;
         [SerializeField] private TMP_Text _winningScoreText;
+        [SerializeField] private BossIconView _bossIcon;
 
         [SerializeField] private TableControlsView _tableControls;
         public TableControlsView TableControls => _tableControls;
@@ -37,6 +39,13 @@ namespace Code.Scripts.UI.Screens
             _shotsText.text = shots.ToString();
             _rerollButtonText.text = $"REROLL ({rerolls})";
         }
+        
+        public void ShowBoss(BossSO boss)
+        {
+            if (_bossIcon != null) _bossIcon.Show(boss);
+        }
+
+        public void SetCheckAvailable(bool available) => _nextButton.interactable = available;
         
         public void ShowScore(int score)
         {

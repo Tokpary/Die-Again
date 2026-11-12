@@ -1,3 +1,4 @@
+using Code.Scripts.Bosses;
 using Code.Scripts.Dice;
 using UnityEngine;
 
@@ -21,13 +22,17 @@ namespace Code.Scripts.Core
         [Header("Shop")] 
         public DiceSO[] shopPool;
 
-        public int shopOfferMin = 10;
-        public int shopOfferMax = 20;
+        public int shopOfferSize = 10;
+        public int shopMaxNumber = 20;
         
         [Header("Dice coins ")]
         public int bankCapacity = 5;              
         public DiceSO[] coinPool;               
         public int coinChoices = 3;  
+        
+        [Header("Bosses")]
+        [Tooltip("Jefes de la partida: se barajan al empezar y cada semana toca uno, sin repetir.")]
+        public BossSO[] bossPool;
         
         [Header("Cursed objects")]
         public int cursedCapacity = 5;

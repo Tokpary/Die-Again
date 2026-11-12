@@ -1,4 +1,5 @@
 using Code.Scripts.Core;
+using Code.Scripts.Roulette;
 using Code.Scripts.UI;
 using Code.Scripts.UI.Screens;
 using UnityEngine;
@@ -8,32 +9,52 @@ namespace Code.Scripts.States.State
     public class GameOverState : AState
     {
         private GameOverScreen _screen;
-
-        public GameOverState(GameContext context, IStateMachine stateMachine) : base(context, stateMachine)
+        private readonly bool _victory;
+        public GameOverState(GameContext context, IStateMachine stateMachine, bool victory = false) : base(context, stateMachine)
         {
+            _victory = victory;
         }
 
         public override void Enter()
         {
             base.Enter();
-            Debug.Log("Entering Main Menu State");
             _screen = _context.UIManager.ShowScreen<GameOverScreen>();
             _screen.ReturnToMainMenuClicked += OnReturnToMainMenuClicked;
+            _screen.ReplayClicked += OnReplayClicked;
+
+            RouletteResult result = _context.RunData.Progress.CurrentResult;
+            var boss = result.IsBoss ? _context.RunData.BossOfWeek(result.Week) : null;
+            if (_victory) _screen.ShowVictory(result, boss);
+            else _screen.ShowDefeat(result, boss);
+            _screen.ShowDice(_context.RunData.DiceCase.Dice);
         }
 
         public override void Exit()
         {
             base.Exit();
-            _screen.ReturnToMainMenuClicked -= OnReturnToMainMenuClicked;
+            Unsubscribe();
+        }
+
+        private void OnReplayClicked()
+        {
+            Unsubscribe();
+            RunSetup.StartNewRun(_context);
+            _stateMachine.ChangeState(new RouletteState(_context, _stateMachine));
         }
 
         private void OnReturnToMainMenuClicked()
         {
-            _screen.ReturnToMainMenuClicked -= OnReturnToMainMenuClicked;
-            _context.RunData = new RunData(_context.GameConfig); 
+            Unsubscribe();
+            _context.RunData = new RunData(_context.GameConfig);
             WeekDayBanner.Refresh(_context.RunData.Progress);
             _context.DiceDrawer.Clear();
             _stateMachine.ChangeState(new MainMenuState(_context, _stateMachine));
+        }
+
+        private void Unsubscribe()
+        {
+            _screen.ReturnToMainMenuClicked -= OnReturnToMainMenuClicked;
+            _screen.ReplayClicked -= OnReplayClicked;
         }
     }
 }
