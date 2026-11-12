@@ -29,6 +29,7 @@ namespace Code.Scripts.Shop
             }
 
             _isVisible = true;
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayShopPostSFX();
             transform.DOKill();
             transform.DOLocalRotateQuaternion(_visibleRotation, _duration)
                 .SetEase(Ease.InOutSine)

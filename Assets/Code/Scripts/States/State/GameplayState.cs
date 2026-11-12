@@ -23,6 +23,7 @@ namespace Code.Scripts.States.State
         private RouletteResult _result;
         private bool _ending;
         private RollSession _session;
+        private bool _wasWithinWinningRange;
 
         public GameplayState(
             GameContext context,
@@ -187,6 +188,10 @@ namespace Code.Scripts.States.State
 
         private void UpdateScoreDisplay(ScoreResult score)
         {
+            if (score.IsSuccess && !_wasWithinWinningRange && AudioManager.Instance != null)
+                AudioManager.Instance.PlayWinningScoreSFX();
+
+            _wasWithinWinningRange = score.IsSuccess;
             _screen.ShowScore(score.TotalScore);
             _context.RouletteManager.SetWinningRangeHighlighted(score.IsSuccess);
         }

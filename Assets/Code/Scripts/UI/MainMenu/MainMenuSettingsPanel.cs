@@ -78,6 +78,7 @@ namespace Code.Scripts.UI
             if (option == MainMenuOptionType.Settings &&
                 (!isVisible || CurrentOption != option))
             {
+                if (AudioManager.Instance != null) AudioManager.Instance.PlaySettingsGearsSFX();
                 PlayGearsAnimation();
             }
 
@@ -104,7 +105,10 @@ namespace Code.Scripts.UI
 
             // Reproducir la animacion al cerrar Settings.
             if (CurrentOption == MainMenuOptionType.Settings)
+            {
+                if (AudioManager.Instance != null) AudioManager.Instance.PlaySettingsGearsSFX();
                 PlayGearsAnimation();
+            }
 
             SetVisible(false);
         }

@@ -75,6 +75,7 @@ namespace Code.Scripts.States.State
         {
             if (_delivering) return;
             _chosen = _options[index];
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayCoinRewardSelectionSFX();
 
             if (_context.RunData.HasCursedRoom)
             {

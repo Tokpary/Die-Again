@@ -115,6 +115,14 @@ namespace Code.Scripts.States.State
             try
             {
                 _progress.RecordResult(result);
+                if (AudioManager.Instance != null)
+                {
+                    if (result.IsBoss)
+                        AudioManager.Instance.PlayBossRouletteResultSFX();
+                    else
+                        AudioManager.Instance.PlayNormalRouletteResultSFX();
+                }
+
                 _screen.ShowResult(result, false);
                 ScoreResult preview = CalculateWinningRange(result);
                 _rouletteManager.ShowWinningRange(preview.MinimumScore, preview.MaximumScore);

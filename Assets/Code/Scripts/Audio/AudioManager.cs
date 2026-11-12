@@ -13,6 +13,27 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource sfxSource;
 
+    [Header("Reward Audio")]
+    [SerializeField] private AudioClip _coinRewardSelectionSfx;
+
+    [Header("Menu Audio")]
+    [SerializeField] private AudioClip _curtainSfx;
+    [SerializeField] private AudioClip _settingsGearsSfx;
+
+    [Header("Shop Audio")]
+    [SerializeField] private AudioClip _shopPostSfx;
+
+    [Header("Container Audio")]
+    [SerializeField] private AudioClip _chestSfx;
+    [SerializeField] private AudioClip _drawerSfx;
+
+    [Header("Gameplay Audio")]
+    [SerializeField] private AudioClip _winningScoreSfx;
+
+    [Header("Roulette Audio")]
+    [SerializeField] private AudioClip _normalRouletteResultSfx;
+    [SerializeField] private AudioClip _bossRouletteResultSfx;
+
     private const string MASTER_KEY = "MasterVolume";
     private const string MUSIC_KEY = "MusicVolume";
     private const string SFX_KEY = "SFXVolume";
@@ -100,6 +121,51 @@ public class AudioManager : MonoBehaviour
         if (clip == null) return;
 
         sfxSource.PlayOneShot(clip);
+    }
+
+    public void PlayCoinRewardSelectionSFX()
+    {
+        PlaySFX(_coinRewardSelectionSfx);
+    }
+
+    public void PlayCurtainSFX()
+    {
+        PlaySFX(_curtainSfx);
+    }
+
+    public void PlaySettingsGearsSFX()
+    {
+        PlaySFX(_settingsGearsSfx);
+    }
+
+    public void PlayShopPostSFX()
+    {
+        PlaySFX(_shopPostSfx);
+    }
+
+    public void PlayChestSFX()
+    {
+        PlaySFX(_chestSfx);
+    }
+
+    public void PlayDrawerSFX()
+    {
+        PlaySFX(_drawerSfx);
+    }
+
+    public void PlayWinningScoreSFX()
+    {
+        PlaySFX(_winningScoreSfx);
+    }
+
+    public void PlayNormalRouletteResultSFX()
+    {
+        PlaySFX(_normalRouletteResultSfx);
+    }
+
+    public void PlayBossRouletteResultSFX()
+    {
+        PlaySFX(_bossRouletteResultSfx);
     }
 
     // Recuperar configuración guardada

@@ -48,6 +48,8 @@ namespace Code.Scripts.Dice
         {
             if (IsOpen) return;
             IsOpen = true;
+            if (_openMode == OpenMode.Hinge && AudioManager.Instance != null) AudioManager.Instance.PlayChestSFX();
+            if (_openMode == OpenMode.Slide && AudioManager.Instance != null) AudioManager.Instance.PlayDrawerSFX();
             _drawerTransform.DOKill();
 
             if (_openMode == OpenMode.Hinge)
@@ -60,6 +62,8 @@ namespace Code.Scripts.Dice
         {
             if (!IsOpen) return;
             IsOpen = false;
+            if (_openMode == OpenMode.Hinge && AudioManager.Instance != null) AudioManager.Instance.PlayChestSFX();
+            if (_openMode == OpenMode.Slide && AudioManager.Instance != null) AudioManager.Instance.PlayDrawerSFX();
             _drawerTransform.DOKill();
 
             if (_openMode == OpenMode.Hinge)

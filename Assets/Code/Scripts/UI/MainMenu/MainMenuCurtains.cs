@@ -58,6 +58,7 @@ public class MainMenuCurtains : MonoBehaviour
     private IEnumerator Abrir()
     {
         abiertas = true;
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayCurtainSFX();
 
         Vector3 destinoIzquierda =
             posicionInicialIzquierda + desplazamientoIzquierda;
@@ -107,6 +108,8 @@ public class MainMenuCurtains : MonoBehaviour
 
     private IEnumerator CerrarCortinas()
     {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayCurtainSFX();
+
         Vector3 inicioIzquierda = paredIzquierda.localPosition;
         Vector3 inicioDerecha = paredDerecha.localPosition;
 

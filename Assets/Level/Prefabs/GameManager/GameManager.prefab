@@ -3642,6 +3642,15 @@ MonoBehaviour:
   audioMixer: {fileID: 24100000, guid: 2217056c2aefbf64e808b72472a7066a, type: 2}
   musicSource: {fileID: 2005966371314947880}
   sfxSource: {fileID: 4096835684538901727}
+  _coinRewardSelectionSfx: {fileID: 8300000, guid: 64d2977f0a778884d8a17d75a7d06ef6, type: 3}
+  _curtainSfx: {fileID: 8300000, guid: 1f9a7595a26ff134d90a1d19a028cfc3, type: 3}
+  _settingsGearsSfx: {fileID: 8300000, guid: db4bb1420165d264fa670cbb9fcec6c0, type: 3}
+  _shopPostSfx: {fileID: 8300000, guid: 6913530b34c94614bab3bb88fbc06e82, type: 3}
+  _chestSfx: {fileID: 8300000, guid: 9ba7541946db04742a32641dc9c5f6cf, type: 3}
+  _drawerSfx: {fileID: 8300000, guid: 5eff47262ce1c6b4196eadb2d2e8d7f1, type: 3}
+  _winningScoreSfx: {fileID: 8300000, guid: d7655c170d63ffa46815d6d0e69cdb39, type: 3}
+  _normalRouletteResultSfx: {fileID: 8300000, guid: 6923c8bf771df4746a25722e4585926a, type: 3}
+  _bossRouletteResultSfx: {fileID: 8300000, guid: 7331b69ff5c5cf944b7f65c88038b9d0, type: 3}
 --- !u!1 &8619312007751239426
 GameObject:
   m_ObjectHideFlags: 0
