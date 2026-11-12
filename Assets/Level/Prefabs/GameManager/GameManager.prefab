@@ -705,6 +705,7 @@ MonoBehaviour:
   _claimButton: {fileID: 6352165193352705362}
   _offerText: {fileID: 0}
   _sumText: {fileID: 2355708041808015442}
+  _slotsContainer: {fileID: 0}
   _tableControls: {fileID: 8356301245398620846}
 --- !u!114 &8356301245398620846
 MonoBehaviour:
@@ -2685,6 +2686,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Roulette.RouletteManager
   _settings: {fileID: 11400000, guid: 4ae9723027d24676adb0c7a489b3d424, type: 2}
   _view: {fileID: 8460459884974005371}
+  _luckyNumberText: {fileID: 0}
+  _luckyNumberRangeTexts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _winningRangeColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!114 &8460459884974005371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2708,7 +2718,7 @@ MonoBehaviour:
   _numberOutwardOffset: 0.537
   _numberSurfaceGap: 0.00002
   _labelColor: {r: 1, g: 0.91, b: 0.7, a: 1}
-  _numberFont: {fileID: 0}
+  _numberFont: {fileID: 11400000, guid: a353e8093fb624844831e84ecf86724d, type: 2}
   _baseFontSize: 36
   _numberSizeMultiplier: 0.413
 --- !u!114 &4488643685250347316
