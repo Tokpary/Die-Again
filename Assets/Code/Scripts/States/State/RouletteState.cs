@@ -2,6 +2,7 @@ using System;
 using Code.Scripts.Camera;
 using Code.Scripts.Core;
 using Code.Scripts.Roulette;
+using Code.Scripts.UI;
 using Code.Scripts.UI.Screens;
 using UnityEngine;
 
@@ -52,6 +53,7 @@ namespace Code.Scripts.States.State
                 {
                     if (!_active) return;
                     _transitioning = false;
+                    WeekDayBanner.Refresh(_progress);
                     _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day, _context.RunData.CursedObject));
                     if (_progress.HasResult)
                     {

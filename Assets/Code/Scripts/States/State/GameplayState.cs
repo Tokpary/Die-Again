@@ -9,6 +9,7 @@ using Code.Scripts.Rolling;
 using Code.Scripts.Rolls;
 using Code.Scripts.Roulette;
 using Code.Scripts.Rounds;
+using Code.Scripts.UI;
 using Code.Scripts.UI.Screens;
 using DG.Tweening;
 using UnityEngine;
@@ -224,6 +225,7 @@ namespace Code.Scripts.States.State
             if (success)
             {
                 _context.RunData.Progress.CompleteRound();
+                WeekDayBanner.Refresh(_context.RunData.Progress);
             }
 
             _session.ReturnAllToDrawer(() =>

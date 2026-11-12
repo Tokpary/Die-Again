@@ -31,6 +31,7 @@ namespace Code.Scripts.States.State
         {
             _screen.ReturnToMainMenuClicked -= OnReturnToMainMenuClicked;
             _context.RunData = new RunData(_context.GameConfig); 
+            WeekDayBanner.Refresh(_context.RunData.Progress);
             _context.DiceDrawer.Clear();
             _stateMachine.ChangeState(new MainMenuState(_context, _stateMachine));
         }
