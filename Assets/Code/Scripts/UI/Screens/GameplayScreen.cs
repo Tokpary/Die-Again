@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Code.Scripts.UI.Screens
@@ -13,7 +14,9 @@ namespace Code.Scripts.UI.Screens
         [SerializeField] private TMP_Text _rerollHintText;
         [SerializeField] private TMP_Text _shotsText;
         [SerializeField] private TMP_Text _rerollButtonText;
-        [SerializeField] private TMP_Text _scoreText;
+        [HideInInspector, FormerlySerializedAs("_scoreText")]
+        [SerializeField] private TMP_Text _previousScoreText;
+        [SerializeField] private TMP_Text[] _scoreTexts;
         [SerializeField] private TMP_Text _winningScoreText;
 
         [SerializeField] private TableControlsView _tableControls;
@@ -37,7 +40,25 @@ namespace Code.Scripts.UI.Screens
         
         public void ShowScore(int score)
         {
-            _scoreText.text = $"Score: {score}";
+            if (_previousScoreText != null)
+                _previousScoreText.gameObject.SetActive(false);
+
+            if (_scoreTexts == null || _scoreTexts.Length == 0)
+            {
+                Debug.LogError("Assign the score TMP texts in the GameplayScreen Inspector.", this);
+                return;
+            }
+
+            foreach (TMP_Text scoreText in _scoreTexts)
+            {
+                if (scoreText == null)
+                {
+                    Debug.LogError("A score TMP text is not assigned in the GameplayScreen Inspector.", this);
+                    continue;
+                }
+
+                scoreText.text = score.ToString();
+            }
         }
         
         public void ShowWinningScore(int minimum, int maximum)
