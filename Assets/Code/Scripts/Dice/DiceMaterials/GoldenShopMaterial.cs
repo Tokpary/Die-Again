@@ -35,7 +35,7 @@ namespace Code.Scripts.Dice.DiceMaterials
                 filter.sharedMesh == null)
             {
                 Debug.LogWarning(
-                    "[GoldenShop] Missing material or mesh.",
+                    "[GoldenShop] Missing visual material or mesh.",
                     dice
                 );
                 return;
@@ -76,7 +76,7 @@ namespace Code.Scripts.Dice.DiceMaterials
             {
                 numberMode = 2;
             }
-            else if (faceCount == 6)
+            else if (faceCount == 2 || faceCount == 6)
             {
                 numberMode = 1;
             }

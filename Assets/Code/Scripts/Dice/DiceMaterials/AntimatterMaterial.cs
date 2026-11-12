@@ -56,11 +56,12 @@ namespace Code.Scripts.Dice.DiceMaterials
 
             int faceCount = dice.Data.FaceValues.Length;
 
-            // Automatically select number rendering.
+            // D2/D6: pips. D4: corner numbers.
+            // Remaining dice: number atlas.
             int numberMode =
                 dice.GetComponent<D4FaceShaderData>() != null
                     ? 2
-                    : faceCount == 6
+                    : (faceCount == 2 || faceCount == 6)
                         ? 1
                         : 0;
 

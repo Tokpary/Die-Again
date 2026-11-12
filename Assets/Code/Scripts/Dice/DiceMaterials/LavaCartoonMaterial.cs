@@ -76,9 +76,9 @@ namespace Code.Scripts.Dice.DiceMaterials
             // AUTOMATIC NUMBER MODE
             // --------------------------------------
 
-            // D4: corner numbers
-            // D6: procedural pips
-            // Other dice: number atlas
+            // D4: corner numbers.
+            // D2/D6: procedural pips.
+            // Other dice: number atlas.
 
             int numberMode;
 
@@ -86,7 +86,7 @@ namespace Code.Scripts.Dice.DiceMaterials
             {
                 numberMode = 2;
             }
-            else if (faceCount == 6)
+            else if (faceCount == 2 || faceCount == 6)
             {
                 numberMode = 1;
             }

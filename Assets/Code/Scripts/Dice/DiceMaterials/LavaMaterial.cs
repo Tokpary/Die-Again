@@ -35,7 +35,7 @@ namespace Code.Scripts.Dice.DiceMaterials
                 filter.sharedMesh == null)
             {
                 Debug.LogWarning(
-                    "[Lava] Missing visual material or dice mesh.",
+                    "[Lava] Missing visual material or mesh.",
                     dice
                 );
                 return;
@@ -78,9 +78,9 @@ namespace Code.Scripts.Dice.DiceMaterials
             // AUTOMATIC NUMBER MODE
             // --------------------------------------
 
-            // D4: corner numbers
-            // D6: pips
-            // Other dice: number atlas
+            // D4: corner numbers.
+            // D2/D6: procedural pips.
+            // Other dice: number atlas.
 
             int numberMode;
 
@@ -88,7 +88,7 @@ namespace Code.Scripts.Dice.DiceMaterials
             {
                 numberMode = 2;
             }
-            else if (faceCount == 6)
+            else if (faceCount == 2 || faceCount == 6)
             {
                 numberMode = 1;
             }

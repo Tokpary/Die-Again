@@ -104,9 +104,9 @@ namespace Code.Scripts.Dice.DiceMaterials
                 // D4 corner numbers.
                 numberMode = 2;
             }
-            else if (faceCount == 6)
+            else if (faceCount == 2 || faceCount == 6)
             {
-                // D6 pips.
+                // D2 and D6 procedural pips.
                 numberMode = 1;
             }
             else
