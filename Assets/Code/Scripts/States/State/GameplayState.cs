@@ -155,6 +155,7 @@ namespace Code.Scripts.States.State
         {
             base.Exit();
 
+            _context.RouletteManager.SetWinningRangeHighlighted(false);
             _screen.TableControls.Unbind();
 
             _session.Stop();
@@ -181,9 +182,13 @@ namespace Code.Scripts.States.State
 
         private void OnTableSettled()
         {
-            _screen.ShowScore(
-                CalculateScore().TotalScore
-            );
+            UpdateScoreDisplay(CalculateScore());
+        }
+
+        private void UpdateScoreDisplay(ScoreResult score)
+        {
+            _screen.ShowScore(score.TotalScore);
+            _context.RouletteManager.SetWinningRangeHighlighted(score.IsSuccess);
         }
 
         private ScoreResult CalculateScore()
@@ -213,7 +218,7 @@ namespace Code.Scripts.States.State
                 EndDay(false);
             }
 
-            _screen.ShowScore(score.TotalScore);
+            UpdateScoreDisplay(score);
         }
 
         private void EndDay(bool success)

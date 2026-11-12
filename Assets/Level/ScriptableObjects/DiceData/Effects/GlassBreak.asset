@@ -19,6 +19,7 @@ MonoBehaviour:
   _target: 1
   _vanishDuration: 0.05
   _vfx: {fileID: 5884212840563812282, guid: b62e0e3bd941a554fa80a0fd0c229e90, type: 3}
+  _sfx: {fileID: 8300000, guid: 159f24b4e9c027442a0434ffaa7edeeb, type: 3}
   _blastForce: 0
   _blastRadius: 2.5
   _blastUpwards: 0.5

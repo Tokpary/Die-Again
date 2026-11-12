@@ -19,6 +19,7 @@ namespace Code.Scripts.Dice.Collision.Effects
 
         [SerializeField] private GameObject _startVfx;
         [SerializeField] private GameObject _endVfx;
+        [SerializeField] private AudioClip _sfx;
 
         protected override void OnHit(DiceCollision hit)
         {
@@ -29,6 +30,8 @@ namespace Code.Scripts.Dice.Collision.Effects
 
             table.Eliminate(hit.Self, t => Fuse(t, contact, fusionPoint));
             table.Eliminate(hit.Other, t => Fuse(t, contact, fusionPoint));
+
+            if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX(_sfx);
 
             GameObject startVfx = _startVfx;
             GameObject endVfx = _endVfx;

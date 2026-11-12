@@ -59,6 +59,8 @@ namespace Code.Scripts.States.State
                     {
                         _rouletteManager.ShowResult(_progress.CurrentResult);
                         _screen.ShowResult(_progress.CurrentResult, false);
+                        ScoreResult range = CalculateWinningRange(_progress.CurrentResult);
+                        _rouletteManager.ShowWinningRange(range.MinimumScore, range.MaximumScore);
                     }
                 });
             });
@@ -114,8 +116,8 @@ namespace Code.Scripts.States.State
             {
                 _progress.RecordResult(result);
                 _screen.ShowResult(result, false);
-                ScoreResult preview = DiceCalculator.PreviewTolerance(_context.RunData.CursedObject,
-                    result.LuckyNumber, result.VictoryTolerance, result.Day);
+                ScoreResult preview = CalculateWinningRange(result);
+                _rouletteManager.ShowWinningRange(preview.MinimumScore, preview.MaximumScore);
                 _rouletteManager.GetBossProbability(result.Day, _context.RunData.CursedObject, true);
                 Debug.Log($"[Ruleta] Semana {result.Week}, día {result.Day} | Lucky Number: {result.LuckyNumber} | " +
                     $"Tolerancia base: +/-{result.VictoryTolerance} | " +
@@ -128,6 +130,12 @@ namespace Code.Scripts.States.State
                 _screen.ShowError(exception.Message);
                 Debug.LogException(exception);
             }
+        }
+
+        private ScoreResult CalculateWinningRange(RouletteResult result)
+        {
+            return DiceCalculator.PreviewTolerance(_context.RunData.CursedObject,
+                result.LuckyNumber, result.VictoryTolerance, result.Day);
         }
 
         private void OnSpinCancelled()
