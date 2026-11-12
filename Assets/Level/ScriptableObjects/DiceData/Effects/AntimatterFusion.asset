@@ -26,4 +26,4 @@ MonoBehaviour:
   _pullLinger: 0.3
   _startVfx: {fileID: 5208035526828389471, guid: 4be775da9cc4144439ff36b7d5dd9d94, type: 3}
   _endVfx: {fileID: 1781338005938663254, guid: 59228ca4fdf881849908dc5c24b203e1, type: 3}
-  _sfx: {fileID: 8300000, guid: 617e40bcea6022c45ba7a597ba6f7ad7, type: 3}
+  _sfx: {fileID: 8300000, guid: d65e571ce8a899e4e94ab786c26d039a, type: 3}

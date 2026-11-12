@@ -16,13 +16,13 @@ MonoBehaviour:
   InitialDay: 1
   diceCaseCapacity: 12
   startingDices:
+  - {fileID: 11400000, guid: 644d1bb061bada340a5d553b89a1edaa, type: 2}
   - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
   - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
-  - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
-  - {fileID: 11400000, guid: c6c9b27d146a8f048b5ad0b43fa0901b, type: 2}
+  - {fileID: 11400000, guid: 203dc907bb5ea4c45b36b540e1727fb7, type: 2}
   - {fileID: 11400000, guid: d052d533ab845f04daef40ef95250327, type: 2}
-  - {fileID: 11400000, guid: 5b171cfb70ce4894aa2f64ebcb702b35, type: 2}
-  - {fileID: 11400000, guid: e172d267daab6ea43aacea88c4fd7f29, type: 2}
+  - {fileID: 11400000, guid: 5c4f2098c99ce804da72269c8880319b, type: 2}
+  - {fileID: 11400000, guid: b21bbab446fa468438fb40b527cb7df3, type: 2}
   - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
   shotsPerDay: 5
   rerollsPerDay: 3

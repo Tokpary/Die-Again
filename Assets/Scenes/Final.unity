@@ -19337,6 +19337,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 127915807}
     - target: {fileID: 4092011532349205910, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
+      propertyPath: _curtainSfx
+      value: 
+      objectReference: {fileID: 8300000, guid: adcb2b4d45d55f047926395f40bb587f, type: 3}
+    - target: {fileID: 4092011532349205910, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
       propertyPath: _rouletteTickSfx
       value: 
       objectReference: {fileID: 8300000, guid: add2848ee815942458b01312ac0c254e, type: 3}
