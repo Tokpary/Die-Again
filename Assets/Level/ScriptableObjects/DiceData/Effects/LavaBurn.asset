@@ -17,6 +17,7 @@ MonoBehaviour:
   _immuneMaterials: []
   _minImpact: 0.5
   _vfx: {fileID: 8194992990867289339, guid: 99bc28c0d45f51c4fbac01080b73edc7, type: 3}
+  _sfx: {fileID: 8300000, guid: 1a84574972aa2ca44b50322a4032c507, type: 3}
   _blastForce: 15
   _blastRadius: 40
   _blastUpwards: 0.5

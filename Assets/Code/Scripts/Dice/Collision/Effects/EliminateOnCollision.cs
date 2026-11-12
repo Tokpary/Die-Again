@@ -11,6 +11,7 @@ namespace Code.Scripts.Dice.Collision.Effects
         [SerializeField] private Target _target = Target.Other;
         [SerializeField, Min(0f)] private float _vanishDuration;
         [SerializeField] private GameObject _vfx;
+        [SerializeField] private AudioClip _sfx;
 
         [SerializeField, Min(0f)] private float _blastForce;
         [SerializeField, Min(0f)] private float _blastRadius = 2.5f;
@@ -23,6 +24,7 @@ namespace Code.Scripts.Dice.Collision.Effects
             if (_target != Target.Other) eliminated |= TryEliminate(hit.Table, hit.Self);
             if (!eliminated) return;
 
+            if (AudioManager.Instance != null) AudioManager.Instance.PlaySFX(_sfx);
             if (_vfx != null) Instantiate(_vfx, hit.Point, Quaternion.identity);
             if (_blastForce > 0f) hit.Table.Blast(hit.Point, _blastForce, _blastRadius, _blastUpwards);
         }

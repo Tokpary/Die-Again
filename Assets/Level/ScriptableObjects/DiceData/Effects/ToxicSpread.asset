@@ -17,4 +17,5 @@ MonoBehaviour:
   _immuneMaterials: []
   _minImpact: 0
   _vfx: {fileID: 1524533970525000399, guid: 1133dff0b5fda2e4295d301899b1582d, type: 3}
+  _sfx: {fileID: 8300000, guid: 01cf805513f168b47806406938c36566, type: 3}
   _punch: 0.2
