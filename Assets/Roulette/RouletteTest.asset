@@ -24,33 +24,33 @@ MonoBehaviour:
       maximum: 20
     day4:
       minimum: 10
-      maximum: 30
+      maximum: 21
   week2:
     day1:
-      minimum: 12
+      minimum: 13
+      maximum: 23
+    day2:
+      minimum: 15
+      maximum: 25
+    day3:
+      minimum: 17
+      maximum: 27
+    day4:
+      minimum: 20
+      maximum: 30
+  week3:
+    day1:
+      minimum: 22
       maximum: 32
     day2:
-      minimum: 14
-      maximum: 34
+      minimum: 24
+      maximum: 35
     day3:
-      minimum: 14
-      maximum: 34
+      minimum: 25
+      maximum: 40
     day4:
       minimum: 30
       maximum: 50
-  week3:
-    day1:
-      minimum: 32
-      maximum: 52
-    day2:
-      minimum: 40
-      maximum: 60
-    day3:
-      minimum: 40
-      maximum: 60
-    day4:
-      minimum: 50
-      maximum: 98
   maximumSlices: 20
   day1BossProbability: 1
   day2BossProbability: 25
