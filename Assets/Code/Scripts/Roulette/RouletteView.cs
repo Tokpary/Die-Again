@@ -79,13 +79,23 @@ namespace Code.Scripts.Roulette
         {
             if (_wheel == null || !_wheel.gameObject.activeInHierarchy || _visualRoot == null ||
                 !_visualRoot.activeInHierarchy || IsSpinning) return false;
+
             Ray ray = camera.ScreenPointToRay(screenPoint);
             var plane = new Plane(_wheel.forward, _wheel.position);
-            if (!plane.Raycast(ray, out float distance)) return false;
-            Vector3 point = _wheel.InverseTransformPoint(ray.GetPoint(distance));
-            return point.x * point.x + point.y * point.y <= 0.55f * 0.55f;
+
+            if (!plane.Raycast(ray, out float distance))
+                return false;
+
+            Vector3 point = _wheel.InverseTransformPoint(
+                ray.GetPoint(distance)
+            );
+
+            return point.x * point.x + point.y * point.y
+                <= 0.55f * 0.55f;
         }
-        // Read-only presentation telemetry. Does not participate in result selection.
+
+        // Read-only presentation telemetry.
+        // Does not participate in result selection.
         public float SpinTravelDegrees { get; private set; }
         public float SpinStartPointerAngle { get; private set; }
 
@@ -162,7 +172,10 @@ namespace Code.Scripts.Roulette
             _initialized = true;
         }
 
-        public void Show(int probability, IReadOnlyList<int> numbers, Action onPresented = null)
+        public void Show(
+            int probability,
+            IReadOnlyList<int> numbers,
+            Action onPresented = null)
         {
             if (!TryValidate(out string error))
                 throw new InvalidOperationException(error);
@@ -178,8 +191,10 @@ namespace Code.Scripts.Roulette
             }
 
             Initialize();
+
             var vfx = GetComponent<RouletteSectorVFX>();
             vfx?.PrepareNumberLayout();
+
             _visualRoot.SetActive(true);
 
             _sectorRenderer.GetPropertyBlock(_properties);
@@ -188,8 +203,11 @@ namespace Code.Scripts.Roulette
             _sectorRenderer.SetPropertyBlock(_properties);
 
             RefreshLabels(numbers);
-            if (vfx != null) vfx.Present(onPresented);
-            else onPresented?.Invoke();
+
+            if (vfx != null)
+                vfx.Present(onPresented);
+            else
+                onPresented?.Invoke();
         }
 
         private void RefreshLabels(IReadOnlyList<int> numbers)
@@ -330,8 +348,8 @@ namespace Code.Scripts.Roulette
                 // to prevent mirrored numbers.
                 Quaternion facingRotation =
                     positiveZ
-                    ? Quaternion.Euler(0f, 180f, 0f)
-                    : Quaternion.identity;
+                        ? Quaternion.Euler(0f, 180f, 0f)
+                        : Quaternion.identity;
 
                 obj.transform.localRotation =
                     radialRotation * facingRotation;
@@ -357,23 +375,42 @@ namespace Code.Scripts.Roulette
 
                 rect.sizeDelta = new Vector2(4f, 2f);
 
-                // The model is active above the stage so TMP has initialized its font and mesh.
+                // The model is active above the stage so TMP
+                // has initialized its font and mesh.
                 label.ForceMeshUpdate();
 
                 if (commonScale < 0f)
                 {
-                    float referenceHeight = label.textBounds.size.y;
-                    if (referenceHeight <= 0.001f || float.IsNaN(referenceHeight) || float.IsInfinity(referenceHeight))
-                        referenceHeight = label.GetPreferredValues("8").y;
+                    float referenceHeight =
+                        label.textBounds.size.y;
 
-                    if (referenceHeight <= 0.001f || float.IsNaN(referenceHeight) || float.IsInfinity(referenceHeight))
+                    if (referenceHeight <= 0.001f ||
+                        float.IsNaN(referenceHeight) ||
+                        float.IsInfinity(referenceHeight))
                     {
-                        // Never turn missing text geometry into an enormous scale.
+                        referenceHeight =
+                            label.GetPreferredValues("8").y;
+                    }
+
+                    if (referenceHeight <= 0.001f ||
+                        float.IsNaN(referenceHeight) ||
+                        float.IsInfinity(referenceHeight))
+                    {
+                        // Never turn missing text geometry
+                        // into an enormous scale.
                         obj.SetActive(false);
-                        if (Application.isPlaying) Destroy(obj);
-                        else DestroyImmediate(obj);
+
+                        if (Application.isPlaying)
+                            Destroy(obj);
+                        else
+                            DestroyImmediate(obj);
+
                         ClearLabels();
-                        throw new InvalidOperationException("Roulette number font could not be measured. Check the assigned TMP font.");
+
+                        throw new InvalidOperationException(
+                            "Roulette number font could not be measured. " +
+                            "Check the assigned TMP font."
+                        );
                     }
 
                     commonScale =
@@ -424,8 +461,14 @@ namespace Code.Scripts.Roulette
         public void Spin(RouletteResult result)
         {
             var vfx = GetComponent<RouletteSectorVFX>();
+
             if (vfx != null && vfx.IsPresentationBusy)
-                throw new InvalidOperationException("Wait for the roulette entrance to finish.");
+            {
+                throw new InvalidOperationException(
+                    "Wait for the roulette entrance to finish."
+                );
+            }
+
             if (IsSpinning ||
                 !isActiveAndEnabled ||
                 !_initialized)
@@ -442,7 +485,9 @@ namespace Code.Scripts.Roulette
 
             SpinTravelDegrees = 0f;
             SpinStartPointerAngle = GetPointerSectorAngle();
+
             IsSpinning = true;
+
             _spin = StartCoroutine(Animate(result, target));
         }
 
@@ -489,6 +534,45 @@ namespace Code.Scripts.Roulette
 
             float elapsed = 0f;
 
+            // ======================================
+            // ROULETTE TICK SOUND
+            // ======================================
+
+            // Every numbered wedge has the same angle.
+            float sliceAngle =
+                360f / _displayedNumbers.Count;
+
+            // Index of the wedge under the pointer.
+            // We keep the angle unwrapped so that
+            // full revolutions can be counted.
+            int lastBoundary = Mathf.FloorToInt(
+                SpinStartPointerAngle / sliceAngle
+            );
+
+            // Play one tick for every wedge boundary
+            // crossed since the previous frame.
+            void PlayCrossedTicks(float travelledDegrees)
+            {
+                int currentBoundary = Mathf.FloorToInt(
+                    (SpinStartPointerAngle + travelledDegrees)
+                    / sliceAngle
+                );
+
+                int crossed =
+                    Mathf.Max(0, currentBoundary - lastBoundary);
+
+                for (int i = 0; i < crossed; i++)
+                {
+                    AudioManager.Instance?.PlayRouletteTickSFX();
+                }
+
+                lastBoundary = currentBoundary;
+            }
+
+            // ======================================
+            // ORIGINAL SPIN ANIMATION
+            // ======================================
+
             while (elapsed < _spinDuration)
             {
                 if (!_visualRoot.activeInHierarchy)
@@ -501,19 +585,32 @@ namespace Code.Scripts.Roulette
 
                 elapsed += Time.unscaledDeltaTime;
 
-                float t = Mathf.Clamp01(elapsed / _spinDuration);
+                float t = Mathf.Clamp01(
+                    elapsed / _spinDuration
+                );
+
                 float remaining = 1f - t;
 
                 float eased =
                     1f - remaining * remaining * remaining;
 
                 SpinTravelDegrees = distance * eased;
+
                 SetAngle(start + distance * eased);
+
+                // Detect the boundaries crossed by
+                // the pointer during this frame.
+                PlayCrossedTicks(SpinTravelDegrees);
+
                 yield return null;
             }
 
+            // Check the final segment as well.
             SpinTravelDegrees = distance;
+
             SetAngle(target);
+
+            PlayCrossedTicks(SpinTravelDegrees);
 
             _spin = null;
             IsSpinning = false;
@@ -566,10 +663,15 @@ namespace Code.Scripts.Roulette
         public float GetPointerSectorAngle()
         {
             Vector3 pointer =
-                _wheel.InverseTransformPoint(_pointer.position);
+                _wheel.InverseTransformPoint(
+                    _pointer.position
+                );
 
             return Mathf.Repeat(
-                Mathf.Atan2(pointer.x, pointer.y) * Mathf.Rad2Deg,
+                Mathf.Atan2(
+                    pointer.x,
+                    pointer.y
+                ) * Mathf.Rad2Deg,
                 360f
             );
         }
@@ -577,7 +679,9 @@ namespace Code.Scripts.Roulette
         public void Hide()
         {
             CancelSpin();
-            GetComponent<RouletteSectorVFX>()?.HidePresentationImmediately();
+
+            GetComponent<RouletteSectorVFX>()
+                ?.HidePresentationImmediately();
 
             if (_visualRoot != null)
                 _visualRoot.SetActive(false);
@@ -586,8 +690,11 @@ namespace Code.Scripts.Roulette
         public void Dismiss(Action completed)
         {
             var vfx = GetComponent<RouletteSectorVFX>();
-            if (vfx != null && vfx.isActiveAndEnabled) vfx.Dismiss(completed);
-            else completed?.Invoke();
+
+            if (vfx != null && vfx.isActiveAndEnabled)
+                vfx.Dismiss(completed);
+            else
+                completed?.Invoke();
         }
 
         public void CancelSpin()

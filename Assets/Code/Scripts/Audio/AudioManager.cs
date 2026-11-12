@@ -31,6 +31,10 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip _winningScoreSfx;
 
     [Header("Roulette Audio")]
+    [SerializeField] private AudioClip _rouletteTickSfx;
+    [SerializeField, Range(0f, 1f)]
+    private float _rouletteTickVolume = 0.4f;
+
     [SerializeField] private AudioClip _normalRouletteResultSfx;
     [SerializeField] private AudioClip _bossRouletteResultSfx;
 
@@ -156,6 +160,18 @@ public class AudioManager : MonoBehaviour
     public void PlayWinningScoreSFX()
     {
         PlaySFX(_winningScoreSfx);
+    }
+
+    // Sonido al cruzar cada separacion de la ruleta.
+    public void PlayRouletteTickSFX()
+    {
+        if (_rouletteTickSfx == null || sfxSource == null)
+            return;
+
+        sfxSource.PlayOneShot(
+            _rouletteTickSfx,
+            _rouletteTickVolume
+        );
     }
 
     public void PlayNormalRouletteResultSFX()

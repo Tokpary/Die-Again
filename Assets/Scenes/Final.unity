@@ -19336,6 +19336,14 @@ PrefabInstance:
       propertyPath: _diceDrawer
       value: 
       objectReference: {fileID: 127915807}
+    - target: {fileID: 4092011532349205910, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
+      propertyPath: _rouletteTickSfx
+      value: 
+      objectReference: {fileID: 8300000, guid: add2848ee815942458b01312ac0c254e, type: 3}
+    - target: {fileID: 4092011532349205910, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
+      propertyPath: _rouletteTickVolume
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4167854339418479200, guid: 4487d65468874d14888ac5e4b2f90150, type: 3}
       propertyPath: m_Sprite
       value: 
