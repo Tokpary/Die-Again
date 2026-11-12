@@ -14,6 +14,11 @@ namespace Code.Scripts.Roulette
         [SerializeField] private RouletteSO _settings;
         [SerializeField] private RouletteView _view;
         [SerializeField] private TMP_Text _luckyNumberText;
+        [SerializeField] private TMP_Text[] _luckyNumberRangeTexts = new TMP_Text[6];
+        [SerializeField] private Color _winningRangeColor = Color.green;
+        private Color _luckyNumberDefaultColor;
+        private Color[] _luckyNumberRangeDefaultColors;
+        private bool _hasLuckyNumberDefaultColor;
         private readonly System.Random _random = new System.Random();
         private readonly List<RaycastResult> _pointerHits = new List<RaycastResult>();
         private PointerEventData _pointerEvent;
@@ -25,10 +30,27 @@ namespace Code.Scripts.Roulette
 
         private void Awake()
         {
+            CacheDefaultColors();
             if (_view == null) { Debug.LogError("RouletteView is missing.", this); return; }
             _view.SpinCompleted += HandleSpinCompleted;
             _view.SpinCancelled += HandleSpinCancelled;
             _view.Hide();
+        }
+
+        private void CacheDefaultColors()
+        {
+            if (_luckyNumberText != null)
+            {
+                _luckyNumberDefaultColor = _luckyNumberText.color;
+                _hasLuckyNumberDefaultColor = true;
+            }
+
+            if (_luckyNumberRangeTexts == null) return;
+
+            _luckyNumberRangeDefaultColors = new Color[_luckyNumberRangeTexts.Length];
+            for (int i = 0; i < _luckyNumberRangeTexts.Length; i++)
+                if (_luckyNumberRangeTexts[i] != null)
+                    _luckyNumberRangeDefaultColors[i] = _luckyNumberRangeTexts[i].color;
         }
 
         private void HandleSpinCompleted(RouletteResult result)
@@ -43,6 +65,67 @@ namespace Code.Scripts.Roulette
         {
             if (_luckyNumberText != null)
                 _luckyNumberText.text = result.LuckyNumber.ToString();
+        }
+
+        public void ShowWinningRange(int minimumScore, int maximumScore)
+        {
+            if (minimumScore > maximumScore)
+            {
+                Debug.LogError("The winning range minimum cannot be greater than its maximum.", this);
+                return;
+            }
+
+            if (_luckyNumberRangeTexts == null || _luckyNumberRangeTexts.Length != 6)
+            {
+                Debug.LogError("Assign exactly six TMP text references for the lucky number range.", this);
+                return;
+            }
+
+            string rangeText = $"{minimumScore}-{maximumScore}";
+            for (int i = 0; i < _luckyNumberRangeTexts.Length; i++)
+                SetWinningRangeText(i, rangeText);
+
+            SetWinningRangeHighlighted(false);
+        }
+
+        private void SetWinningRangeText(int index, string text)
+        {
+            if (_luckyNumberRangeTexts[index] == null)
+            {
+                Debug.LogError($"Lucky number range TMP reference {index + 1} is not assigned.", this);
+                return;
+            }
+
+            _luckyNumberRangeTexts[index].text = text;
+        }
+
+        public void SetWinningRangeHighlighted(bool highlighted)
+        {
+            if (_luckyNumberText == null || !_hasLuckyNumberDefaultColor)
+                Debug.LogError("Lucky Number TMP reference is not assigned.", this);
+            else
+                _luckyNumberText.color = highlighted ? _winningRangeColor : _luckyNumberDefaultColor;
+
+            if (_luckyNumberRangeTexts == null ||
+                _luckyNumberRangeDefaultColors == null ||
+                _luckyNumberRangeTexts.Length != _luckyNumberRangeDefaultColors.Length)
+            {
+                Debug.LogError("Lucky number range TMP references are not initialized.", this);
+                return;
+            }
+
+            for (int i = 0; i < _luckyNumberRangeTexts.Length; i++)
+            {
+                if (_luckyNumberRangeTexts[i] == null)
+                {
+                    Debug.LogError($"Lucky number range TMP reference {i + 1} is not assigned.", this);
+                    continue;
+                }
+
+                _luckyNumberRangeTexts[i].color = highlighted
+                    ? _winningRangeColor
+                    : _luckyNumberRangeDefaultColors[i];
+            }
         }
 
         private void Update()
