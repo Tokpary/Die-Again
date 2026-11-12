@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Antimatter D4
   description: Annihilates itself and the first dice it collides with. Immune to
     Antimatter and Lava dice.
-  preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
+  preview: {fileID: 21300000, guid: c00cec8f6b926674ba1d2366ccd3712f, type: 3}
   faceValues: 01000000020000000300000004000000
   diceMaterial: {fileID: 11400000, guid: 60bb761868d4411b9f830e845f727d5e, type: 2}
   prefab: {fileID: -2287452370266603689, guid: 02baab6d0f74ab84ead543ae484d51c4, type: 3}

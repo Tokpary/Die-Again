@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
   displayName: Golden D10
   description: Can be spent in the shop to make purchases. Consumed when used.
-  preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
+  preview: {fileID: 21300000, guid: a70690fd9a1771247bcf7799c89852e5, type: 3}
   faceValues: 0100000002000000030000000400000005000000060000000700000008000000090000000a000000
   diceMaterial: {fileID: 11400000, guid: a789ba506fff2b8409c657b645ce2917, type: 2}
   prefab: {fileID: 3750473455239548728, guid: 1d837cb23d2d5a743a199d0f8f9a35b6, type: 3}

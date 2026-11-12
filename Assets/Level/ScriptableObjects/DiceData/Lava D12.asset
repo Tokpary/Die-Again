@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Lava D12
   description: Destroys any dice it collides with without destroying itself. Immune
     to other Lava dice.
-  preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
+  preview: {fileID: 21300000, guid: d8c926b66474e7d4f93ff376ccca848b, type: 3}
   faceValues: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c000000
   diceMaterial: {fileID: 11400000, guid: 3b863c6b1adbb9f468f01fe298bef6ca, type: 2}
   prefab: {fileID: -7719134516154497222, guid: 2ae051c653a86054f95b3da860ee36c5, type: 3}

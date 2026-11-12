@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Lava D20
   description: Destroys any dice it collides with without destroying itself. Immune
     to other Lava dice.
-  preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
+  preview: {fileID: 21300000, guid: 1ae7c8c186c7a1640a98ee7be80e2b6e, type: 3}
   faceValues: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000120000001300000014000000
   diceMaterial: {fileID: 11400000, guid: 3b863c6b1adbb9f468f01fe298bef6ca, type: 2}
   prefab: {fileID: 3359372215161582234, guid: 646331e6d89dee247b5ce81375952067, type: 3}

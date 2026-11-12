@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
   displayName: Golden D8
   description: Can be spent in the shop to make purchases. Consumed when used.
-  preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
+  preview: {fileID: 21300000, guid: 3d3d057aed1c8c54abb1f552fbc7f61f, type: 3}
   faceValues: 0100000002000000030000000400000005000000060000000700000008000000
   diceMaterial: {fileID: 11400000, guid: a789ba506fff2b8409c657b645ce2917, type: 2}
   prefab: {fileID: -3470391934397304992, guid: 6a8a811d755680046afea6f4af581601, type: 3}

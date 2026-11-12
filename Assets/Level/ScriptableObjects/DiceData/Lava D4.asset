@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Lava D4
   description: Destroys any dice it collides with without destroying itself. Immune
     to other Lava dice.
-  preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
+  preview: {fileID: 21300000, guid: 94fcab2439df491478c8f8cab585dd08, type: 3}
   faceValues: 01000000020000000300000004000000
   diceMaterial: {fileID: 11400000, guid: 3b863c6b1adbb9f468f01fe298bef6ca, type: 2}
   prefab: {fileID: -2287452370266603689, guid: 02baab6d0f74ab84ead543ae484d51c4, type: 3}

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
   displayName: Cursed D10
   description: Converts the dice's rolled value into a negative score.
-  preview: {fileID: 21300038, guid: 7ab74e659e1f0a34d9cfec21c478fc12, type: 3}
+  preview: {fileID: 21300000, guid: 370e25fe273179044a79ed973f87b369, type: 3}
   faceValues: 0100000002000000030000000400000005000000060000000700000008000000090000000a000000
   diceMaterial: {fileID: 11400000, guid: 624c3a5a8ce43b749bb5eeba4fbad017, type: 2}
   prefab: {fileID: 3750473455239548728, guid: 1d837cb23d2d5a743a199d0f8f9a35b6, type: 3}
