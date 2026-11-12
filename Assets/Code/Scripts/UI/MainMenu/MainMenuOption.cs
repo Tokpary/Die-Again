@@ -1,3 +1,4 @@
+
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -27,11 +28,13 @@ namespace Code.Scripts.UI
                 return;
 
             UnityEngine.Camera cameraToUse = UnityEngine.Camera.main;
+
             if (cameraToUse == null)
                 return;
 
             Ray ray = cameraToUse.ScreenPointToRay(
-                Mouse.current.position.ReadValue());
+                Mouse.current.position.ReadValue()
+            );
 
             if (!Physics.Raycast(ray, out RaycastHit hit))
                 return;

@@ -1,3 +1,4 @@
+
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,12 +7,19 @@ namespace Code.Scripts.UI
 {
     public class MainMenuSettingsPanel : MonoBehaviour
     {
+        [Header("Panel Movement")]
         [SerializeField] private Transform menuOptions;
         [SerializeField] private Transform hidePoint;
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private GameObject settingsContent;
         [SerializeField] private GameObject creditsContent;
         [SerializeField] private float movementDuration = 0.8f;
+
+        [Header("Settings Gears Animation")]
+        [SerializeField] private Animator gearsAnimator;
+        [SerializeField]
+        private string gearsAnimationState =
+            "Base Layer.Engranajes";
 
         private Vector3 hiddenPosition;
         private Vector3 shownPosition;
@@ -27,7 +35,10 @@ namespace Code.Scripts.UI
 
             if (hidePoint == null || spawnPoint == null)
             {
-                Debug.LogError("[MainMenuSettingsPanel] Asigna Hide Point y Spawn Point.", this);
+                Debug.LogError(
+                    "[MainMenuSettingsPanel] Asigna Hide Point y Spawn Point.",
+                    this
+                );
                 enabled = false;
                 return;
             }
@@ -36,16 +47,19 @@ namespace Code.Scripts.UI
             shownPosition = new Vector3(
                 hiddenPosition.x,
                 spawnPoint.position.y,
-                hiddenPosition.z);
+                hiddenPosition.z
+            );
 
             menuOptions.position = hiddenPosition;
+
             SetContentActive(settingsContent, false);
             SetContentActive(creditsContent, false);
         }
 
         private void Update()
         {
-            if (isVisible && Keyboard.current != null &&
+            if (isVisible &&
+                Keyboard.current != null &&
                 Keyboard.current.escapeKey.wasPressedThisFrame)
             {
                 Hide();
@@ -54,13 +68,30 @@ namespace Code.Scripts.UI
 
         public void ShowFor(MainMenuOptionType option)
         {
-            if (!enabled || (option != MainMenuOptionType.Settings &&
-                             option != MainMenuOptionType.Credits))
+            if (!enabled ||
+                (option != MainMenuOptionType.Settings &&
+                 option != MainMenuOptionType.Credits))
                 return;
 
+            // Reproducir los engranajes al abrir Settings
+            // o al cambiar desde Credits a Settings.
+            if (option == MainMenuOptionType.Settings &&
+                (!isVisible || CurrentOption != option))
+            {
+                PlayGearsAnimation();
+            }
+
             CurrentOption = option;
-            SetContentActive(settingsContent, option == MainMenuOptionType.Settings);
-            SetContentActive(creditsContent, option == MainMenuOptionType.Credits);
+
+            SetContentActive(
+                settingsContent,
+                option == MainMenuOptionType.Settings
+            );
+
+            SetContentActive(
+                creditsContent,
+                option == MainMenuOptionType.Credits
+            );
 
             if (!isVisible)
                 SetVisible(true);
@@ -71,16 +102,53 @@ namespace Code.Scripts.UI
             if (!enabled || !isVisible)
                 return;
 
+            // Reproducir la animacion al cerrar Settings.
+            if (CurrentOption == MainMenuOptionType.Settings)
+                PlayGearsAnimation();
+
             SetVisible(false);
+        }
+
+        private void PlayGearsAnimation()
+        {
+            if (gearsAnimator == null)
+            {
+                Debug.LogWarning(
+                    "[MainMenuSettingsPanel] Falta asignar Gears Animator.",
+                    this
+                );
+                return;
+            }
+
+            if (string.IsNullOrEmpty(gearsAnimationState))
+            {
+                Debug.LogWarning(
+                    "[MainMenuSettingsPanel] Falta el nombre del estado de animacion.",
+                    this
+                );
+                return;
+            }
+
+            // Iniciar siempre la animacion desde el primer frame.
+            gearsAnimator.Play(gearsAnimationState, 0, 0f);
+
+            Debug.Log(
+                "[MainMenuSettingsPanel] Reproduciendo animacion: " +
+                gearsAnimationState
+            );
         }
 
         private void SetVisible(bool visible)
         {
             isVisible = visible;
+
             if (movement != null)
                 StopCoroutine(movement);
 
-            Vector3 destination = visible ? shownPosition : hiddenPosition;
+            Vector3 destination = visible
+                ? shownPosition
+                : hiddenPosition;
+
             movement = StartCoroutine(MoveTo(destination));
         }
 
@@ -92,11 +160,19 @@ namespace Code.Scripts.UI
             while (elapsed < movementDuration)
             {
                 elapsed += Time.deltaTime;
+
                 float t = movementDuration <= 0f
                     ? 1f
                     : Mathf.Clamp01(elapsed / movementDuration);
+
                 t = Mathf.SmoothStep(0f, 1f, t);
-                menuOptions.position = Vector3.Lerp(start, destination, t);
+
+                menuOptions.position = Vector3.Lerp(
+                    start,
+                    destination,
+                    t
+                );
+
                 yield return null;
             }
 
@@ -106,12 +182,15 @@ namespace Code.Scripts.UI
             if (!isVisible)
             {
                 CurrentOption = null;
+
                 SetContentActive(settingsContent, false);
                 SetContentActive(creditsContent, false);
             }
         }
 
-        private static void SetContentActive(GameObject content, bool active)
+        private static void SetContentActive(
+            GameObject content,
+            bool active)
         {
             if (content != null)
                 content.SetActive(active);
