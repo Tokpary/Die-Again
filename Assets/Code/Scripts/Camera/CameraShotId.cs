@@ -9,6 +9,7 @@ namespace Code.Scripts.Camera
         Shop,
         CursedShelf,
         Drawer,
-        Chest
+        Chest,
+        Tutorial
     }
 }

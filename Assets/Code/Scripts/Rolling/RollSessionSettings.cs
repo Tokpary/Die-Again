@@ -11,7 +11,7 @@ namespace Code.Scripts.Rolls
         public CameraShotId RestShot = CameraShotId.Gameplay;
         public CameraShotId AimShot = CameraShotId.Throwing;
         public CameraShotId DrawerShot = CameraShotId.Drawer;
-        public CameraShotId[] Views = { CameraShotId.Drawer, CameraShotId.Throwing, CameraShotId.CursedShelf };
+        public CameraShotId[] Views = { CameraShotId.Drawer, CameraShotId.Throwing, CameraShotId.CursedShelf, CameraShotId.Tutorial };
         public float ResultViewDelay = 1f;
         public float EliminateDuration = 0.3f; 
         public CameraShotId[] HoverViews = { CameraShotId.Drawer, CameraShotId.Chest, CameraShotId.Throwing };
