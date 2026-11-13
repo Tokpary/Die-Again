@@ -69,6 +69,32 @@ namespace Code.Scripts.UI.Screens
                 scoreText.text = score.ToString();
             }
         }
+
+        public void ClearScoreDisplay()
+        {
+            if (_previousScoreText != null)
+            {
+                _previousScoreText.text = string.Empty;
+                _previousScoreText.gameObject.SetActive(false);
+            }
+
+            if (_scoreTexts == null || _scoreTexts.Length == 0)
+            {
+                Debug.LogError("Assign the score TMP texts in the GameplayScreen Inspector.", this);
+                return;
+            }
+
+            foreach (TMP_Text scoreText in _scoreTexts)
+            {
+                if (scoreText == null)
+                {
+                    Debug.LogError("A score TMP text is not assigned in the GameplayScreen Inspector.", this);
+                    continue;
+                }
+
+                scoreText.text = string.Empty;
+            }
+        }
         
         public void ShowWinningScore(int minimum, int maximum)
         {

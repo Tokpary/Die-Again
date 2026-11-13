@@ -17,9 +17,19 @@ namespace Code.Scripts.UI
         private GameInputs _input;
         private CameraController _cameraController;
         private DiceDragController _drag;
+        private bool _gameplayActive;
 
         private IHoverable _hovered;
         private object _hoveredData;
+
+        public void SetGameplayActive(bool active)
+        {
+            _gameplayActive = active;
+            if (active) return;
+
+            UIHoverTarget.ClearCurrent();
+            SetHovered(null, null);
+        }
 
         public void Init(GameInputs input, CameraController cameraController, DiceDragController drag)
         {
@@ -30,6 +40,13 @@ namespace Code.Scripts.UI
 
         private void Update()
         {
+            if (!_gameplayActive)
+            {
+                UIHoverTarget.ClearCurrent();
+                SetHovered(null, null);
+                return;
+            }
+
             UIHoverTarget ui = UIHoverTarget.Current;
             if (ui != null)
             {

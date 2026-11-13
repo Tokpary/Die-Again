@@ -9,6 +9,8 @@ namespace Code.Scripts.UI
 
         public abstract object TooltipData { get; }
 
+        internal static void ClearCurrent() => Current = null;
+
         public void OnPointerEnter(PointerEventData eventData) => Current = this;
 
         public void OnPointerExit(PointerEventData eventData)

@@ -88,6 +88,40 @@ namespace Code.Scripts.Roulette
             SetWinningRangeHighlighted(false);
         }
 
+        public void ClearRoundDisplay()
+        {
+            if (_luckyNumberText != null)
+            {
+                _luckyNumberText.text = string.Empty;
+                if (_hasLuckyNumberDefaultColor)
+                    _luckyNumberText.color = _luckyNumberDefaultColor;
+            }
+            else
+            {
+                Debug.LogError("Lucky Number TMP reference is not assigned.", this);
+            }
+
+            if (_luckyNumberRangeTexts == null ||
+                _luckyNumberRangeDefaultColors == null ||
+                _luckyNumberRangeTexts.Length != _luckyNumberRangeDefaultColors.Length)
+            {
+                Debug.LogError("Lucky number range TMP references are not initialized.", this);
+                return;
+            }
+
+            for (int i = 0; i < _luckyNumberRangeTexts.Length; i++)
+            {
+                if (_luckyNumberRangeTexts[i] == null)
+                {
+                    Debug.LogError($"Lucky number range TMP reference {i + 1} is not assigned.", this);
+                    continue;
+                }
+
+                _luckyNumberRangeTexts[i].text = string.Empty;
+                _luckyNumberRangeTexts[i].color = _luckyNumberRangeDefaultColors[i];
+            }
+        }
+
         private void SetWinningRangeText(int index, string text)
         {
             if (_luckyNumberRangeTexts[index] == null)

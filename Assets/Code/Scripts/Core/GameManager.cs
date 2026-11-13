@@ -47,6 +47,7 @@ namespace Code.Scripts.Core
             _gameInputs.Gameplay.Disable();
             _runData = new RunData(_gameConfig);
             _gameContext = new GameContext(_uiManager, _gameInputs, _diceThrower, _rouletteManager, _runData, _gameConfig, _diceDrawer, _diceDragController, _diceAnimator, _cameraController, _dicePlayArea, _purchaseEffect);
+            _gameContext.HoverController = _hoverController;
             _gameContext.CameraViewInput = _cameraViewInput;
             _gameContext.TableLight = _tableLight;
             _gameContext.BankChest = _bankChest;

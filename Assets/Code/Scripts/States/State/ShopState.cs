@@ -26,6 +26,8 @@ namespace Code.Scripts.States.State
         public override void Enter()
         {
             base.Enter();
+            _context.RouletteManager.ClearRoundDisplay();
+            _context.UIManager.Get<GameplayScreen>().ClearScoreDisplay();
             _context.RunData.ShopOffer.RefreshShopOffer(_context.RunData.Progress.Week);
             _screen = _context.UIManager.Get<ShopScreen>();
             _screen.ShowOffer(_context.RunData.ShopOffer.Entries, _sum);

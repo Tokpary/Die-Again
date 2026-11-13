@@ -47,6 +47,7 @@ namespace Code.Scripts.States.State
                 () =>
                 {
                     _screen = _context.UIManager.ShowScreen<GameplayScreen>();
+                    _context.HoverController?.SetGameplayActive(true);
 
                     ScoreResult range = DiceCalculator.PreviewTolerance(
                         _context.RunData.CursedObject,
@@ -150,6 +151,7 @@ namespace Code.Scripts.States.State
                     _screen.TableControls.Bind(_session);
 
                     _session.AllSettled += OnTableSettled;
+                    _session.DiceEliminated += OnDiceEliminated;
                     _session.BudgetChanged += RefreshBudget;
                     _session.RerollModeChanged += _screen.ShowRerollMode;
 
@@ -173,6 +175,7 @@ namespace Code.Scripts.States.State
         public override void Exit()
         {
             base.Exit();
+            _context.HoverController?.SetGameplayActive(false);
 
             _context.RouletteManager.SetWinningRangeHighlighted(false);
             _screen.TableControls.Unbind();
@@ -180,6 +183,7 @@ namespace Code.Scripts.States.State
             _session.Stop();
 
             _session.AllSettled -= OnTableSettled;
+            _session.DiceEliminated -= OnDiceEliminated;
             _session.BudgetChanged -= RefreshBudget;
             _session.RerollModeChanged -= _screen.ShowRerollMode;
 
@@ -200,6 +204,11 @@ namespace Code.Scripts.States.State
         }
 
         private void OnTableSettled()
+        {
+            UpdateScoreDisplay(CalculateScore());
+        }
+
+        private void OnDiceEliminated()
         {
             UpdateScoreDisplay(CalculateScore());
         }

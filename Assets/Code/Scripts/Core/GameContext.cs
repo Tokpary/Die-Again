@@ -14,6 +14,7 @@ namespace Code.Scripts
     public class GameContext 
     {
         public UIManager UIManager { get; private set; }
+        public HoverController HoverController { get; set; }
         public GameInputs GameInputs { get; private set; }
         public DiceThrower DiceThrower { get; private set; }
         public RouletteManager RouletteManager { get; private set; }

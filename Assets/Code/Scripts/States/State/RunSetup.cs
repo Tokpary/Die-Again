@@ -1,6 +1,7 @@
 using Code.Scripts.Ambient;
 using Code.Scripts.Core;
 using Code.Scripts.UI;
+using Code.Scripts.UI.Screens;
 
 namespace Code.Scripts.States
 {
@@ -9,6 +10,7 @@ namespace Code.Scripts.States
         public static void StartNewRun(GameContext context)
         {
             context.RunData = new RunData(context.GameConfig);
+            context.UIManager.Get<GameplayScreen>().ShowBoss(null);
             WeekDayBanner.Refresh(context.RunData.Progress);
             context.DiceDrawer.Clear();
             context.SetTableMood(TableMood.Normal);

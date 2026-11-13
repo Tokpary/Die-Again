@@ -66,6 +66,7 @@ namespace Code.Scripts.Rolling
         public bool IsInChest => CurrentView == _settings.ChestShot;
         public int EliminatedCount => _eliminated.Count;
         public event Action AllSettled;
+        public event Action DiceEliminated;
         public event Action BudgetChanged;
         public event Action<bool> RerollModeChanged;
         public event Action ViewChanged;   
@@ -263,6 +264,7 @@ namespace Code.Scripts.Rolling
         {
             if (!IsInPlay(a) || !IsInPlay(b)) return;
 
+            int diceCountBefore = _tracker.Dice.Count;
             Vector3 point = collision.contactCount > 0 ? collision.GetContact(0).point : a.transform.position;
             float impact = collision.relativeVelocity.magnitude;
 
@@ -272,6 +274,9 @@ namespace Code.Scripts.Rolling
 
             foreach ((DiceCollisionEffect effect, DiceCollision hit) in hits)
                 if (IsInPlay(hit.Self)) effect.Apply(hit); 
+
+            if (_tracker.Dice.Count < diceCountBefore)
+                DiceEliminated?.Invoke();
         }
         
         private IEnumerable<(DiceCollisionEffect Effect, DiceCollision Hit)> EffectsOf(Dice.Dice self, Dice.Dice other, Vector3 point, float impact)
