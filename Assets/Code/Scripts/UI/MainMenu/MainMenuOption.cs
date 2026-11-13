@@ -26,7 +26,8 @@ namespace Code.Scripts.UI
 
         private void Update()
         {
-            if (!enabled || Mouse.current == null ||
+            if (!enabled || !InGameSettingsCard.AllowsWorldInteraction(transform) ||
+                Mouse.current == null ||
                 !Mouse.current.leftButton.wasPressedThisFrame)
                 return;
 
@@ -39,11 +40,21 @@ namespace Code.Scripts.UI
                 Mouse.current.position.ReadValue()
             );
 
-            if (!Physics.Raycast(ray, out RaycastHit hit))
-                return;
+            MainMenuOption opcionPulsada = null;
+            float closestOptionDistance = float.PositiveInfinity;
+            foreach (RaycastHit hit in Physics.RaycastAll(ray))
+            {
+                MainMenuOption hitOption =
+                    hit.collider.GetComponentInParent<MainMenuOption>();
 
-            MainMenuOption opcionPulsada =
-                hit.collider.GetComponentInParent<MainMenuOption>();
+                if (hitOption == null ||
+                    !InGameSettingsCard.AllowsWorldInteraction(hitOption.transform) ||
+                    hit.distance >= closestOptionDistance)
+                    continue;
+
+                opcionPulsada = hitOption;
+                closestOptionDistance = hit.distance;
+            }
 
             if (opcionPulsada != this)
                 return;

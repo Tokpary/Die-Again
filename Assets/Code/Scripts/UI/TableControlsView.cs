@@ -15,7 +15,7 @@ namespace Code.Scripts.UI
             Unbind();
             _session = session;
             _session.ViewChanged += Refresh;
-            _backButton.onClick.AddListener(_session.GoBack);
+            _backButton.onClick.AddListener(OnBackClicked);
             Refresh();
         }
 
@@ -24,10 +24,16 @@ namespace Code.Scripts.UI
             if (_session != null)
             {
                 _session.ViewChanged -= Refresh;
-                _backButton.onClick.RemoveListener(_session.GoBack);
+                _backButton.onClick.RemoveListener(OnBackClicked);
                 _session = null;
             }
             Refresh();
+        }
+
+        private void OnBackClicked()
+        {
+            if (!InGameSettingsCard.BlocksGameplayInput)
+                _session?.GoBack();
         }
 
         private void Refresh()

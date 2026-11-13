@@ -1,5 +1,6 @@
 using System;
 using Code.Scripts.Dice;
+using Code.Scripts.UI;
 using UnityEngine;
 
 namespace Code.Scripts.Table
@@ -33,6 +34,13 @@ namespace Code.Scripts.Table
         private void Update()
         {
             PressConsumed = false;
+            if (InGameSettingsCard.BlocksGameplayInput)
+            {
+                if (_draggedDice != null)
+                    ReturnToDrawer(TakeDragged());
+                return;
+            }
+
             if (_gameInputs == null || !_gameInputs.Gameplay.enabled) return;
 
             Vector2 pointer = _gameInputs.Gameplay.Apuntar.ReadValue<Vector2>();

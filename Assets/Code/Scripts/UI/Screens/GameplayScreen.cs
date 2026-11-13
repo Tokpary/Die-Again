@@ -30,8 +30,16 @@ namespace Code.Scripts.UI.Screens
         protected override void Awake()
         {
             base.Awake();
-            _nextButton.onClick.AddListener(() => NextButtonClicked?.Invoke());
-            _rerollButton.onClick.AddListener(() => RerollButtonClicked?.Invoke());
+            _nextButton.onClick.AddListener(() =>
+            {
+                if (!InGameSettingsCard.BlocksGameplayInput)
+                    NextButtonClicked?.Invoke();
+            });
+            _rerollButton.onClick.AddListener(() =>
+            {
+                if (!InGameSettingsCard.BlocksGameplayInput)
+                    RerollButtonClicked?.Invoke();
+            });
         }
         
         public void ShowBudget(int shots, int rerolls)

@@ -35,6 +35,8 @@ namespace Code.Scripts.Core
         private GameContext _gameContext;
         private IStateMachine _stateMachine;
 
+        public IState CurrentState => _stateMachine?.CurrentState;
+
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);

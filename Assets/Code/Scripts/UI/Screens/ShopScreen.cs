@@ -33,7 +33,11 @@ namespace Code.Scripts.UI.Screens
         protected override void Awake()
         {
             base.Awake();
-            _nextButton.onClick.AddListener(() => NextButtonClicked?.Invoke());
+            _nextButton.onClick.AddListener(() =>
+            {
+                if (!InGameSettingsCard.BlocksGameplayInput)
+                    NextButtonClicked?.Invoke();
+            });
             if (_nextButtonLabel == null) _nextButtonLabel = _nextButton.GetComponentInChildren<TMP_Text>(true);
             CacheOfferSlots();
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Code.Scripts.Dice;
 using Code.Scripts.Table;
+using Code.Scripts.UI;
 using Code.Scripts.Utils;
 using DG.Tweening;
 using UnityEngine;
@@ -52,6 +53,13 @@ public class DiceThrower : MonoBehaviour
 
     private void Update()
     {
+        if (InGameSettingsCard.BlocksGameplayInput)
+        {
+            hasAimPoint = false;
+            HideTrajectory();
+            return;
+        }
+
         if (gameInput == null || !gameInput.Gameplay.enabled)
         {
             HideTrajectory();

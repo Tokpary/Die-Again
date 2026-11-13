@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Code.Scripts.Core;
 using Code.Scripts.Dice;
 using Code.Scripts.Table;
+using Code.Scripts.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -60,6 +61,13 @@ namespace Code.Scripts.Camera
 
         private void Update()
         {
+            if (InGameSettingsCard.BlocksGameplayInput)
+            {
+                _padSelection = null;
+                SetHighlight(null);
+                return;
+            }
+
             if (_input == null || !_input.Gameplay.enabled)
             {
                 SetHighlight(null);
