@@ -28,7 +28,8 @@ namespace Code.Scripts.Rolling
 
         private bool _running;
         private bool _rerollSelecting;   
-        private bool _placing;          
+        private bool _placing;         
+        private int _returning;
         private Tween _cameraReturn;
 
         public RollSession(GameContext context, RollSessionSettings settings)
@@ -48,6 +49,17 @@ namespace Code.Scripts.Rolling
         public bool CanReroll => !IsAnimating && Budget.Rerolls > 0 && _tracker.Dice.Count > 0;
         public bool CanPlace => _running && !IsAnimating && (UnlimitedShots || Budget.Shots > 0);
 
+        public bool HasMovesLeft
+        {
+            get
+            {
+                bool hasShots = UnlimitedShots || Budget.Shots > 0;
+                bool hasDice = _context.DiceThrower.HasLoadedDice || _returning > 0 || DiceInContainers() > 0;
+                bool canReroll = Budget.Rerolls > 0 && _tracker.Dice.Count > 0;
+                return (hasShots && hasDice) || canReroll;
+            }
+        }
+        
         public CameraShotId CurrentView => _context.CameraController.CurrentShotId;
         public bool IsInHub => CurrentView == _settings.RestShot;
         public bool IsInDrawer => CurrentView == _settings.DrawerShot;
@@ -232,13 +244,14 @@ namespace Code.Scripts.Rolling
         {
             _tracker.Remove(dice);
             _outOfDrawer.Remove(dice);
+            _returning++;
             NotifyBudgetChanged();
 
             _context.DiceAnimator.Vanish(new[] { dice }, onVanish =>
             {
                 DiceDrawer home = ContainerOf(onVanish);
                 onVanish.transform.position = home.DropPoint;
-                _context.DiceAnimator.Appear(new[] { onVanish }, d => home.Add(d), null);
+                _context.DiceAnimator.Appear(new[] { onVanish }, d => home.Add(d), () => _returning--);
             }, null);
         }
 
@@ -454,7 +467,8 @@ namespace Code.Scripts.Rolling
             _outOfDrawer.Remove(loadedDice);
             _freeShots.Remove(loadedDice);
             DiceDrawer home = ContainerOf(loadedDice);
-            _context.DiceAnimator.ArcTo(new[] { loadedDice }, home.GetReturnPoint, d => home.Add(d), null);
+            _returning++;
+            _context.DiceAnimator.ArcTo(new[] { loadedDice }, home.GetReturnPoint, d => home.Add(d), () => _returning--);
         }
 
         #endregion
@@ -505,6 +519,7 @@ namespace Code.Scripts.Rolling
             _tracker.Clear();
             _outOfDrawer.Clear();
             _freeShots.Clear();
+            _returning = 0;
             NotifyBudgetChanged();
         }
 
@@ -520,6 +535,13 @@ namespace Code.Scripts.Rolling
         private DiceDrawer ContainerOf(Dice.Dice dice) =>
             _origins.TryGetValue(dice, out DiceDrawer home) ? home : _context.DiceDrawer;
         
+        private int DiceInContainers()
+        {
+            int count = _context.DiceDrawer.Count;
+            if (_context.BankChest != null && Array.IndexOf(_settings.Views, _settings.ChestShot) >= 0)
+                count += _context.BankChest.Count;
+            return count;
+        }
 
         private void NotifyBudgetChanged()
         {

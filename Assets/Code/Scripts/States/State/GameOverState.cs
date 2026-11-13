@@ -1,3 +1,4 @@
+using Code.Scripts.Ambient;
 using Code.Scripts.Core;
 using Code.Scripts.Roulette;
 using Code.Scripts.UI;
@@ -27,6 +28,7 @@ namespace Code.Scripts.States.State
             if (_victory) _screen.ShowVictory(result, boss);
             else _screen.ShowDefeat(result, boss);
             _screen.ShowDice(_context.RunData.DiceCase.Dice);
+            _context.SetTableMood(_victory ? TableMood.Victory : TableMood.GameOver);
         }
 
         public override void Exit()
@@ -48,6 +50,7 @@ namespace Code.Scripts.States.State
             _context.RunData = new RunData(_context.GameConfig);
             WeekDayBanner.Refresh(_context.RunData.Progress);
             _context.DiceDrawer.Clear();
+            _context.SetTableMood(TableMood.Normal);
             _stateMachine.ChangeState(new MainMenuState(_context, _stateMachine));
         }
 

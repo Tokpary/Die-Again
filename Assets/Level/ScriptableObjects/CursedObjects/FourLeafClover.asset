@@ -17,7 +17,7 @@ MonoBehaviour:
   displayName: Four Leaf Clover
   descriptionInGame: Increases both lower and upper score tolerance by 1 on the first
     day of each week.
-  preview: {fileID: 0}
+  preview: {fileID: 21300000, guid: a7887f0896d68e141a759c25856f1ab2, type: 3}
   prefab: {fileID: 353137530324026634, guid: 9c316e8d4684b444d8ac3f6ad9740589, type: 3}
   lowerToleranceIncrease: 1
   upperToleranceIncrease: 1

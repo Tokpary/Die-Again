@@ -21,6 +21,7 @@ namespace Code.Scripts.Dice
         [SerializeField] private Code.Scripts.Table.DiceDropZone _dropZone;
         [SerializeField] private float _dragHeight = 1.5f;
         public float DragHeight => _dragHeight;
+        public int Count => _dice.Count;
         
         private enum OpenMode {Slide, Hinge}
         

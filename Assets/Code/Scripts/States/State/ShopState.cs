@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Code.Scripts.Ambient;
 using Code.Scripts.Camera;
 using Code.Scripts.Core;
 using Code.Scripts.Dice;
@@ -45,6 +46,7 @@ namespace Code.Scripts.States.State
             _context.CameraController.MoveTo(CameraShotId.Gameplay, () =>
             {
                 _screen = _context.UIManager.ShowScreen<ShopScreen>();
+                _context.SetTableMood(TableMood.Shop);
                 _context.DiceDrawer.Open();   
                 _context.BankChest.Open();
                 _session = new RollSession(_context, new RollSessionSettings
@@ -123,7 +125,7 @@ namespace Code.Scripts.States.State
             if (offered == null)
             {
                 _context.CameraController.MoveTo(CameraShotId.Throwing, () =>
-                    _context.PurchaseEffect.PlayFailed(spent, FinishPurchase));
+                    _context.PurchaseEffect.PlayFailed(spent, FinishPurchase, FlickerLight));
                 return;
             }
 
@@ -133,8 +135,18 @@ namespace Code.Scripts.States.State
 
             _context.CameraController.MoveTo(CameraShotId.Throwing, () =>
             {
-                _context.PurchaseEffect.Play(spent, bought, FinishPurchase);
+                _context.PurchaseEffect.Play(spent, bought, FinishPurchase, FlashLight);
             });
+        }
+        
+        private void FlashLight()
+        {
+            if (_context.TableLight != null) _context.TableLight.FlashClaim();
+        }
+
+        private void FlickerLight()
+        {
+            if (_context.TableLight != null) _context.TableLight.FlickerFail();
         }
         
         private void FinishPurchase()

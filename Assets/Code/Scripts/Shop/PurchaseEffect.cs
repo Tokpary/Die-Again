@@ -21,10 +21,11 @@ namespace Code.Scripts.Shop
         [SerializeField] private GameObject _failVfx;
         [SerializeField, Min(0f)] private float _failHoldTime = 0.8f;
 
-        public void Play(IReadOnlyList<Dice.Dice> spent, DiceInstance bought, Action onComplete)
+        public void Play(IReadOnlyList<Dice.Dice> spent, DiceInstance bought, Action onComplete, Action onMerged = null)
         {
             Merge(spent, point =>
             {
+                onMerged?.Invoke();
                 if (_spawnVfx != null) Instantiate(_spawnVfx, point, Quaternion.identity);
                 Dice.Dice dice = _diceDrawer.Spawn(bought, point);
                 _animator.Appear(new[] { dice }, null, () =>
@@ -32,10 +33,11 @@ namespace Code.Scripts.Shop
             });
         }
 
-        public void PlayFailed(IReadOnlyList<Dice.Dice> spent, Action onComplete)
+        public void PlayFailed(IReadOnlyList<Dice.Dice> spent, Action onComplete, Action onMerged = null)
         {
             Merge(spent, point =>
             {
+                onMerged?.Invoke();
                 if (_failVfx != null) Instantiate(_failVfx, point, Quaternion.identity);
                 if (_failHoldTime > 0f) DOVirtual.DelayedCall(_failHoldTime, () => onComplete?.Invoke());
                 else onComplete?.Invoke();

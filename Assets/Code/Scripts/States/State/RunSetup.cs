@@ -1,3 +1,4 @@
+using Code.Scripts.Ambient;
 using Code.Scripts.Core;
 using Code.Scripts.UI;
 
@@ -10,6 +11,7 @@ namespace Code.Scripts.States
             context.RunData = new RunData(context.GameConfig);
             WeekDayBanner.Refresh(context.RunData.Progress);
             context.DiceDrawer.Clear();
+            context.SetTableMood(TableMood.Normal);
             context.DiceDrawer.Populate(context.RunData.DiceCase);
             context.BankChest.Clear();
             context.BankChest.Populate(context.RunData.Bank);

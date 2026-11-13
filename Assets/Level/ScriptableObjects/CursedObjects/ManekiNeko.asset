@@ -15,6 +15,6 @@ MonoBehaviour:
   description: Grants 1 additional reroll during boss rounds.
   displayName: Maneki-neko
   descriptionInGame: Grants 1 additional reroll during boss rounds.
-  preview: {fileID: 0}
+  preview: {fileID: 21300000, guid: edd1578c5ef17064395ac6578a102dbf, type: 3}
   prefab: {fileID: 5130522700796311704, guid: 7e5c2eb6c47501e45ba278b142ef58ba, type: 3}
   extraBossRerolls: 1

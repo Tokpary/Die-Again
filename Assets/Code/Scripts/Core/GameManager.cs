@@ -1,4 +1,5 @@
 using System;
+using Code.Scripts.Ambient;
 using Code.Scripts.Camera;
 using Code.Scripts.CursedObject;
 using Code.Scripts.Dice;
@@ -27,8 +28,8 @@ namespace Code.Scripts.Core
         [SerializeField] private CameraViewInput _cameraViewInput;
         [SerializeField] private DiceDrawer _bankChest;
         [SerializeField] private CursedShelf _cursedShelf;
-        [SerializeField] private HoverController _hoverController;
-        
+        [SerializeField] private HoverController _hoverController;[SerializeField] private TableLight _tableLight;
+
         private RunData _runData;
         private GameInputs _gameInputs;
         private GameContext _gameContext;
@@ -47,6 +48,7 @@ namespace Code.Scripts.Core
             _runData = new RunData(_gameConfig);
             _gameContext = new GameContext(_uiManager, _gameInputs, _diceThrower, _rouletteManager, _runData, _gameConfig, _diceDrawer, _diceDragController, _diceAnimator, _cameraController, _dicePlayArea, _purchaseEffect);
             _gameContext.CameraViewInput = _cameraViewInput;
+            _gameContext.TableLight = _tableLight;
             _gameContext.BankChest = _bankChest;
             _gameContext.CursedShelf = _cursedShelf;
             _stateMachine = new GameStateMachine();

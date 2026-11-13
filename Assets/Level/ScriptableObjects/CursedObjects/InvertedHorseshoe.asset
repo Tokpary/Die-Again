@@ -15,6 +15,6 @@ MonoBehaviour:
   description: Grants 1 additional dice throw per round.
   displayName: Inverted Horseshoe
   descriptionInGame: Grants 1 additional dice throw per round.
-  preview: {fileID: 0}
+  preview: {fileID: 21300000, guid: 8a7ed1876196234479a6eef7632a3232, type: 3}
   prefab: {fileID: 3789365492920209016, guid: 7e94f7473b1b59343840d71817352460, type: 3}
   extraShots: 1
