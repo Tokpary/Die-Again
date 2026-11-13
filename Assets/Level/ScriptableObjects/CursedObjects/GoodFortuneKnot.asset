@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e5eecedcdb544589fc346c79c5c081d, type: 3}
   m_Name: GoodFortuneKnot
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.CursedObject.CursedObjects.GoodFortuneKnot
-  description: Reduces boss encounter probability by 10 percentage points.
+  description: Reduces boss encounter probability by 10 percentage points, without
+    affecting guaranteed boss encounters.
   displayName: Good Fortune Knot
-  descriptionInGame: Reduces boss encounter probability by 10 percentage points.
-  preview: {fileID: 0}
+  descriptionInGame: Reduces boss encounter probability by 10 percentage points,
+    without affecting guaranteed boss encounters.
+  preview: {fileID: 21300000, guid: e9078f88d1bdfcb4fb574cb7efb1e280, type: 3}
   prefab: {fileID: 8741338117756418383, guid: 3db0581d43066db41bc5503878434435, type: 3}
   probabilityReduction: 10

@@ -15,6 +15,6 @@ MonoBehaviour:
   description: Increases the upper score tolerance by 1.
   displayName: Fatima's Hand
   descriptionInGame: Increases the upper score tolerance by 1.
-  preview: {fileID: 0}
+  preview: {fileID: 21300000, guid: 27461185b25e16049a54836199e79241, type: 3}
   prefab: {fileID: 622951479409091938, guid: 8c56ea0664e4a274dbaeb9c17eb10e1a, type: 3}
   toleranceIncrease: 1

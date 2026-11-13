@@ -1,4 +1,5 @@
 using System;
+using Code.Scripts.Ambient;
 using Code.Scripts.Camera;
 using Code.Scripts.Core;
 using Code.Scripts.Roulette;
@@ -55,6 +56,7 @@ namespace Code.Scripts.States.State
                     _transitioning = false;
                     WeekDayBanner.Refresh(_progress);
                     _screen.ShowPreview(_progress, _rouletteManager.GetBossProbability(_progress.Day, _context.RunData.CursedObject));
+                    _context.SetTableMood(_progress.HasResult && _progress.CurrentResult.IsBoss ? TableMood.Boss : TableMood.Normal);
                     if (_progress.HasResult)
                     {
                         _rouletteManager.ShowResult(_progress.CurrentResult);
@@ -115,6 +117,7 @@ namespace Code.Scripts.States.State
             try
             {
                 _progress.RecordResult(result);
+                _context.SetTableMood(result.IsBoss ? TableMood.Boss : TableMood.Normal);
                 if (AudioManager.Instance != null)
                 {
                     if (result.IsBoss)

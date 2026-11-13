@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Code.Scripts.Ambient;
 using Code.Scripts.Bosses;
 using Code.Scripts.Camera;
 using Code.Scripts.Core;
@@ -26,7 +27,7 @@ namespace Code.Scripts.States.State
         private RollSession _session;
         private bool _wasWithinWinningRange;
         private BossSO _boss;
-
+        private TableMood DayMood => _boss != null ? TableMood.Boss : TableMood.Normal;
         public GameplayState(
             GameContext context,
             IStateMachine stateMachine
@@ -60,7 +61,7 @@ namespace Code.Scripts.States.State
                     );
 
                     _screen.ShowBoss(_boss);
-                    
+                    _context.SetTableMood(DayMood);
                     _context.DiceDrawer.Open(
                         _context.RunData.DiceCase
                     );
@@ -209,6 +210,7 @@ namespace Code.Scripts.States.State
                 AudioManager.Instance.PlayWinningScoreSFX();
 
             _wasWithinWinningRange = score.IsSuccess;
+            _context.SetTableMood(score.IsSuccess ? TableMood.CanWin : DayMood);
             _screen.ShowScore(score.TotalScore);
             _context.RouletteManager.SetWinningRangeHighlighted(score.IsSuccess);
         }
@@ -235,7 +237,7 @@ namespace Code.Scripts.States.State
             {
                 EndDay(true);
             }
-            else if (_session.Budget.Shots <= 0)
+            else if (!_session.HasMovesLeft)  
             {
                 EndDay(false);
             }
@@ -258,6 +260,7 @@ namespace Code.Scripts.States.State
             _session.ReturnAllToDrawer(() =>
             {
                 if (_boss != null) _boss.OnFightEnd(_context);
+                if (success && !_context.RunData.Progress.IsComplete) _context.SetTableMood(TableMood.Normal);   
                 if (!success || _context.RunData.Progress.IsComplete)
                 {
                     _context.DiceDrawer.Close();   

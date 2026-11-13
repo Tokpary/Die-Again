@@ -15,6 +15,6 @@ MonoBehaviour:
   description: Grants 1 additional reroll per round.
   displayName: Daruma
   descriptionInGame: Grants 1 additional reroll per round.
-  preview: {fileID: 0}
+  preview: {fileID: 21300000, guid: b359cec2182bf464ab9e0024fd65e22c, type: 3}
   prefab: {fileID: 1244191093587220075, guid: a32996af6528b3a439f76dda189a9f1f, type: 3}
   extraRerolls: 1

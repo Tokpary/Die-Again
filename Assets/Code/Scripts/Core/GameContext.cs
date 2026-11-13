@@ -1,3 +1,4 @@
+using Code.Scripts.Ambient;
 using Code.Scripts.Camera;
 using Code.Scripts.States;
 using Code.Scripts.UI;
@@ -27,6 +28,7 @@ namespace Code.Scripts
         public CameraViewInput CameraViewInput { get; set; }
         public CursedShelf CursedShelf { get; set; }
         public DiceDrawer BankChest { get; set; }
+        public TableLight TableLight { get; set; }
         public GameContext(UIManager uiManager, GameInputs gameInputs, DiceThrower diceThrower, RouletteManager rouletteManager, 
             RunData runData, GameConfigSO gameConfig, DiceDrawer diceDrawer, DiceDragController diceDragController = null,
             DiceAnimator diceAnimator = null, CameraController cameraController = null, DicePlayArea dicePlayArea = null, PurchaseEffect purchaseEffect = null)
