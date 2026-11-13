@@ -15,7 +15,10 @@ namespace Code.Scripts.UI
 
     public class MainMenuOption : MonoBehaviour
     {
+        private const string CreditsOpenAnimationState = "Base Layer.Open";
+
         [SerializeField] private MainMenuOptionType optionType;
+        [SerializeField] private Animator creditsAnimator;
 
         public event Action<MainMenuOptionType> OptionClicked;
 
@@ -46,7 +49,34 @@ namespace Code.Scripts.UI
                 return;
 
             Debug.Log($"[MainMenu] Se ha pulsado: {optionType}");
+
+            if (optionType == MainMenuOptionType.Credits)
+                PlayCreditsAnimation();
+
             OptionClicked?.Invoke(optionType);
+        }
+
+        private void PlayCreditsAnimation()
+        {
+            if (creditsAnimator == null)
+            {
+                Debug.LogWarning(
+                    "[MainMenu] Asigna el Animator de Credits desde el Inspector.",
+                    this
+                );
+                return;
+            }
+
+            if (creditsAnimator.runtimeAnimatorController == null)
+            {
+                Debug.LogWarning(
+                    "[MainMenu] El Animator de Credits no tiene un controller asignado.",
+                    creditsAnimator
+                );
+                return;
+            }
+
+            creditsAnimator.Play(CreditsOpenAnimationState, 0, 0f);
         }
     }
 }

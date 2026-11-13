@@ -21,6 +21,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 394b551d943a8534fa2162eb71c26f90, type: 2}
   - {fileID: 11400000, guid: 394b551d943a8534fa2162eb71c26f90, type: 2}
   - {fileID: 11400000, guid: f221d4fa3d140e44083a1a5023002573, type: 2}
+  - {fileID: 11400000, guid: 5c4f2098c99ce804da72269c8880319b, type: 2}
   shotsPerDay: 5
   rerollsPerDay: 3
   shopPool:
