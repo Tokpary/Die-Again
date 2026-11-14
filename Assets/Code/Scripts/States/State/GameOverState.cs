@@ -47,11 +47,16 @@ namespace Code.Scripts.States.State
         private void OnReturnToMainMenuClicked()
         {
             Unsubscribe();
-            _context.RunData = new RunData(_context.GameConfig);
-            WeekDayBanner.Refresh(_context.RunData.Progress);
-            _context.DiceDrawer.Clear();
-            _context.SetTableMood(TableMood.Normal);
-            _stateMachine.ChangeState(new MainMenuState(_context, _stateMachine));
+            ReturnToMainMenu(_context, _stateMachine);
+        }
+
+        public static void ReturnToMainMenu(GameContext context, IStateMachine stateMachine)
+        {
+            context.RunData = new RunData(context.GameConfig);
+            WeekDayBanner.Refresh(context.RunData.Progress);
+            context.DiceDrawer.Clear();
+            context.SetTableMood(TableMood.Normal);
+            stateMachine.ChangeState(new MainMenuState(context, stateMachine));
         }
 
         private void Unsubscribe()

@@ -38,6 +38,17 @@ namespace Code.Scripts.Core
 
         public IState CurrentState => _stateMachine?.CurrentState;
 
+        public void GiveUpAndReturnToMainMenu()
+        {
+            if (_gameContext == null ||
+                _stateMachine == null ||
+                (!(_stateMachine.CurrentState is GameplayState) &&
+                 !(_stateMachine.CurrentState is ShopState)))
+                return;
+
+            GameOverState.ReturnToMainMenu(_gameContext, _stateMachine);
+        }
+
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);

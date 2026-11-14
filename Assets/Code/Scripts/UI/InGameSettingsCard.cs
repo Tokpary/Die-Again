@@ -3,6 +3,7 @@ using Code.Scripts.Core;
 using Code.Scripts.States.State;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace Code.Scripts.UI
 {
@@ -14,6 +15,8 @@ namespace Code.Scripts.UI
 
         [Header("Button")]
         [SerializeField] private MainMenuOption settingsButton;
+        [SerializeField] private MainMenuOption giveUpButton;
+        private Button _giveUpUiButton;
 
         [Header("Menu Movement")]
         [SerializeField] private Transform menuOptions;
@@ -45,6 +48,20 @@ namespace Code.Scripts.UI
                 return;
             }
 
+            if (giveUpButton != null)
+                _giveUpUiButton = giveUpButton.GetComponentInChildren<Button>(true);
+
+            if (giveUpButton == null)
+                Debug.LogError(
+                    "[InGameSettingsCard] Asigna Give Up Button en el Inspector.",
+                    this
+                );
+            else if (_giveUpUiButton == null)
+                Debug.LogWarning(
+                    "[InGameSettingsCard] Give Up Button no tiene un componente Button; se usara el clic 3D de MainMenuOption.",
+                    giveUpButton
+                );
+
             _hiddenPosition = hidePoint.position;
             _shownPosition = new Vector3(
                 _hiddenPosition.x,
@@ -60,12 +77,20 @@ namespace Code.Scripts.UI
         {
             if (settingsButton != null)
                 settingsButton.OptionClicked += OnOptionClicked;
+            if (_giveUpUiButton != null)
+                _giveUpUiButton.onClick.AddListener(OnGiveUpButtonClicked);
+            else if (giveUpButton != null)
+                giveUpButton.OptionClicked += OnGiveUpOptionClicked;
         }
 
         private void OnDisable()
         {
             if (settingsButton != null)
                 settingsButton.OptionClicked -= OnOptionClicked;
+            if (_giveUpUiButton != null)
+                _giveUpUiButton.onClick.RemoveListener(OnGiveUpButtonClicked);
+            else if (giveUpButton != null)
+                giveUpButton.OptionClicked -= OnGiveUpOptionClicked;
 
             if (_movement != null)
             {
@@ -133,6 +158,25 @@ namespace Code.Scripts.UI
             menuOptions.gameObject.SetActive(true);
             SetVisible(true);
             Debug.Log("[InGameSettingsCard] Abriendo Menu Opciones_juego.", this);
+        }
+
+        private void OnGiveUpOptionClicked(MainMenuOptionType option)
+        {
+            if (option != MainMenuOptionType.Quit)
+                return;
+
+            OnGiveUpButtonClicked();
+        }
+
+        private void OnGiveUpButtonClicked()
+        {
+            if (!IsGameplayOrShop())
+                return;
+
+            if (_gameManager == null)
+                return;
+
+            _gameManager.GiveUpAndReturnToMainMenu();
         }
 
         private bool IsGameplayOrShop()
