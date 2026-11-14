@@ -109,6 +109,42 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Orbitar"",
+                    ""type"": ""Value"",
+                    ""id"": ""617cac7c-b1ab-4bdb-8af1-23b729a6fb21"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""NavegarVista"",
+                    ""type"": ""Value"",
+                    ""id"": ""d68162e1-0cbf-4acf-9aef-c4d5a5247a20"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ConfirmarVista"",
+                    ""type"": ""Button"",
+                    ""id"": ""9026b5f2-4cb2-4942-9176-1459957fdd01"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Volver"",
+                    ""type"": ""Button"",
+                    ""id"": ""fb729dbd-c6fe-43c6-8f43-157265de4896"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -133,6 +169,83 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Apuntar"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""3ee0a1ab-f2f7-45bd-9e09-364834a327c8"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Orbitar"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""42e8d8c6-ec96-46ee-acb1-04d0b793c00b"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Orbitar"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""6c72ce88-3368-48d4-b438-19e0cc5d779d"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Orbitar"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""38db177e-31c1-4f5d-8a18-5177815d867d"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NavegarVista"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dc1eb47c-5b49-4036-b7d4-831c1f347238"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NavegarVista"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0bd440d9-7d54-42ce-bd57-d9943ff9aa6a"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ConfirmarVista"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""902f0698-0034-431b-91e0-b13a23b0867e"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Volver"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -143,6 +256,10 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Disparo = m_Gameplay.FindAction("Disparo", throwIfNotFound: true);
         m_Gameplay_Apuntar = m_Gameplay.FindAction("Apuntar", throwIfNotFound: true);
+        m_Gameplay_Orbitar = m_Gameplay.FindAction("Orbitar", throwIfNotFound: true);
+        m_Gameplay_NavegarVista = m_Gameplay.FindAction("NavegarVista", throwIfNotFound: true);
+        m_Gameplay_ConfirmarVista = m_Gameplay.FindAction("ConfirmarVista", throwIfNotFound: true);
+        m_Gameplay_Volver = m_Gameplay.FindAction("Volver", throwIfNotFound: true);
     }
 
     ~@GameInputs()
@@ -225,6 +342,10 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
     private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
     private readonly InputAction m_Gameplay_Disparo;
     private readonly InputAction m_Gameplay_Apuntar;
+    private readonly InputAction m_Gameplay_Orbitar;
+    private readonly InputAction m_Gameplay_NavegarVista;
+    private readonly InputAction m_Gameplay_ConfirmarVista;
+    private readonly InputAction m_Gameplay_Volver;
     /// <summary>
     /// Provides access to input actions defined in input action map "Gameplay".
     /// </summary>
@@ -244,6 +365,22 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Gameplay/Apuntar".
         /// </summary>
         public InputAction @Apuntar => m_Wrapper.m_Gameplay_Apuntar;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Orbitar".
+        /// </summary>
+        public InputAction @Orbitar => m_Wrapper.m_Gameplay_Orbitar;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/NavegarVista".
+        /// </summary>
+        public InputAction @NavegarVista => m_Wrapper.m_Gameplay_NavegarVista;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/ConfirmarVista".
+        /// </summary>
+        public InputAction @ConfirmarVista => m_Wrapper.m_Gameplay_ConfirmarVista;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/Volver".
+        /// </summary>
+        public InputAction @Volver => m_Wrapper.m_Gameplay_Volver;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -276,6 +413,18 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
             @Apuntar.started += instance.OnApuntar;
             @Apuntar.performed += instance.OnApuntar;
             @Apuntar.canceled += instance.OnApuntar;
+            @Orbitar.started += instance.OnOrbitar;
+            @Orbitar.performed += instance.OnOrbitar;
+            @Orbitar.canceled += instance.OnOrbitar;
+            @NavegarVista.started += instance.OnNavegarVista;
+            @NavegarVista.performed += instance.OnNavegarVista;
+            @NavegarVista.canceled += instance.OnNavegarVista;
+            @ConfirmarVista.started += instance.OnConfirmarVista;
+            @ConfirmarVista.performed += instance.OnConfirmarVista;
+            @ConfirmarVista.canceled += instance.OnConfirmarVista;
+            @Volver.started += instance.OnVolver;
+            @Volver.performed += instance.OnVolver;
+            @Volver.canceled += instance.OnVolver;
         }
 
         /// <summary>
@@ -293,6 +442,18 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
             @Apuntar.started -= instance.OnApuntar;
             @Apuntar.performed -= instance.OnApuntar;
             @Apuntar.canceled -= instance.OnApuntar;
+            @Orbitar.started -= instance.OnOrbitar;
+            @Orbitar.performed -= instance.OnOrbitar;
+            @Orbitar.canceled -= instance.OnOrbitar;
+            @NavegarVista.started -= instance.OnNavegarVista;
+            @NavegarVista.performed -= instance.OnNavegarVista;
+            @NavegarVista.canceled -= instance.OnNavegarVista;
+            @ConfirmarVista.started -= instance.OnConfirmarVista;
+            @ConfirmarVista.performed -= instance.OnConfirmarVista;
+            @ConfirmarVista.canceled -= instance.OnConfirmarVista;
+            @Volver.started -= instance.OnVolver;
+            @Volver.performed -= instance.OnVolver;
+            @Volver.canceled -= instance.OnVolver;
         }
 
         /// <summary>
@@ -347,5 +508,33 @@ public partial class @GameInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnApuntar(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Orbitar" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnOrbitar(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "NavegarVista" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnNavegarVista(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ConfirmarVista" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnConfirmarVista(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Volver" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnVolver(InputAction.CallbackContext context);
     }
 }

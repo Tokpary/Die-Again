@@ -16,6 +16,28 @@ MonoBehaviour:
   InitialDay: 1
   diceCaseCapacity: 12
   startingDices:
+  - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
+  - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
+  - {fileID: 11400000, guid: 394b551d943a8534fa2162eb71c26f90, type: 2}
+  - {fileID: 11400000, guid: 394b551d943a8534fa2162eb71c26f90, type: 2}
+  - {fileID: 11400000, guid: f221d4fa3d140e44083a1a5023002573, type: 2}
+  shotsPerDay: 5
+  rerollsPerDay: 3
+  shopPool:
+  - {fileID: 11400000, guid: 644d1bb061bada340a5d553b89a1edaa, type: 2}
+  - {fileID: 11400000, guid: 5c4f2098c99ce804da72269c8880319b, type: 2}
+  - {fileID: 11400000, guid: d052d533ab845f04daef40ef95250327, type: 2}
+  - {fileID: 11400000, guid: b21bbab446fa468438fb40b527cb7df3, type: 2}
+  - {fileID: 11400000, guid: 1ab1c2f911c0674469bda0d0c7865221, type: 2}
+  - {fileID: 11400000, guid: c20f2aa321433b14cb9b09e351e5ef81, type: 2}
+  - {fileID: 11400000, guid: 8e9d356f4dd715b498f6353638d33308, type: 2}
+  - {fileID: 11400000, guid: b719d5f1d3fa98e4fb026c467c59cd9c, type: 2}
+  - {fileID: 11400000, guid: 718463688cc9fb64f9dba8ef85e6ea00, type: 2}
+  - {fileID: 11400000, guid: 0af68f70c2ea12b449091e9fdfa0f117, type: 2}
+  - {fileID: 11400000, guid: ab512e5efff967d48ae761097c8ee7ab, type: 2}
+  - {fileID: 11400000, guid: 1a12cbc29cf1c2a418d9897e5b9ecdb3, type: 2}
+  - {fileID: 11400000, guid: db15f35bf851d83428452c1762e5310f, type: 2}
+  - {fileID: 11400000, guid: c5b9ca92923f8c148bd4ba540e7bd20d, type: 2}
   - {fileID: 11400000, guid: f221d4fa3d140e44083a1a5023002573, type: 2}
   - {fileID: 11400000, guid: 394b551d943a8534fa2162eb71c26f90, type: 2}
   - {fileID: 11400000, guid: 7b151bc3759762c4098b0f3211d1b07e, type: 2}
@@ -23,3 +45,54 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1833768530ff21e479b6ea396c65a001, type: 2}
   - {fileID: 11400000, guid: b70000ccec238d44e9c61da5848b7eaa, type: 2}
   - {fileID: 11400000, guid: 203dc907bb5ea4c45b36b540e1727fb7, type: 2}
+  - {fileID: 11400000, guid: 207eb407d1002064a8d18abdc3f74c93, type: 2}
+  - {fileID: 11400000, guid: 655980ab8f4214644993b535d5829690, type: 2}
+  - {fileID: 11400000, guid: e172d267daab6ea43aacea88c4fd7f29, type: 2}
+  - {fileID: 11400000, guid: 68343c226b6b50444a8f94bca49a703c, type: 2}
+  - {fileID: 11400000, guid: 4434a7fe677271c4384276b92da8dace, type: 2}
+  - {fileID: 11400000, guid: 402576ffad2129f4bb5d0d7f550e9d5e, type: 2}
+  - {fileID: 11400000, guid: acf979c1fa752b743805d4a7f4358e61, type: 2}
+  - {fileID: 11400000, guid: 821ce9e92f9326e4da103c8b735de0e5, type: 2}
+  - {fileID: 11400000, guid: 40eef0181aa901c43812cdf189e68af5, type: 2}
+  - {fileID: 11400000, guid: c6c9b27d146a8f048b5ad0b43fa0901b, type: 2}
+  - {fileID: 11400000, guid: 21894c1d77041c940bdc23ca8cb9b740, type: 2}
+  - {fileID: 11400000, guid: eac700c39d2d3104b8b71c65324f8f28, type: 2}
+  - {fileID: 11400000, guid: 76ad7542e5fac9446aa01e904b04d525, type: 2}
+  - {fileID: 11400000, guid: 0fdbc57bd7485724096bda80a303238a, type: 2}
+  - {fileID: 11400000, guid: 99a1409501a3d584baead24b35049e74, type: 2}
+  - {fileID: 11400000, guid: eb932b259911a244ca745aa40adb727f, type: 2}
+  - {fileID: 11400000, guid: 5b171cfb70ce4894aa2f64ebcb702b35, type: 2}
+  - {fileID: 11400000, guid: 8f12ec8d0f5115c46bf92a2327ba5441, type: 2}
+  - {fileID: 11400000, guid: 8e1ed13dd0479cd4cab2ccc6eba46442, type: 2}
+  - {fileID: 11400000, guid: 9221abee97f80bc429460bf66b6a79ed, type: 2}
+  - {fileID: 11400000, guid: b12fb351bdb6a6340835478b837061d1, type: 2}
+  shopOfferSize: 10
+  shopMaxNumber: 20
+  bankCapacity: 5
+  coinPool:
+  - {fileID: 11400000, guid: 615798a5695b6bf4abf5261c8ed95567, type: 2}
+  - {fileID: 11400000, guid: 413f8956ca4d76649b2a2d3f90989bc0, type: 2}
+  - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
+  - {fileID: 11400000, guid: 9c849528c1ec1b842a1d3bc0cd727dfb, type: 2}
+  - {fileID: 11400000, guid: 26ffdf7b6d3a70445bf20263d0d962a6, type: 2}
+  - {fileID: 11400000, guid: 7a46d858909d620489c8e0e676fd842a, type: 2}
+  - {fileID: 11400000, guid: 806feeb37460f2a41aff4df0eadea80d, type: 2}
+  coinChoices: 3
+  startingBankDice:
+  - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
+  bossPool:
+  - {fileID: 11400000, guid: fd367cad8f3f563489502257ef4edab7, type: 2}
+  - {fileID: 11400000, guid: f64272912ef92de489feac8ac2f8640c, type: 2}
+  - {fileID: 11400000, guid: 52cadfa06af3c1040aa02c2542adc21a, type: 2}
+  cursedCapacity: 5
+  startingCursedObjects: []
+  cursedPool:
+  - {fileID: 11400000, guid: 48ec1dc4da8546a4ad838e200fcb985b, type: 2}
+  - {fileID: 11400000, guid: 17138a3891f84b229422aa8e6cfcffce, type: 2}
+  - {fileID: 11400000, guid: b2322f3498c4410d8c87c5c1cbceb7bb, type: 2}
+  - {fileID: 11400000, guid: 8372d0c28a2241fcb932c4a4b41f78e5, type: 2}
+  - {fileID: 11400000, guid: 72b459c5ac421ed44b8b61bb1415e495, type: 2}
+  - {fileID: 11400000, guid: 2970c5f9aa834d249b034ae433816f27, type: 2}
+  - {fileID: 11400000, guid: 694dfb95157b2c840823759d7eb7141f, type: 2}
+  cursedChoices: 3
+  KillPlaneHeight: -1

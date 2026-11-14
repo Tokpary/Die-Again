@@ -27,6 +27,11 @@ namespace Code.Scripts.Dice
             RunBatch(dice, (d,i) => Shrink(d, i * _stagger), onVanish, onComplete);
         }
         
+        public void Appear(IReadOnlyList<Dice> dice, Action<Dice> onAppear, Action onComplete)
+        {
+            RunBatch(dice, (d,i) => Grow(d, 0f), onAppear, onComplete);
+        }
+        
         private void RunBatch(IReadOnlyList<Dice> dice, Func<Dice, int, IEnumerator> animation, Action<Dice> onEach, Action onComplete)
         {
             var list = new List<Dice>(dice);
@@ -38,8 +43,8 @@ namespace Code.Scripts.Dice
                 pending++;
                 StartCoroutine(Then(animation(d, i), () =>
                 {
-                    onEach?.Invoke(d);
-                    if (--pending == 0) onComplete?.Invoke();
+                    if (d != null) onEach?.Invoke(d);   
+                    if (--pending == 0) onComplete?.Invoke();   
                 }));
             }
             if(pending == 0) onComplete?.Invoke();
@@ -54,6 +59,7 @@ namespace Code.Scripts.Dice
         private IEnumerator Arc(Dice dice, Vector3 target, float delay)
         {
             if (delay > 0f) yield return new WaitForSeconds(delay);
+            if (dice == null) yield break;
             Rigidbody rb = dice.GetComponent<Rigidbody>();
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
@@ -65,25 +71,42 @@ namespace Code.Scripts.Dice
             
             for(float t = 0f; t < 1f; t += Time.deltaTime / _arcDuration)
             {
+                if (dice == null) yield break;
                 float e = t*t * (3f - 2f*t); 
                 Vector3 position = Vector3.Lerp(start, target, e) + Vector3.up * (_arcHeight * 4f * e * (1f - e));
                 dice.transform.SetPositionAndRotation(position, Quaternion.Slerp(startRot, targetRot, e));
                 yield return null;
             }
 
-            dice.transform.position = target;
+            if (dice != null) dice.transform.position = target;
         }
 
         private IEnumerator Shrink(Dice dice, float delay)
         {
             if (delay > 0f) yield return new WaitForSeconds(delay);
+            if (dice == null) yield break;
             dice.GetComponent<Rigidbody>().isKinematic = true;
             Vector3 startScale = dice.transform.localScale;
             for (float t = 0f; t < 1f; t += Time.deltaTime / _vanishDuration)
             {
+                if (dice == null) yield break;
                 dice.transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
                 yield return null;
             }
+            
+        }
+        
+        private IEnumerator Grow(Dice dice, float delay)
+        {
+            if (delay > 0f) yield return new WaitForSeconds(delay);
+            if (dice == null) yield break;
+            for (float t = 0f; t < 1f; t += Time.deltaTime / _vanishDuration)
+            {
+                if (dice == null) yield break;
+                dice.transform.localScale = Vector3.Lerp(Vector3.zero, dice.BaseScale, t);
+                yield return null;
+            }
+            if (dice != null) dice.transform.localScale = dice.BaseScale;
         }
     }
 }

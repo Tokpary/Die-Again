@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AntimatterDice
+  m_Shader: {fileID: 4800000, guid: a21a0db39898e9949b058fbfc3f012d4, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _NumberAtlas:
+        m_Texture: {fileID: 2800000, guid: 5ab3c2dbbbc448242ba47191b46bf480, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BevelStrength: 0.8
+    - _BevelWidth: 0.1
+    - _D2Balance: 0.9
+    - _D2FlatAxis: 2
+    - _D2Pattern: 0
+    - _D2PatternScale: 8
+    - _DeformAmount: 0.0111
+    - _DeformFrequency: 8
+    - _Distortion: 3.53
+    - _EdgeWidth: 0.077
+    - _EffectIntensity: 3.51
+    - _GlossPower: 36
+    - _GlossStrength: 0.35
+    - _JellyFrequency: 2
+    - _JellySpeed: 0.55
+    - _JellyStrength: 0.18
+    - _NumberClearance: 0
+    - _NumberMode: 0
+    - _PatternInvSize: 1
+    - _WaveScale: 3.97
+    - _WaveSpeed: 1.37
+    - _WaveWidth: 0.293
+    m_Colors:
+    - _BaseColor: {r: 0.019607844, g: 0.019607844, b: 0.019607844, a: 1}
+    - _D2HalfSize: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - _D4Values: {r: 1, g: 2, b: 3, a: 4}
+    - _InkColor: {r: 0.90588236, g: 0.89411765, b: 0.98039216, a: 1}
+    - _PatternCenter: {r: 0, g: 0, b: 0, a: 0}
+    - _WaveColor: {r: 0.90588236, g: 0.89411765, b: 0.98039216, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

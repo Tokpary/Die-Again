@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a5d8b89e134494b7b51bd15c577381, type: 3}
+  m_Name: Lava D6
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
+  displayName: Lava D6
+  description: Destroys any dice it collides with without destroying itself. Immune
+    to other Lava dice.
+  preview: {fileID: 21300000, guid: 7efdd6854d499834f9eeb37dd8a51731, type: 3}
+  faceValues: 010000000200000003000000040000000500000006000000
+  diceMaterial: {fileID: 11400000, guid: 3b863c6b1adbb9f468f01fe298bef6ca, type: 2}
+  prefab: {fileID: 6939954841522258775, guid: ffd69c4107fb6934ba4fd146910a12a8, type: 3}
