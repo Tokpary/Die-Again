@@ -1,4 +1,4 @@
-#Die Again
+# Die Again
 
 **Die Again** is a dice-based roguelike developed for the Unity 2026 Game Jam. Your goal is to hit the **Lucky Number** by throwing and rerolling the dice you own. Along the way you can buy new dice, collect cursed objects that change your run, and even face the Sins: bosses that will try to make your rounds harder.
 
