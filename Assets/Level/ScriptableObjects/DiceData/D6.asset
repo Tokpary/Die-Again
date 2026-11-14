@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4a5d8b89e134494b7b51bd15c577381, type: 3}
   m_Name: D6
   m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Dice.DiceSO
+  displayName: Basic D6
+  description: Just a basic D6.
+  preview: {fileID: 21300000, guid: d376555c0d2ef254d9dc8c7e590395f3, type: 3}
   faceValues: 010000000200000003000000040000000500000006000000
   diceMaterial: {fileID: 0}
   prefab: {fileID: 6939954841522258775, guid: ffd69c4107fb6934ba4fd146910a12a8, type: 3}

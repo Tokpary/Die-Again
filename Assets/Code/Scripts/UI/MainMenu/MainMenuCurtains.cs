@@ -1,3 +1,4 @@
+
 using System.Collections;
 using UnityEngine;
 using Code.Scripts.UI;
@@ -12,10 +13,10 @@ public class MainMenuCurtains : MonoBehaviour
     [SerializeField] private Transform breakpoint;
     [SerializeField] private float duracionMovimientoCamara = 2f;
 
-    // Ajusta estos desplazamientos según la orientación de las paredes.
     [SerializeField]
     private Vector3 desplazamientoIzquierda =
         new Vector3(-5f, 0f, 0f);
+
     [SerializeField]
     private Vector3 desplazamientoDerecha =
         new Vector3(5f, 0f, 0f);
@@ -25,6 +26,7 @@ public class MainMenuCurtains : MonoBehaviour
     private Vector3 posicionInicialIzquierda;
     private Vector3 posicionInicialDerecha;
     private bool abiertas;
+    private Coroutine movimientoCortinas;
 
     private void Awake()
     {
@@ -45,15 +47,22 @@ public class MainMenuCurtains : MonoBehaviour
     private void AlPulsarOpcion(MainMenuOptionType opcion)
     {
         if (opcion == MainMenuOptionType.Play && !abiertas)
-            StartCoroutine(Abrir());
+        {
+            if (movimientoCortinas != null)
+                StopCoroutine(movimientoCortinas);
+
+            movimientoCortinas = StartCoroutine(Abrir());
+        }
     }
 
     private IEnumerator Abrir()
     {
         abiertas = true;
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayCurtainSFX();
 
         Vector3 destinoIzquierda =
             posicionInicialIzquierda + desplazamientoIzquierda;
+
         Vector3 destinoDerecha =
             posicionInicialDerecha + desplazamientoDerecha;
 
@@ -66,10 +75,16 @@ public class MainMenuCurtains : MonoBehaviour
             progreso = Mathf.SmoothStep(0f, 1f, progreso);
 
             paredIzquierda.localPosition = Vector3.Lerp(
-                posicionInicialIzquierda, destinoIzquierda, progreso);
+                posicionInicialIzquierda,
+                destinoIzquierda,
+                progreso
+            );
 
             paredDerecha.localPosition = Vector3.Lerp(
-                posicionInicialDerecha, destinoDerecha, progreso);
+                posicionInicialDerecha,
+                destinoDerecha,
+                progreso
+            );
 
             yield return null;
         }
@@ -77,32 +92,57 @@ public class MainMenuCurtains : MonoBehaviour
         paredIzquierda.localPosition = destinoIzquierda;
         paredDerecha.localPosition = destinoDerecha;
 
-        yield return StartCoroutine(MoverCamara());
+        movimientoCortinas = null;
     }
 
-    private IEnumerator MoverCamara()
+    public void Cerrar()
     {
-        Vector3 posicionInicial = camara.position;
-        Quaternion rotacionInicial = camara.rotation;
+        if (!abiertas)
+            return;
+
+        if (movimientoCortinas != null)
+            StopCoroutine(movimientoCortinas);
+
+        movimientoCortinas = StartCoroutine(CerrarCortinas());
+    }
+
+    private IEnumerator CerrarCortinas()
+    {
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayCurtainSFX();
+
+        Vector3 inicioIzquierda = paredIzquierda.localPosition;
+        Vector3 inicioDerecha = paredDerecha.localPosition;
 
         float tiempo = 0f;
 
-        while (tiempo < duracionMovimientoCamara)
+        while (tiempo < duracion)
         {
             tiempo += Time.deltaTime;
-            float progreso = Mathf.Clamp01(tiempo / duracionMovimientoCamara);
-            progreso = Mathf.SmoothStep(0f, 1f, progreso);
+            float progreso = Mathf.SmoothStep(
+                0f,
+                1f,
+                Mathf.Clamp01(tiempo / duracion)
+            );
 
-            camara.position = Vector3.Lerp(
-                posicionInicial, breakpoint.position, progreso);
+            paredIzquierda.localPosition = Vector3.Lerp(
+                inicioIzquierda,
+                posicionInicialIzquierda,
+                progreso
+            );
 
-            camara.rotation = Quaternion.Slerp(
-                rotacionInicial, breakpoint.rotation, progreso);
+            paredDerecha.localPosition = Vector3.Lerp(
+                inicioDerecha,
+                posicionInicialDerecha,
+                progreso
+            );
 
             yield return null;
         }
 
-        camara.position = breakpoint.position;
-        camara.rotation = breakpoint.rotation;
+        paredIzquierda.localPosition = posicionInicialIzquierda;
+        paredDerecha.localPosition = posicionInicialDerecha;
+
+        abiertas = false;
+        movimientoCortinas = null;
     }
 }

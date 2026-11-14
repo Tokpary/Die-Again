@@ -1,3 +1,4 @@
+
 namespace Code.Scripts.Roulette
 {
     public readonly struct RouletteResult
@@ -10,10 +11,12 @@ namespace Code.Scripts.Roulette
         public int LuckyNumber { get; }
         public bool IsBoss { get; }
         public int BossProbability { get; }
+        public double StopAngle { get; }
+        public int SliceIndex { get; }
         public int VictoryTolerance => 3 - Week;
 
         public RouletteResult(int roundId, int week, int day, int minimum, int maximum,
-            int luckyNumber, bool isBoss, int bossProbability)
+            int luckyNumber, bool isBoss, int bossProbability, double stopAngle, int sliceIndex)
         {
             RoundId = roundId;
             Week = week;
@@ -23,6 +26,8 @@ namespace Code.Scripts.Roulette
             LuckyNumber = luckyNumber;
             IsBoss = isBoss;
             BossProbability = bossProbability;
+            StopAngle = stopAngle;
+            SliceIndex = sliceIndex;
         }
     }
 }

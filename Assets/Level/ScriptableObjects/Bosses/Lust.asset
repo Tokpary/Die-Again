@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbd358313ea741ddb40d0008535c90f3, type: 3}
+  m_Name: Lust
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Scripts.Bosses.LustBoss
+  displayName: LUST
+  description: All your dice turn to glass for this fight. They shatter when they
+    hit another die.
+  icon: {fileID: 21300000, guid: 20a761b0452a5e741b828b2b41c6f88e, type: 3}
+  _glassMaterial: {fileID: 11400000, guid: 59f4d863dd659c14eb3ce7245d9dea0d, type: 2}
