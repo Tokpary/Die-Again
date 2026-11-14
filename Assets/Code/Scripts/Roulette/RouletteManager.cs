@@ -247,9 +247,9 @@ namespace Code.Scripts.Roulette
         public bool TryValidate(GameProgress progress, out string error)
         {
             error = null;
-            if (_settings == null) error = "Falta el RouletteSO.";
-            else if (_view == null) error = "Falta la RouletteView.";
-            else if (progress == null) error = "Falta el GameProgress.";
+            if (_settings == null) error = "Missing RouletteSO.";
+            else if (_view == null) error = "Missing RouletteView.";
+            else if (progress == null) error = "Missing GameProgress.";
             else if (_settings.TryValidate(out error)) _view.TryValidate(out error);
             return error == null;
         }
@@ -274,7 +274,7 @@ namespace Code.Scripts.Roulette
             if (!TryValidate(progress, out string error)) throw new InvalidOperationException(error);
             if (_view.IsSpinning) throw new InvalidOperationException("The roulette is already spinning.");
             if (progress.HasResult || progress.IsRoundStarted)
-                throw new InvalidOperationException("Esta ronda ya tiene un resultado de ruleta.");
+                throw new InvalidOperationException("This round already has a roulette result.");
             RouletteResult result = RouletteRules.Roll(progress, GetBossProbability(progress.Day, passives), _random);
             _view.Show(result.BossProbability, progress.SelectedLuckyNumbers);
             _view.Spin(result);

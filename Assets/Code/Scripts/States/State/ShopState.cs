@@ -127,7 +127,7 @@ namespace Code.Scripts.States.State
             if (offered == null)
             {
                 _context.CameraController.MoveTo(CameraShotId.Throwing, () =>
-                    _context.PurchaseEffect.PlayFailed(spent, FinishPurchase, FlickerLight));
+                    _context.PurchaseEffect.PlayFailed(spent, FinishPurchase, OnNothingMerged));
                 return;
             }
 
@@ -137,18 +137,21 @@ namespace Code.Scripts.States.State
 
             _context.CameraController.MoveTo(CameraShotId.Throwing, () =>
             {
-                _context.PurchaseEffect.Play(spent, bought, FinishPurchase, FlashLight);
+                _context.PurchaseEffect.Play(spent, bought, FinishPurchase, OnPrizeMerged);
             });
         }
         
-        private void FlashLight()
+        // En el momento de la fusión: luz y sonido de premio, o de mezcla fallida.
+        private void OnPrizeMerged()
         {
             if (_context.TableLight != null) _context.TableLight.FlashClaim();
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayClaimPrizeSFX();
         }
 
-        private void FlickerLight()
+        private void OnNothingMerged()
         {
             if (_context.TableLight != null) _context.TableLight.FlickerFail();
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayClaimNothingSFX();
         }
         
         private void FinishPurchase()

@@ -155,8 +155,7 @@ namespace Code.Scripts.States.State
                     _session.BudgetChanged += RefreshBudget;
                     _session.RerollModeChanged += _screen.ShowRerollMode;
 
-                    _screen.NextButtonClicked += OnCheckClicked;
-                    _screen.RerollButtonClicked += _session.ToggleReroll;
+                    _screen.MainButtonClicked += OnMainButtonClicked;
 
                     _session.Start();
                 }
@@ -167,7 +166,7 @@ namespace Code.Scripts.States.State
         {
             base.Update();
             _session?.Tick();
-            if (_session != null) _screen.SetCheckAvailable(!_ending && CanCheck());
+            if (_session != null) RefreshMainButton();
         }
         
         private bool CanCheck() => _boss == null || _boss.CanCheck(_context, _session);
@@ -187,8 +186,7 @@ namespace Code.Scripts.States.State
             _session.BudgetChanged -= RefreshBudget;
             _session.RerollModeChanged -= _screen.ShowRerollMode;
 
-            _screen.NextButtonClicked -= OnCheckClicked;
-            _screen.RerollButtonClicked -= _session.ToggleReroll;
+            _screen.MainButtonClicked -= OnMainButtonClicked;
         }
 
         private void RefreshBudget()
@@ -198,9 +196,6 @@ namespace Code.Scripts.States.State
                 _session.Budget.Rerolls
             );
 
-            _screen.SetRerollAvailable(
-                _session.CanReroll
-            );
         }
 
         private void OnTableSettled()
@@ -235,24 +230,59 @@ namespace Code.Scripts.States.State
             );
         }
 
-        private void OnCheckClicked()
-        {
-            if (_ending || _session.IsAnimating)
-                return;
 
-            ScoreResult score = CalculateScore();
+private enum MainAction { Win, Lose, Reroll, CancelReroll, Wait }
 
-            if (score.IsSuccess)
-            {
-                EndDay(true);
-            }
-            else if (!_session.HasMovesLeft)  
-            {
-                EndDay(false);
-            }
+private MainAction CurrentMainAction()
+{
+    if (_ending) return MainAction.Wait;
+    if (_session.IsRerollSelecting) return MainAction.CancelReroll;
+    if (_session.IsRerollPending || _session.IsAnimating) return MainAction.Wait;
 
+    bool tableStill = !_context.DiceThrower.HasLoadedDice && _session.ThrownDice.All(d => d.Motion.IsSettled);
+    if (tableStill && _wasWithinWinningRange && CanCheck()) return MainAction.Win;
+    if (tableStill && !_session.HasMovesLeft) return MainAction.Lose;
+    return MainAction.Reroll;
+}
+
+private void RefreshMainButton()
+{
+    switch (CurrentMainAction())
+    {
+        case MainAction.Win:
+        case MainAction.Lose:
+            _screen.SetMainButton(GameplayScreen.MainButtonMode.Next, true);
+            break;
+        case MainAction.CancelReroll:
+            _screen.SetMainButton(GameplayScreen.MainButtonMode.CancelReroll, true);
+            break;
+        case MainAction.Reroll:
+            _screen.SetMainButton(GameplayScreen.MainButtonMode.Reroll, _session.CanReroll);
+            break;
+        default:
+            _screen.SetMainButton(GameplayScreen.MainButtonMode.Reroll, false);
+            break;
+    }
+}
+
+private void OnMainButtonClicked()
+{
+    switch (CurrentMainAction())
+    {
+        case MainAction.Win:
+            ScoreResult score = CalculateScore();   
             UpdateScoreDisplay(score);
-        }
+            if (score.IsSuccess) EndDay(true);
+            break;
+        case MainAction.Lose:
+            EndDay(false);
+            break;
+        case MainAction.Reroll:
+        case MainAction.CancelReroll:
+            _session.ToggleReroll();
+            break;
+    }
+}
 
         private void EndDay(bool success)
         {

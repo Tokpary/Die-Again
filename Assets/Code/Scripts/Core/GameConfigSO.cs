@@ -29,6 +29,7 @@ namespace Code.Scripts.Core
         public int bankCapacity = 5;              
         public DiceSO[] coinPool;               
         public int coinChoices = 3;  
+        public DiceSO[] startingBankDice;
         
         [Header("Bosses")]
         [Tooltip("Jefes de la partida: se barajan al empezar y cada semana toca uno, sin repetir.")]

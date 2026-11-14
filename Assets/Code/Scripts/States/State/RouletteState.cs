@@ -49,7 +49,7 @@ namespace Code.Scripts.States.State
                 if (!_progress.IsRoundPrepared) _rouletteManager.PrepareRound(_progress);
 
                 _transitioning = true;
-                _screen.ShowTransition("Preparando la ruleta...");
+                _screen.ShowTransition("Preparing the roulette...");
                 _rouletteManager.Show(_progress, _context.RunData.CursedObject, () =>
                 {
                     if (!_active) return;
@@ -72,7 +72,7 @@ namespace Code.Scripts.States.State
         private bool TryValidate(out string error)
         {
             if (!_rouletteManager.TryValidate(_progress, out error)) return false;
-            if(_progress.IsComplete) error = "El juego ha finalizado. No se puede continuar.";
+            if(_progress.IsComplete) error = "The run is over. You can't continue.";
             return error == null;
         }
 
@@ -153,14 +153,14 @@ namespace Code.Scripts.States.State
         {
             if (!_active || !_spinning) return;
             _spinning = false;
-            _screen.ShowError("Giro cancelado. Puedes volver a intentarlo.", true);
+            _screen.ShowError("Spin cancelled. Try again.", true);
         }
 
         private void OnPlayButtonClicked()
         {
             if (!_active || _transitioning || _spinning || !_progress.HasResult) return;
             _transitioning = true;
-            _screen.ShowTransition("Continuando...");
+            _screen.ShowTransition("Continuing...");
             _rouletteManager.Dismiss(() =>
             {
                 if (!_active) return;

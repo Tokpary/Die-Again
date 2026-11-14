@@ -42,6 +42,8 @@ public class DiceThrower : MonoBehaviour
     private Dice _loadedDice;
     
     public bool HasLoadedDice => _loadedDice != null;
+    // Donde se coloca el dado cargado (para los efectos de aparecer).
+    public Vector3 HoldPosition => _holdPoint != null ? _holdPoint.position : transform.position;
     public bool ShootEnabled { get; set; } = true;
     private void Awake()
     {

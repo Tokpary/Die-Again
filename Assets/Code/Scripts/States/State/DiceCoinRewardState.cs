@@ -63,7 +63,7 @@ namespace Code.Scripts.States.State
 
         private void ShowOptions()
         {
-            _screen.ShowTitle("Elige un dado-moneda");
+            _screen.ShowTitle("CHOOSE A COIN DIE");
             _screen.ShowChoices(_options.Select(o => new DiceInstance(o)).ToList(), OnOptionPicked);
         }
 
@@ -80,7 +80,7 @@ namespace Code.Scripts.States.State
                 return;
             }
 
-            _screen.ShowTitle("Cofre lleno: elige qué dado sustituir");
+            _screen.ShowTitle("CHEST FULL: CHOOSE A DIE TO REPLACE");
             _screen.ShowChoices(bank.Dice, OnReplacePicked);
         }
 
@@ -96,7 +96,7 @@ namespace Code.Scripts.States.State
         {
             _delivering = true;
             _screen.ClearChoices();
-            _screen.SetSkipAvailable(false);
+            _screen.Hide(); 
 
             var data = new DiceInstance(_chosen);
             if (!_context.RunData.Bank.TryAdd(data))

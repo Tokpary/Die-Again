@@ -22,6 +22,8 @@ public class AudioManager : MonoBehaviour
 
     [Header("Shop Audio")]
     [SerializeField] private AudioClip _shopPostSfx;
+    [SerializeField] private AudioClip _claimPrizeSfx;     // canje con premio (sale dado)
+    [SerializeField] private AudioClip _claimNothingSfx;   // canje sin premio (mezcla fallida)
 
     [Header("Container Audio")]
     [SerializeField] private AudioClip _chestSfx;
@@ -145,6 +147,16 @@ public class AudioManager : MonoBehaviour
     public void PlayShopPostSFX()
     {
         PlaySFX(_shopPostSfx);
+    }
+
+    public void PlayClaimPrizeSFX()
+    {
+        PlaySFX(_claimPrizeSfx);
+    }
+
+    public void PlayClaimNothingSFX()
+    {
+        PlaySFX(_claimNothingSfx);
     }
 
     public void PlayChestSFX()

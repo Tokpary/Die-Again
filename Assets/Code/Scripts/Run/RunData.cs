@@ -32,6 +32,9 @@ namespace Code.Scripts.Core
                         CursedObject.Add(passive);
             DiceCase = new DiceCase(config.diceCaseCapacity);
             Bank = new DiceCase(config.bankCapacity);
+            if (config.startingBankDice != null)
+                foreach (DiceSO coin in config.startingBankDice)
+                    if (coin != null) Bank.TryAdd(new DiceInstance(coin));
             foreach (DiceSO dice in config.startingDices)
             {
                 DiceCase.TryAdd(new DiceInstance(dice));

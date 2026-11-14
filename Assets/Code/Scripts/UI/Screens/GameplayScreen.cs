@@ -9,12 +9,17 @@ namespace Code.Scripts.UI.Screens
 {
     public class GameplayScreen : UIScreen
     {
+        public enum MainButtonMode { Next, Reroll, CancelReroll }
+
         [SerializeField] private Button _nextButton;
+        [SerializeField] private TMP_Text _mainButtonLabel;
+        [SerializeField] private string _nextText = "NEXT";
+        [SerializeField] private string _rerollFormat = "REROLL ({0})";
+        [SerializeField] private string _cancelRerollText = "CANCEL";
         [SerializeField] private Button _rerollButton;
         
         [SerializeField] private TMP_Text _rerollHintText;
         [SerializeField] private TMP_Text _shotsText;
-        [SerializeField] private TMP_Text _rerollButtonText;
         [HideInInspector, FormerlySerializedAs("_scoreText")]
         [SerializeField] private TMP_Text _previousScoreText;
         [SerializeField] private TMP_Text[] _scoreTexts;
@@ -24,8 +29,9 @@ namespace Code.Scripts.UI.Screens
         [SerializeField] private TableControlsView _tableControls;
         public TableControlsView TableControls => _tableControls;
         
-        public event Action NextButtonClicked;
-        public event Action RerollButtonClicked;
+        public event Action MainButtonClicked;
+
+        private int _rerolls;
         
         protected override void Awake()
         {
@@ -33,19 +39,16 @@ namespace Code.Scripts.UI.Screens
             _nextButton.onClick.AddListener(() =>
             {
                 if (!InGameSettingsCard.BlocksGameplayInput)
-                    NextButtonClicked?.Invoke();
+                    MainButtonClicked?.Invoke();
             });
-            _rerollButton.onClick.AddListener(() =>
-            {
-                if (!InGameSettingsCard.BlocksGameplayInput)
-                    RerollButtonClicked?.Invoke();
-            });
+            if (_mainButtonLabel == null) _mainButtonLabel = _nextButton.GetComponentInChildren<TMP_Text>(true);
+            if (_rerollButton != null) _rerollButton.gameObject.SetActive(false);
         }
         
         public void ShowBudget(int shots, int rerolls)
         {
             _shotsText.text = shots.ToString();
-            _rerollButtonText.text = $"REROLL ({rerolls})";
+            _rerolls = rerolls;
         }
         
         public void ShowBoss(BossSO boss)
@@ -53,7 +56,14 @@ namespace Code.Scripts.UI.Screens
             if (_bossIcon != null) _bossIcon.Show(boss);
         }
 
-        public void SetCheckAvailable(bool available) => _nextButton.interactable = available;
+        public void SetMainButton(MainButtonMode mode, bool interactable)
+        {
+            _nextButton.interactable = interactable;
+            if (_mainButtonLabel == null) return;
+            _mainButtonLabel.text = mode == MainButtonMode.Next ? _nextText
+                : mode == MainButtonMode.CancelReroll ? _cancelRerollText
+                : string.Format(_rerollFormat, _rerolls);
+        }
         
         public void ShowScore(int score)
         {
@@ -110,6 +120,5 @@ namespace Code.Scripts.UI.Screens
         }
         
         public void ShowRerollMode(bool active) => _rerollHintText.gameObject.SetActive(active);
-        public void SetRerollAvailable(bool available) => _rerollButton.interactable = available;
     }
 }

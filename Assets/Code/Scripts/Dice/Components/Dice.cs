@@ -12,6 +12,8 @@ namespace Code.Scripts.Dice
         public Vector3 BaseScale { get; private set; }
         
         public static event Action<Dice, Dice, UnityEngine.Collision> CollidedWithDice;
+        // Cualquier golpe de este dado (contra otro dado, la mesa, una pared...). Lo escucha DiceImpactAudio.
+        public static event Action<Dice, UnityEngine.Collision> Impacted;
         
         private void Awake()
         {
@@ -36,6 +38,8 @@ namespace Code.Scripts.Dice
         
         private void OnCollisionEnter(UnityEngine.Collision collision)
         {
+            Impacted?.Invoke(this, collision);
+
             if (CollidedWithDice == null || collision.rigidbody == null) return;
             Dice other = collision.rigidbody.GetComponent<Dice>();
             if (other != null && GetInstanceID() < other.GetInstanceID()) CollidedWithDice(this, other, collision);

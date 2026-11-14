@@ -29,6 +29,7 @@ namespace Code.Scripts.Core
         [SerializeField] private DiceDrawer _bankChest;
         [SerializeField] private CursedShelf _cursedShelf;
         [SerializeField] private HoverController _hoverController;[SerializeField] private TableLight _tableLight;
+        [SerializeField] private DiceTeleportFX _diceTeleportFX;
 
         private RunData _runData;
         private GameInputs _gameInputs;
@@ -52,6 +53,7 @@ namespace Code.Scripts.Core
             _gameContext.HoverController = _hoverController;
             _gameContext.CameraViewInput = _cameraViewInput;
             _gameContext.TableLight = _tableLight;
+            _gameContext.DiceTeleportFX = _diceTeleportFX;
             _gameContext.BankChest = _bankChest;
             _gameContext.CursedShelf = _cursedShelf;
             _stateMachine = new GameStateMachine();

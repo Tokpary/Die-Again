@@ -30,6 +30,7 @@ namespace Code.Scripts
         public CursedShelf CursedShelf { get; set; }
         public DiceDrawer BankChest { get; set; }
         public TableLight TableLight { get; set; }
+        public DiceTeleportFX DiceTeleportFX { get; set; }
         public GameContext(UIManager uiManager, GameInputs gameInputs, DiceThrower diceThrower, RouletteManager rouletteManager, 
             RunData runData, GameConfigSO gameConfig, DiceDrawer diceDrawer, DiceDragController diceDragController = null,
             DiceAnimator diceAnimator = null, CameraController cameraController = null, DicePlayArea dicePlayArea = null, PurchaseEffect purchaseEffect = null)

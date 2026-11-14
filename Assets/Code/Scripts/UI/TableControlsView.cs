@@ -15,6 +15,7 @@ namespace Code.Scripts.UI
             Unbind();
             _session = session;
             _session.ViewChanged += Refresh;
+            _session.BudgetChanged += Refresh;
             _backButton.onClick.AddListener(OnBackClicked);
             Refresh();
         }
@@ -24,6 +25,7 @@ namespace Code.Scripts.UI
             if (_session != null)
             {
                 _session.ViewChanged -= Refresh;
+                _session.BudgetChanged -= Refresh;
                 _backButton.onClick.RemoveListener(OnBackClicked);
                 _session = null;
             }
@@ -39,7 +41,7 @@ namespace Code.Scripts.UI
         private void Refresh()
         {
             if(_backButton != null)
-                _backButton.gameObject.SetActive(_session != null && !_session.IsInHub);
+                _backButton.gameObject.SetActive(_session != null && !_session.IsInHub && !_session.IsRerollPending);
         }
     }
 }

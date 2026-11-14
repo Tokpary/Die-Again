@@ -45,6 +45,8 @@ namespace Code.Scripts.Rolling
         public IReadOnlyList<Dice.Dice> ThrownDice => _tracker.Dice;
         public bool IsRerolling { get; private set; }
         public bool IsAnimating => IsRerolling || _placing;   
+        public bool IsRerollSelecting => _rerollSelecting;
+        public bool IsRerollPending => _context.DiceThrower.HasLoadedDice && _freeShots.Count > 0;
         public bool UnlimitedShots => _settings.Shots <= 0;
         public bool CanReroll => !IsAnimating && Budget.Rerolls > 0 && _tracker.Dice.Count > 0;
         public bool CanPlace => _running && !IsAnimating && (UnlimitedShots || Budget.Shots > 0);
@@ -149,7 +151,7 @@ namespace Code.Scripts.Rolling
 
         public void GoBack()
         {
-            if (!_running || IsInHub || IsAnimating) return;
+            if (!_running || IsInHub || IsAnimating || IsRerollPending) return;
             CancelCameraReturn();
             GoTo(_settings.RestShot);
         }
@@ -203,15 +205,19 @@ namespace Code.Scripts.Rolling
             ReturnLoadedDiceToDrawer();   
             _outOfDrawer.Add(dice);
 
+            PlayVanishFX(dice);
             _context.DiceAnimator.Vanish(new[] { dice }, vanished =>
             {
                 _context.DiceThrower.LoadDice(vanished);   
                 GoTo(_settings.AimShot, () =>
+                {
+                    PlayAppearFX();
                     _context.DiceAnimator.Appear(new[] { vanished }, null, () =>
                     {
                         _placing = false;
                         NotifyBudgetChanged();
-                    }));
+                    });
+                });
             }, null);
         }
 
@@ -405,7 +411,7 @@ namespace Code.Scripts.Rolling
 
         public void ToggleReroll()
         {
-            if (IsAnimating) return;
+            if (IsAnimating || IsRerollPending) return;
 
             if (_rerollSelecting)
             {
@@ -444,10 +450,12 @@ namespace Code.Scripts.Rolling
             ReturnLoadedDiceToDrawer();
             _tracker.Remove(dice);
 
+            PlayVanishFX(dice);
             _context.DiceAnimator.Vanish(new[] { dice }, onVanish =>
             {
                 _context.DiceThrower.LoadDice(onVanish);
                 _freeShots.Add(onVanish);  
+                PlayAppearFX();
                 _context.DiceAnimator.Appear(new[] { onVanish }, null, () =>
                 {
                     IsRerolling = false;
@@ -546,6 +554,17 @@ namespace Code.Scripts.Rolling
             if (_context.BankChest != null && Array.IndexOf(_settings.Views, _settings.ChestShot) >= 0)
                 count += _context.BankChest.Count;
             return count;
+        }
+
+        // Efectos del teletransporte (opcionales: si no hay DiceTeleportFX en la escena, no pasa nada).
+        private void PlayVanishFX(Dice.Dice dice)
+        {
+            if (_context.DiceTeleportFX != null) _context.DiceTeleportFX.PlayVanish(dice.transform.position);
+        }
+
+        private void PlayAppearFX()
+        {
+            if (_context.DiceTeleportFX != null) _context.DiceTeleportFX.PlayAppear(_context.DiceThrower.HoldPosition);
         }
 
         private void NotifyBudgetChanged()

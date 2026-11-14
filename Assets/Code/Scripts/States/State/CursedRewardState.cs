@@ -67,7 +67,7 @@ namespace Code.Scripts.States.State
 
         private void ShowOptions()
         {
-            _screen.ShowTitle("Elige un objeto maldito");
+            _screen.ShowTitle("CHOOSE A CURSED OBJECT");
             _screen.ShowChoices(_options, OnOptionPicked);
         }
 
@@ -83,7 +83,7 @@ namespace Code.Scripts.States.State
                 return;
             }
 
-            _screen.ShowTitle("Estantería llena: elige qué objeto sustituir");
+            _screen.ShowTitle("SHELF FULL: CHOOSE AN OBJECT TO REPLACE");
             _screen.ShowChoices(Owned, OnReplacePicked);
         }
 
@@ -100,7 +100,7 @@ namespace Code.Scripts.States.State
         {
             _delivering = true;
             _screen.ClearChoices();
-            _screen.SetSkipAvailable(false);
+            _screen.Hide(); 
             Owned.Add(_chosen);
 
             int pending = 2;
