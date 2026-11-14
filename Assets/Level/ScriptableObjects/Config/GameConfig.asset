@@ -80,10 +80,6 @@ MonoBehaviour:
   coinChoices: 3
   startingBankDice:
   - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
-  - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
-  - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
-  - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
-  - {fileID: 11400000, guid: 26967886fe436a740a11acf8879be5b5, type: 2}
   bossPool:
   - {fileID: 11400000, guid: fd367cad8f3f563489502257ef4edab7, type: 2}
   - {fileID: 11400000, guid: f64272912ef92de489feac8ac2f8640c, type: 2}

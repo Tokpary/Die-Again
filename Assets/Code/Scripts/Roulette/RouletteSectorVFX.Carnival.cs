@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Rendering;
@@ -24,6 +26,7 @@ namespace Code.Scripts.Roulette
         private float measuredSpinSpeed;
         private Tween presentationTween;
         private bool presentationVisible;
+        private readonly List<Action> pendingPresentationCallbacks = new List<Action>();
         public bool IsPresentationBusy => presentationTween != null && presentationTween.IsActive();
 
         private bool PreparePresentation()
@@ -60,11 +63,21 @@ namespace Code.Scripts.Roulette
         public void Present(System.Action completed)
         {
             if (!isActiveAndEnabled || !PreparePresentation()) { completed?.Invoke(); return; }
-            if (presentationVisible) { completed?.Invoke(); return; }
+            if (presentationVisible)
+            {
+                if (IsPresentationBusy && completed != null)
+                    pendingPresentationCallbacks.Add(completed);
+                else
+                    completed?.Invoke();
+                return;
+            }
             presentationTween?.Kill();
             presentationVisible = true;
             presentationRoot.localPosition = presentationHome + LocalLift(retractHeight);
             presentationRoot.gameObject.SetActive(true);
+            pendingPresentationCallbacks.Clear();
+            if (completed != null)
+                pendingPresentationCallbacks.Add(completed);
             var sequence = DOTween.Sequence().SetUpdate(true);
             presentationTween = sequence;
             sequence.Append(presentationRoot.DOLocalMove(presentationHome, dropDuration).SetEase(Ease.InQuad));
@@ -78,13 +91,17 @@ namespace Code.Scripts.Roulette
             {
                 presentationRoot.localPosition = presentationHome;
                 presentationTween = null;
-                completed?.Invoke();
+                Action[] callbacks = pendingPresentationCallbacks.ToArray();
+                pendingPresentationCallbacks.Clear();
+                foreach (Action callback in callbacks)
+                    callback();
             });
         }
 
         public void Dismiss(System.Action completed)
         {
             if (!PreparePresentation() || !presentationVisible) { completed?.Invoke(); return; }
+            pendingPresentationCallbacks.Clear();
             presentationTween?.Kill();
             presentationVisible = false;
             ResetCarnival();
@@ -99,6 +116,7 @@ namespace Code.Scripts.Roulette
 
         public void HidePresentationImmediately()
         {
+            pendingPresentationCallbacks.Clear();
             presentationTween?.Kill(); presentationTween = null;
             presentationVisible = false;
             if (!PreparePresentation()) return;

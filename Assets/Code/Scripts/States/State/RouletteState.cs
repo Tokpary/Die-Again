@@ -1,5 +1,6 @@
 using System;
 using Code.Scripts.Ambient;
+using Code.Scripts.Bosses;
 using Code.Scripts.Camera;
 using Code.Scripts.Core;
 using Code.Scripts.Roulette;
@@ -16,6 +17,7 @@ namespace Code.Scripts.States.State
         private bool _spinning;
         private bool _transitioning;
         private bool _entered;
+        private bool _bossCardPending;
         
         private RouletteManager _rouletteManager => _context.RouletteManager;
         private GameProgress _progress => _context.RunData.Progress;
@@ -35,6 +37,7 @@ namespace Code.Scripts.States.State
                 _screen = _context.UIManager.ShowScreen<RouletteScreen>();
                 _screen.SpinButtonClicked += OnSpinButtonClicked;
                 _screen.NextButtonClicked += OnPlayButtonClicked;
+                _screen.BossCardAcknowledged += OnBossCardAcknowledged;
                 _rouletteManager.OnSpinCompleted += OnSpinCompleted;
                 _rouletteManager.OnSpinCancelled += OnSpinCancelled;
                 _rouletteManager.SpinRequested += OnRouletteClicked;
@@ -60,7 +63,7 @@ namespace Code.Scripts.States.State
                     if (_progress.HasResult)
                     {
                         _rouletteManager.ShowResult(_progress.CurrentResult);
-                        _screen.ShowResult(_progress.CurrentResult, false);
+                        PresentResult(_progress.CurrentResult);
                         ScoreResult range = CalculateWinningRange(_progress.CurrentResult);
                         _rouletteManager.ShowWinningRange(range.MinimumScore, range.MaximumScore);
                     }
@@ -105,7 +108,8 @@ namespace Code.Scripts.States.State
 
         private void OnRouletteClicked()
         {
-            if (!_active || _transitioning || _spinning) return;
+            if (!_active || _transitioning || _spinning || _bossCardPending ||
+                _screen.IsBossCardVisible) return;
             if (_progress.HasResult) OnPlayButtonClicked();
             else RequestSpin();
         }
@@ -126,7 +130,7 @@ namespace Code.Scripts.States.State
                         AudioManager.Instance.PlayNormalRouletteResultSFX();
                 }
 
-                _screen.ShowResult(result, false);
+                PresentResult(result);
                 ScoreResult preview = CalculateWinningRange(result);
                 _rouletteManager.ShowWinningRange(preview.MinimumScore, preview.MaximumScore);
                 _rouletteManager.GetBossProbability(result.Day, _context.RunData.CursedObject, true);
@@ -149,6 +153,24 @@ namespace Code.Scripts.States.State
                 result.LuckyNumber, result.VictoryTolerance, result.Day);
         }
 
+        private void PresentResult(RouletteResult result)
+        {
+            _screen.ShowResult(result, false);
+            _bossCardPending = result.IsBoss;
+            if (!result.IsBoss)
+                return;
+
+            BossSO boss = _context.RunData.BossOfWeek(result.Week);
+            if (!_screen.ShowBossCard(boss))
+                _screen.ShowError("No se pudo mostrar la tarjeta del jefe. Revisa la configuración en Unity.");
+        }
+
+        private void OnBossCardAcknowledged()
+        {
+            _bossCardPending = false;
+            OnPlayButtonClicked();
+        }
+
         private void OnSpinCancelled()
         {
             if (!_active || !_spinning) return;
@@ -158,7 +180,8 @@ namespace Code.Scripts.States.State
 
         private void OnPlayButtonClicked()
         {
-            if (!_active || _transitioning || _spinning || !_progress.HasResult) return;
+            if (!_active || _transitioning || _spinning || !_progress.HasResult ||
+                _bossCardPending || _screen.IsBossCardVisible) return;
             _transitioning = true;
             _screen.ShowTransition("Continuing...");
             _rouletteManager.Dismiss(() =>
@@ -180,6 +203,7 @@ namespace Code.Scripts.States.State
             {
                 _screen.SpinButtonClicked -= OnSpinButtonClicked;
                 _screen.NextButtonClicked -= OnPlayButtonClicked;
+                _screen.BossCardAcknowledged -= OnBossCardAcknowledged;
             }
             _rouletteManager.OnSpinCompleted -= OnSpinCompleted;
             _rouletteManager.OnSpinCancelled -= OnSpinCancelled;
